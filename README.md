@@ -3,7 +3,7 @@
 ### An OpenGL C++ project which simulate a daily traffic. ###
 
   - 4 lanes.
-  - Add a car by tapping '1' '2' '3' or '4' key. Number represented the lane you want to load it. 
+  - Add a car by tapping '1' '2' '3' or '4' key. Number representing the lane you want the car to be loaded. 
   - Every car has implemented an AI to avoid collision with other cars, also maintain and adjust the speed for keeping a reasonable distance toward the car in front of her. 
   - After a tour (cross entire displayed road) the car will be respawned to remake the tour of the road.
 
