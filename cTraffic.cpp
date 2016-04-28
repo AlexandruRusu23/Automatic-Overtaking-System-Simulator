@@ -51,24 +51,24 @@ void cTraffic::MoveCars()
 		{
 			if((*it).getLane()<2)
 			{
-				if((*it).getxPosition()>-18)
+				if((*it).getxPosition()>-22)
 				{
 					(*it).setxPosition((*it).getxPosition()-0.15);
 				}
 				else
 				{
-					(*it).setxPosition(18);
+					(*it).setxPosition(22);
 				}
 			}
 			else
 			{
-				if((*it).getxPosition()<18)
+				if((*it).getxPosition()<22)
 				{
 					(*it).setxPosition((*it).getxPosition()+0.05);
 				}
 				else
 				{
-					(*it).setxPosition(-18);
+					(*it).setxPosition(-22);
 				}
 			}
 		}

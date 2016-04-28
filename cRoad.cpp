@@ -2,10 +2,10 @@
 
 cRoad::cRoad(void) 
 {
-	xLeftFront=-16;
-	xRightFront=16;
-	xRightBack=16;
-	xRightBack=48;
+	xLeftFront=-20;
+	xRightFront=20;
+	xRightBack=20;
+	xRightBack=60;
 	y=5.8;
 }
 cRoad::~cRoad(void){}
@@ -51,7 +51,7 @@ void drawOneLine(float x1, float y1, float x2, float y2)
 
 void cRoad::move()
 {
-	if(xRightFront>-16)
+	if(xRightFront>-20)
 	{
 		xRightFront-=0.05;
 		xLeftFront -=0.05;
@@ -59,9 +59,9 @@ void cRoad::move()
 	else
 	{
 		xLeftFront=xRightBack-0.05;
-		xRightFront = xLeftFront + 32;
+		xRightFront = xLeftFront + 40;
 	}
-	if(xRightBack>-16)
+	if(xRightBack>-20)
 	{
 		xRightBack-=0.05;
 		xLeftBack-=0.05;
@@ -69,7 +69,7 @@ void cRoad::move()
 	else
 	{
 		xLeftBack=xRightFront-0.05;
-		xRightBack=xLeftBack + 32;
+		xRightBack=xLeftBack + 40;
 	}
 }
 
