@@ -1,5 +1,5 @@
 #include "cRoad.h"
-#include "cCar.h"
+#include "cTraffic.h"
 
 class cWorld
 {
@@ -19,9 +19,6 @@ public:
 	void Render();
 
 private:
-	cCar Car;
-	cCar Car1;
-	cCar Car2;
-	cCar Car3;
+	cTraffic Traffic;
 	cRoad Road;
 };

@@ -7,6 +7,11 @@ cCar::cCar()
 }
 cCar::~cCar(){}
 
+bool cCar::getPlayer()
+{
+	return player;
+}
+
 int cCar::getLane()
 {
 	return Lane;
@@ -17,11 +22,15 @@ float cCar::getxPosition()
 	return xPosition;
 }
 
-void cCar::setPosition(int l, float xPos)
+int cCar::getOrientation()
 {
-	xPosition=xPos;
-	Lane=l;
-	switch (l)
+	return orientation;
+}
+
+void cCar::setLane(int lane)
+{
+	Lane=lane;
+	switch (lane)
 	{
 		case 0:
 			yPosition=5.45;
@@ -33,13 +42,18 @@ void cCar::setPosition(int l, float xPos)
 		break;
 		case 2:
 			yPosition=0.45;
-			orientation = 0;
+			orientation = -1;
 		break;
 		case 3:
 			yPosition=-1.85;
-			orientation = 0;
+			orientation = -1;
 		break;
 	}
+}
+
+void cCar::setxPosition(float xPos)
+{
+	xPosition = xPos;
 }
 
 void cCar::setType(int x)
@@ -116,31 +130,5 @@ void cCar::draw()
 		glTexCoord2f(1.0f, 1.0f); glVertex2f(xPosition + 4,yPosition);
 	glEnd();
 
-	move();
-
 	glDisable(GL_BLEND);
-}
-
-void cCar::move()
-{
-	if(Lane <= 1)
-	{
-		if(player == false)
-		{
-			if(xPosition>-18)
-				xPosition-=0.15;
-			else
-				xPosition=18;
-		}
-	}
-	else
-	{
-		if(player == false)
-		{
-			if(xPosition < 18 )
-				xPosition+=0.05;
-			else
-				xPosition=-18;
-		}
-	}
 }
