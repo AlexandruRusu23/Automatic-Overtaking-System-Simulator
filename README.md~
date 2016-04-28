@@ -13,7 +13,7 @@
   - Install freeglut and SOIL:
   - sudo apt-get install freeglut3 freeglut3-dev
   - sudo apt-get install libsoil-dev
-  - Change current directory in terminal to "Traffic-Simulator" 
+  - Change in directory named "Traffic-Simulator"
   - Type command "make"
   - Type command "./exe"
   - Have fun!
