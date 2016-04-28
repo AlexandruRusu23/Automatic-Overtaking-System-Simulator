@@ -27,7 +27,7 @@ bool cWorld::Init()
 	Car2.setPosition(1,5.0);
 	Car2.Init();
 
-	Car3.setType(1);
+	Car3.setType(3);
 	Car3.setPosition(3,5.0);
 	Car3.Init();
 }

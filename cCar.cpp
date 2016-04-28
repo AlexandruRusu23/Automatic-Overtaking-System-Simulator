@@ -24,19 +24,19 @@ void cCar::setPosition(int l, float xPos)
 	switch (l)
 	{
 		case 0:
-			yPosition=5.65;
+			yPosition=5.45;
 			orientation = 1;
 		break;
 		case 1:
-			yPosition=3.2;
+			yPosition=3.05;
 			orientation = 1;
 		break;
 		case 2:
-			yPosition=0.4;
+			yPosition=0.45;
 			orientation = 0;
 		break;
 		case 3:
-			yPosition=-2.05;
+			yPosition=-1.85;
 			orientation = 0;
 		break;
 	}
@@ -84,6 +84,11 @@ int cCar::LoadGLTextures()
 			else
 				texture[0] = SOIL_load_OGL_texture("Texture/PoliceCar.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y );
 		break;
+		case 3:
+			if(orientation == 1)
+				texture[0] = SOIL_load_OGL_texture("Texture/revMercedes.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y );
+			else
+				texture[0] = SOIL_load_OGL_texture("Texture/Mercedes.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y );
 	}
 
 	if(texture[0] == 0)
@@ -120,10 +125,13 @@ void cCar::move()
 {
 	if(Lane <= 1)
 	{
-		if(xPosition>-18)
-			xPosition-=0.15;
-		else
-			xPosition=18;
+		if(player == false)
+		{
+			if(xPosition>-18)
+				xPosition-=0.15;
+			else
+				xPosition=18;
+		}
 	}
 	else
 	{
