@@ -36,7 +36,7 @@ int main(int argc, char** argv)
 	glutCreateWindow("AOS Simulator");
 	
 	//Get a full screen window
-	glutFullScreen();
+	//glutFullScreen();
 	
 	//Cursor disappear
 	glutSetCursor(GLUT_CURSOR_NONE);

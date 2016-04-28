@@ -20,5 +20,8 @@ public:
 
 private:
 	cCar Car;
+	cCar Car1;
+	cCar Car2;
+	cCar Car3;
 	cRoad Road;
 };

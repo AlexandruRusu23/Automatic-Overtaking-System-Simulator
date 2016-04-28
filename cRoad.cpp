@@ -1,46 +1,100 @@
 #include "cRoad.h"
 
-cRoad::cRoad(void) {}
+cRoad::cRoad(void) 
+{
+	xLeftFront=-16;
+	xRightFront=16;
+	xRightBack=16;
+	xRightBack=48;
+	y=5.8;
+}
 cRoad::~cRoad(void){}
 
-void drawOneLine(float x1, float y1, float x2, float y2, float z1, float z2)
-{ 	glBegin(GL_LINES);
-    glVertex3f (x1,y1,z2);
-    glVertex3f (x2,y2,z2);
-    glEnd();
+void cRoad::Init()
+{
+	if (!LoadGLTextures())
+	{
+		printf("Nu a mers!\n");
+	}
+	glEnable(GL_TEXTURE_2D);
+}
+
+int cRoad::LoadGLTextures() // Load Bitmaps And Convert To Textures
+{
+	/* load an image file directly as a new OpenGL texture */
+	texture[0] = SOIL_load_OGL_texture
+		(
+		"Texture/aos1.png",
+		SOIL_LOAD_AUTO,
+		SOIL_CREATE_NEW_ID,
+		SOIL_FLAG_INVERT_Y
+		);
+
+	if(texture[0] == 0)
+		return false;
+
+	// Typical Texture Generation Using Data From The Bitmap
+	glBindTexture(GL_TEXTURE_2D, texture[0]);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+
+	return true;
+}
+
+void drawOneLine(float x1, float y1, float x2, float y2)
+{
+	glBegin(GL_LINES);
+	glVertex2f (x1,y1);
+	glVertex2f (x2,y2);
+	glEnd();
+}
+
+void cRoad::move()
+{
+	if(xRightFront>-16)
+	{
+		xRightFront-=0.05;
+		xLeftFront -=0.05;
+	}
+	else
+	{
+		xLeftFront=xRightBack-0.05;
+		xRightFront = xLeftFront + 32;
+	}
+	if(xRightBack>-16)
+	{
+		xRightBack-=0.05;
+		xLeftBack-=0.05;
+	}
+	else
+	{
+		xLeftBack=xRightFront-0.05;
+		xRightBack=xLeftBack + 32;
+	}
 }
 
 void cRoad::draw()
 {
-	glPushMatrix();
+	glBindTexture(GL_TEXTURE_2D, texture[0]);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     glBegin(GL_QUADS);
-	glColor3f(0.4, 0.4, 0.4);
  	
- 		glVertex3f (-38.0,6.5,-11.0); 
- 		glVertex3f (38.0,6.5,-11.0);
- 		glVertex3f (38.0,-4.5,-11.0); 
- 		glVertex3f (-38.0,-4.5,-11.0); 
- 	
- 	glEnd();
+ 		glTexCoord2f(0.0f, 0.0f); glVertex2f (xLeftFront,y); 
+ 		glTexCoord2f(1.0f, 0.0f); glVertex2f (xRightFront,y);
+ 		glTexCoord2f(1.0f, 1.0f); glVertex2f (xRightFront,y-10); 
+ 		glTexCoord2f(0.0f, 1.0f); glVertex2f (xLeftFront,y-10); 
 
-	glBegin(GL_LINES);
- 	glColor3f(0.97, 0.97, 1.0);
-
-    glEnable (GL_LINE_STIPPLE);
-    glLineStipple (10, 0xAAAA);  
-    drawOneLine(-38.0, 1.0, 38.0, 1.0,-11.0,-11.0);
-    drawOneLine(-38.0, 0.8, 38.0, 0.8,-11.0,-11.0); 
-
-	glEnable (GL_LINE_STIPPLE);
-    glLineStipple (10, 0xAAAA); 
-	drawOneLine(-38.0, 3.7, 38.0, 3.7,-11.0,-11.0);
-
-	glEnable (GL_LINE_STIPPLE);
-    glLineStipple (10, 0xAAAA); 
-   	drawOneLine(-38.0, -1.8, 38.0, -1.7,-11.0,-11.0);
-   
+ 		glTexCoord2f(0.0f, 0.0f); glVertex2f (xLeftBack,y); 
+ 		glTexCoord2f(1.0f, 0.0f); glVertex2f (xRightBack,y);
+ 		glTexCoord2f(1.0f, 1.0f); glVertex2f (xRightBack,y-10); 
+ 		glTexCoord2f(0.0f, 1.0f); glVertex2f (xLeftBack,y-10); 
+ 
   	glEnd();
 
-  	glFlush();
- 	glPopMatrix();
+  	glDisable(GL_BLEND);
+
+  	move();
 } 

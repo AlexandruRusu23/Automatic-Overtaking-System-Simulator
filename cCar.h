@@ -1,44 +1,30 @@
 #include "Global.h"
 
-struct data
-{
-	float xPosition,yPosition,zPosition; // Car position
-	float xColor,yColor,zColor; // Car color
-	int Lane; // car lane
-	float Speed; // car speed
-	float prefferedSpeed;
-	int Orientation; // 1 = right-> left | -1 = left -> right
-	int pressureFromBehind;
-};
-
 class cCar
 {
 public:
 	cCar(void);
 	~cCar(void);
 
-	void makeNewCar();
+	int getLane();
+	float getxPosition();
+	void setType(int x);
+	void setPlayer(bool g);
 
-	bool cDetector(data *newCar);
+	void setPosition(int Lane, float xPosition);
 
-	void draw(data carToDraw);
+	void Init();
+	int LoadGLTextures();	
+	void draw();
 
-	//draw all cars
-	void drawCars();
-
-	//detect next car for specified car 	
-	vector<data>::iterator detectNextCar(vector<data>::iterator cCar);
-
-	//detect last car for specified lane
-	vector<data>::iterator detectLastCar(int cLane);
-
-	//Car motion
-	void move(vector<data>::iterator carToMove);
-
-	//All Cars motion
-	void moveCars();
+	void move();
 
 private:
-	vector<data> Car;
-	int numberCar[4]; // number of cars per lane
+	bool player;
+	int Lane;
+	float xPosition,yPosition;
+	int type; 
+	// 0 == Porsche.png || 1 == RetroCar.png || 2 == PoliceCar.png
+	int orientation; // 0 == left->right || 1 == right -> left
+	GLuint texture[1];
 };

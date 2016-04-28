@@ -7,17 +7,9 @@
 #include <unistd.h>
 #include <vector>
 #include <cstdio>
+#include "SOIL.h"
 using namespace std;
 
-#define PERSPECTIVE_SIZE 90
+#define PERSPECTIVE_SIZE 120
 #define SCREEN_WIDTH	800
 #define SCREEN_HEIGHT	600
-
-#define ROAD_LIMIT 100
-#define ROAD_EDGE 40
-
-#define SPAWN_LIMIT 8
-#define COLLISION_LIMIT 6
-#define SPEED_UP_LIMIT 6
-#define BRAKE_UNIT 0.01;
-#define SPEED_UP_UNIT 0.05;
