@@ -1,4 +1,3 @@
-#include "cRoad.h"
 #include "cTraffic.h"
 
 class cWorld
@@ -20,5 +19,4 @@ public:
 
 private:
 	cTraffic Traffic;
-	cRoad Road;
 };

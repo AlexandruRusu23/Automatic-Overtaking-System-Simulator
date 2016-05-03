@@ -10,8 +10,8 @@ bool cWorld::Init()
 	glLoadIdentity();
 	gluPerspective(PERSPECTIVE_SIZE,(float)SCREEN_WIDTH/(float)SCREEN_HEIGHT,1.0,5000.0);
 	glMatrixMode(GL_MODELVIEW);
-	Road.Init();
-	Traffic.CreateCar(true, 2, 0, -2);
+	Traffic.LoadRoad();
+	Traffic.LoadPlayer();
 }
 
 void cWorld::Keyboard(unsigned char key, int x, int y)
@@ -22,16 +22,32 @@ void cWorld::Keyboard(unsigned char key, int x, int y)
 			exit(0);
 		break;
 		case '1':
-			Traffic.CreateCar(false, 0, rand()%4, 0);
+			Traffic.CreateCar(0, rand()%3 + 1, 10); // lane , type, xPosition
 		break;
 		case '2':
-			Traffic.CreateCar(false, 1, rand()%4, 0);
+			Traffic.CreateCar(1, rand()%3 + 1, 10);
 		break;
 		case '3':
-			Traffic.CreateCar(false, 2, rand()%4, 0);
+			Traffic.CreateCar(2, rand()%3 + 1, 10);
 		break;
 		case '4':
-			Traffic.CreateCar(false, 3, rand()%4, 0);
+			Traffic.CreateCar(3, rand()%3 + 1, 10);
+		break;
+		case 'a':
+			Traffic.setMovePlayer(1);
+			//Move Player on left lane
+		break;
+		case 'd':
+			Traffic.setMovePlayer(2);
+			//Move Player on right lane
+		break;
+		case 's':
+			Traffic.setMovePlayer(3);
+			//increase Player speed
+		break;
+		case 'w':
+			Traffic.setMovePlayer(4);
+			//decrease Player speed
 		break;
 	}
 }
@@ -52,9 +68,11 @@ void cWorld::Render()
 
 	glTranslatef(0.0,0.0,-5.0);
 
-	Road.draw();
+	Traffic.DrawRoad();
 
 	Traffic.DrawCars();
+
+	Traffic.DrawPlayer();
 	
 	glutSwapBuffers();
 

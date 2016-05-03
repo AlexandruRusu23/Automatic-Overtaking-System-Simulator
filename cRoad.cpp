@@ -2,13 +2,25 @@
 
 cRoad::cRoad(void) 
 {
-	xLeftFront=-20;
-	xRightFront=20;
-	xRightBack=20;
-	xRightBack=60;
+	margin = -20;
+	xLeftFront=margin;
+	xRightFront=-margin;
+	xRightBack=-margin;
+	xRightBack=-3*margin;
 	y=5.8;
+	speed = 0.2;
 }
 cRoad::~cRoad(void){}
+
+void cRoad::setSpeed(float x)
+{
+	speed = x;
+}
+
+float cRoad::getSpeed()
+{
+	return speed;
+}
 
 void cRoad::Init()
 {
@@ -51,25 +63,25 @@ void drawOneLine(float x1, float y1, float x2, float y2)
 
 void cRoad::move()
 {
-	if(xRightFront>-20)
+	if(xRightFront>margin)
 	{
-		xRightFront-=0.05;
-		xLeftFront -=0.05;
+		xRightFront-=speed;
+		xLeftFront -=speed;
 	}
 	else
 	{
-		xLeftFront=xRightBack-0.05;
-		xRightFront = xLeftFront + 40;
+		xLeftFront=xRightBack-speed;
+		xRightFront = xLeftFront + (-2)*margin;
 	}
-	if(xRightBack>-20)
+	if(xRightBack>margin)
 	{
-		xRightBack-=0.05;
-		xLeftBack-=0.05;
+		xRightBack-=speed;
+		xLeftBack-=speed;
 	}
 	else
 	{
-		xLeftBack=xRightFront-0.05;
-		xRightBack=xLeftBack + 40;
+		xLeftBack=xRightFront-speed;
+		xRightBack=xLeftBack + (-2)*margin;
 	}
 }
 

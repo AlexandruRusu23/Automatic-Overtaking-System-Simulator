@@ -3,7 +3,9 @@
 class cPlayer:public cCar
 {
 public:
-	void Load();
-	
+	cPlayer();
+	~cPlayer();
+
 private:
+	int activ;
 };

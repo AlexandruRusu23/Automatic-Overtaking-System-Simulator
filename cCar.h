@@ -9,12 +9,17 @@ public:
 	//getters and setters
 	int getLane();
 	float getxPosition();
-	bool getPlayer();
+	float getyPosition();
+	float getyPosByLane(int lane);
+	int getType();
 	int getOrientation();
+	float getSpeed();
+
 	void setType(int x);
-	void setPlayer(bool g);
 	void setLane(int lane);
 	void setxPosition(float xPos);
+	void setyPosition(float yPos);
+	void setSpeed(float x);
 
 	//loading and drawing functions
 
@@ -22,10 +27,10 @@ public:
 	int LoadGLTextures();	
 	void draw();
 
-private:
-	bool player;
+protected:
 	int Lane;
 	float xPosition,yPosition;
+	float speed;
 	int type; 
 	// 0 == Porsche.png || 1 == RetroCar.png || 2 == PoliceCar.png || 3 == Mercedes.png
 	int orientation; // -1 == left->right || 1 == right -> left

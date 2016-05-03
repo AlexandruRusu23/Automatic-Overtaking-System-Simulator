@@ -1,16 +1,7 @@
 #include "cCar.h"
 
-cCar::cCar() 
-{
-	xPosition=-2.0;
-	yPosition=0.4;
-}
+cCar::cCar(){}
 cCar::~cCar(){}
-
-bool cCar::getPlayer()
-{
-	return player;
-}
 
 int cCar::getLane()
 {
@@ -22,9 +13,48 @@ float cCar::getxPosition()
 	return xPosition;
 }
 
+float cCar::getyPosition()
+{
+	return yPosition;
+}
+
+float cCar::getyPosByLane(int lane)
+{	
+	float y;
+	switch (lane)
+	{
+		case 0:
+			y=5.45;
+			return y;
+		break;
+		case 1:
+			y=3.05;
+			return y;
+		break;
+		case 2:
+			y=0.45;
+			return y;
+		break;
+		case 3:
+			y=-1.85;
+			return y;
+		break;
+	}
+}
+
+int cCar::getType()
+{
+	return type;
+}
+
 int cCar::getOrientation()
 {
 	return orientation;
+}
+
+float cCar::getSpeed()
+{
+	return speed;
 }
 
 void cCar::setLane(int lane)
@@ -35,18 +65,22 @@ void cCar::setLane(int lane)
 		case 0:
 			yPosition=5.45;
 			orientation = 1;
+			speed = 0.3;
 		break;
 		case 1:
 			yPosition=3.05;
 			orientation = 1;
+			speed = 0.3;
 		break;
 		case 2:
 			yPosition=0.45;
 			orientation = -1;
+			speed = 0.1;
 		break;
 		case 3:
 			yPosition=-1.85;
 			orientation = -1;
+			speed = 0.1;
 		break;
 	}
 }
@@ -56,14 +90,19 @@ void cCar::setxPosition(float xPos)
 	xPosition = xPos;
 }
 
+void cCar::setyPosition(float yPos)
+{
+	yPosition = yPos;
+}
+
 void cCar::setType(int x)
 {
 	type = x;
 }
 
-void cCar::setPlayer(bool g)
+void cCar::setSpeed(float x)
 {
-	player = g;
+	speed = x;
 }
 
 void cCar::Init()
@@ -108,7 +147,6 @@ int cCar::LoadGLTextures()
 	if(texture[0] == 0)
 		return false;
 
-	// Typical Texture Generation Using Data From The Bitmap
 	glBindTexture(GL_TEXTURE_2D, texture[0]);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
