@@ -21,6 +21,11 @@ void cTraffic::DrawRoad()
 	Road.draw();
 }
 
+int cTraffic::getMovePlayer()
+{
+	return movePlayer;
+}
+
 void cTraffic::setMovePlayer(int active)
 {
 	movePlayer = active;
@@ -32,7 +37,7 @@ bool cTraffic::VerifySpawn(cCar newCar)
 	{
 		if(newCar.getLane() == (*it).getLane() )
 		{
-			if(abs(newCar.getxPosition() - (*it).getxPosition() ) < 4 )
+			if(abs(newCar.getxPosition() - (*it).getxPosition() ) < 10)
 			{
 				return false;
 			}
@@ -49,7 +54,22 @@ void cTraffic::InitCar(int type, int lane, float xPos)
 	newCar.setxPosition(xPos);
 	newCar.Init();
 
-	if(VerifySpawn(newCar) == true )
+	if(lane <2)
+	{
+		if(Road.getSpeed() <= 0.11 )
+		{
+			newCar.setSpeed(0.2);
+		}
+	}
+	else
+	{
+		if(Road.getSpeed() <= 0.11 )
+		{
+			newCar.setSpeed(0);
+		}
+	}
+
+	if(VerifySpawn(newCar) == true && Accelerate == false && Brake == false )
 		Car.push_back(newCar);
 	else
 		printf("Can't load the car!\n");
@@ -82,9 +102,9 @@ void cTraffic::VerifyLimit()
 				{	
 					if( (*it).getxPosition() * (*it).getOrientation() > (*jt).getxPosition() * (*jt).getOrientation() )
 					{
-						if( abs( (*it).getxPosition() - (*jt).getxPosition() ) < 10 )
+						if( abs( (*it).getxPosition() - (*jt).getxPosition() ) < 11 )
 						{
-							if( abs( (*it).getxPosition() - (*jt).getxPosition() ) < 6.5 )
+							if( abs( (*it).getxPosition() - (*jt).getxPosition() ) < 7 )
 							{
 								(*it).setxPosition( (*it).getxPosition()+0.02 * (*it).getOrientation() );	
 							}

@@ -7,6 +7,7 @@ public:
 	cTraffic();
 	~cTraffic();
 
+	int getMovePlayer();
 	void setMovePlayer(int active);
 
 	bool VerifySpawn(cCar newCar);
