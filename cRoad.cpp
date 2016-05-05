@@ -87,6 +87,7 @@ void cRoad::move()
 
 void cRoad::draw()
 {
+	glColor4f(1.0,1.0,1.0,1.0);
 	glBindTexture(GL_TEXTURE_2D, texture[0]);
 
 	glEnable(GL_BLEND);
@@ -105,6 +106,8 @@ void cRoad::draw()
  		glTexCoord2f(0.0f, 1.0f); glVertex2f (xLeftBack,y-10); 
  
   	glEnd();
+
+	glBindTexture(GL_TEXTURE_2D, 0);
 
   	glDisable(GL_BLEND);
 

@@ -6,8 +6,8 @@ cTraffic::cTraffic()
 	activatePlayer = true;
 	moveLeft = false;
 	moveRight = false;
-	Brake = false;
-	Accelerate = false;
+	setTrafficSpeed = false;
+	setInitialSpeed = false;
 }
 cTraffic::~cTraffic(){}
 
@@ -69,7 +69,7 @@ void cTraffic::InitCar(int type, int lane, float xPos)
 		}
 	}
 
-	if(VerifySpawn(newCar) == true && Accelerate == false && Brake == false )
+	if(VerifySpawn(newCar) == true && setInitialSpeed == false && setTrafficSpeed == false )
 		Car.push_back(newCar);
 	else
 		printf("Can't load the car!\n");
@@ -167,8 +167,183 @@ void cTraffic::DrawCars()
 	MoveCars();
 }
 
+void cTraffic::rendertext(string *message) 
+{
+	for (int i=0;i<message->size();i++)
+		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18,(int)((*message)[i]));
+}
+
+void cTraffic::DisplayPlayerState() 
+{
+	glColor3f(0.0,0.5,1.0);
+	glRasterPos2f(-16.5,-5.5);
+	rendertext(new string("State: "));
+
+	if ( Player.getyPosition() > 0.5 ) 
+	{
+		glColor3f(1.0,0.0,0.0);
+		glRasterPos2f(-14.0,-5.5);
+		rendertext(new string("Overtaking"));
+	}
+	else
+	{
+		if( Player.getyPosition() > 0.5 )
+		{
+			glColor3f(1.0,0.0,0.0);
+			glRasterPos2f(-14.0,-5.5);
+			rendertext(new string("Overtaking"));
+		}
+		else {
+			if (Road.getSpeed() < 0.15) {
+				glColor3f(0.5,1.0,0.0);
+				glRasterPos2f(-14.0,-5.5);
+				rendertext(new string("Cruising"));
+			}
+			else {
+				glColor3f(1.0,1.0,0.0);
+				glRasterPos2f(-14.0,-5.5);
+				rendertext(new string("Speeding"));
+			}
+		}
+	}
+
+	if( leftAOS == true && rightAOS == true )
+		bothAOS = true;
+
+	glColor3f(0.0,0.5,1.0);
+	glRasterPos2f(-16.5,-6.5);
+	rendertext(new string("AOS Info: "));
+
+	if( bothAOS == true )
+	{
+		glColor3f(0.0,0.5,1.0);
+		glRasterPos2f(-12.5,-6.5);
+		rendertext(new string("BOTH lanes are free"));
+	}
+	else
+	{
+		if( leftAOS == true )
+		{
+			glColor3f(0.0,0.5,1.0);
+			glRasterPos2f(-12.5,-6.5);
+			rendertext(new string("Only LEFT lane is free"));
+		}
+		else
+		{
+			if( rightAOS == true )
+			{
+				glColor3f(0.0,0.5,1.0);
+				glRasterPos2f(-12.5,-6.5);
+				rendertext(new string("Only RIGHT lane is free"));
+			}
+			else
+			{
+				glColor3f(0.0,0.5,1.0);
+				glRasterPos2f(-12.5,-6.5);
+				rendertext(new string("Nothing to show"));
+			}
+		}
+	}
+}
+
 void cTraffic::AOS()
 {
+ //depasire prin stanga, cu tot cu revenire pentru banda 2
+/*	for(vector<cCar>::iterator it=Car.begin(); it!=Car.end(); it++)
+	{
+		if((*it).getType()!=0)
+		{
+			if(Player.getLane() == (*it).getLane() && Player.getLane() >= 2 )
+			{
+				if(Player.getxPosition() < (*it).getxPosition() && abs( Player.getxPosition() - (*it).getxPosition()) <= 10 )
+				{
+					movePlayer = 1;
+				}
+			}
+			if(Player.getLane() < 2 )
+			{
+				if((*it).getLane() == Player.getLane() + 1)
+				{
+					if(Player.getxPosition() > (*it).getxPosition() && abs( Player.getxPosition() - (*it).getxPosition()) >= 2 )
+					{
+						movePlayer = 2;
+					}
+				}
+			}
+		}
+	}
+*/
+	for(vector<cCar>::iterator it=Car.begin(); it!=Car.end(); it++)
+	{
+		if((*it).getType()!=0)
+		{
+			if(Player.getLane() == (*it).getLane())
+			{
+				if(Player.getxPosition() < (*it).getxPosition() && abs( Player.getxPosition() - (*it).getxPosition()) <= 9)
+				{
+					if(Road.getSpeed() > 0.199 )
+						movePlayer = 3;
+				}
+			}
+		}
+	}
+
+	if(Road.getSpeed() < 0.15 )
+	{	
+		if( Player.getLane() < 1)
+		{
+			leftAOS = false;
+		}
+		else
+		{
+			leftAOS = true;
+		}
+		if( Player.getLane() > 2 )
+		{
+			rightAOS = false;
+		}
+		else
+		{
+			rightAOS = true;
+		}
+		
+		for(vector<cCar>::iterator it=Car.begin(); it!= Car.end(); it++ )
+		{
+			if( (*it).getType() != 0 )
+			{
+				if( Player.getLane() - 1 == (*it).getLane() )
+				{
+					if(Player.getxPosition() - 4 < (*it).getxPosition() && abs(Player.getxPosition() - (*it).getxPosition()) <=14 )
+					{	
+						leftAOS = false;
+					}
+				}
+				if( Player.getLane() + 1 == (*it).getLane() )
+				{
+					if(Player.getxPosition() -4 < (*it).getxPosition() && abs(Player.getxPosition() - (*it).getxPosition()) <=14 )
+					{
+						rightAOS = false;
+					}
+				}
+			}
+		}
+
+		if( leftAOS == true && rightAOS == true )
+		{
+			bothAOS = true;
+		}
+		else
+		{
+			bothAOS = false;
+		}
+	}
+	else
+	{
+		leftAOS = false;
+		rightAOS = false;
+		bothAOS = false;
+	}
+
 	switch(movePlayer)
 	{
 		case 1:
@@ -180,14 +355,14 @@ void cTraffic::AOS()
 			moveLeft = false;
 		break;
 		case 3:
-			//brake
-			Brake = true;
-			Accelerate = false;
+			//setTrafficSpeed
+			setTrafficSpeed = true;
+			setInitialSpeed = false;
 		break;
 		case 4:	
-			//accelerate
-			Accelerate = true;
-			Brake = false;
+			//setInitialSpeed
+			setInitialSpeed = true;
+			setTrafficSpeed = false;
 		break;
 	}
 
@@ -215,21 +390,22 @@ void cTraffic::AOS()
 		}
 	}
 
-	if(Brake == true )
+	if(setTrafficSpeed == true )
 	{
-		BrakePlayer(Player.getLane());
+		SetTrafficSpeedPlayer();
 	}
 
-	if(Accelerate == true )
+	if(setInitialSpeed == true )
 	{
-		AcceleratePlayer(Player.getLane());
+		SetInitialSpeedPlayer();
 	}
 }
 
-void cTraffic::BrakePlayer(int lane)
+void cTraffic::SetTrafficSpeedPlayer() // make player to move as fast as the traffic
 {
-	if(Brake == true )
+	if(setTrafficSpeed == true )
 	{
+		movePlayer = 0;
 		for(vector<cCar>::iterator it=Car.begin(); it!=Car.end(); it++)
 		{
 			if((*it).getType()!= 0 )
@@ -239,34 +415,34 @@ void cTraffic::BrakePlayer(int lane)
 					if( (*it).getSpeed() >= 0 && (*it).getSpeed() < 0.005 )
 						(*it).setSpeed(0);
 					if( (*it).getSpeed() >= 0.005 )
-						(*it).setSpeed( (*it).getSpeed() - 0.001 );
+						(*it).setSpeed( (*it).getSpeed() - 0.0015 );
 				}
 				else
 				{
 					if( (*it).getSpeed() >= 0.2 && (*it).getSpeed() < 0.205 )
 						(*it).setSpeed(0.2);
 					if( (*it).getSpeed() >= 0.205 )
-						(*it).setSpeed( (*it).getSpeed() - 0.001 );
+						(*it).setSpeed( (*it).getSpeed() - 0.0015 );
 				}
 			}
 		}
 		if(Road.getSpeed() >= 0.1 && Road.getSpeed()<0.105 )
 		{
-			Brake = false;
-			movePlayer = 0;
+			setTrafficSpeed = false;
 			Road.setSpeed(0.1);
 		}
 		if(Road.getSpeed()>= 0.105 )
 		{
-			Road.setSpeed(Road.getSpeed() - 0.001);
+			Road.setSpeed(Road.getSpeed() - 0.0015);
 		}		
 	}
 }
 
-void cTraffic::AcceleratePlayer(int lane)
+void cTraffic::SetInitialSpeedPlayer()
 {
-	if(Accelerate == true )
+	if(setInitialSpeed == true )
 	{
+		movePlayer = 0;
 		for(vector<cCar>::iterator it=Car.begin(); it!=Car.end(); it++)
 		{
 			if((*it).getType()!= 0 )
@@ -276,27 +452,26 @@ void cTraffic::AcceleratePlayer(int lane)
 					if( (*it).getSpeed() <= 0.1 && (*it).getSpeed() > 0.095 )
 						(*it).setSpeed(0.1);
 					if( (*it).getSpeed() <= 0.095 )
-						(*it).setSpeed( (*it).getSpeed() + 0.001 );
+						(*it).setSpeed( (*it).getSpeed() + 0.0015 );
 				}
 				else
 				{
 					if( (*it).getSpeed() <= 0.3 && (*it).getSpeed() > 0.295 )
 						(*it).setSpeed(0.3);
 					if( (*it).getSpeed() <= 0.295 )
-						(*it).setSpeed( (*it).getSpeed() + 0.001 );
+						(*it).setSpeed( (*it).getSpeed() + 0.0015 );
 				}
 			}
 		}
 
 		if(Road.getSpeed() <= 0.2 && Road.getSpeed() > 0.195 )
 		{
-			Accelerate = false;
-			movePlayer = 0;
+			setInitialSpeed = false;
 			Road.setSpeed(0.2);	
 		}
 		if(Road.getSpeed()<= 0.195 )
 		{
-			Road.setSpeed(Road.getSpeed() + 0.001);
+			Road.setSpeed(Road.getSpeed() + 0.0015);
 		}
 	}
 }
@@ -311,6 +486,7 @@ void cTraffic::MovePlayerLeft(int lane)
 {
 	if(moveLeft == true )
 	{
+		movePlayer = 0;
 		if(lane > -1)
 		{
 			float yToAchieve = Player.getyPosByLane(lane);
@@ -320,7 +496,6 @@ void cTraffic::MovePlayerLeft(int lane)
 				Player.setyPosition ( yToAchieve );
 				Player.setLane(lane);
 				moveLeft = false;
-				movePlayer = 0;
 			}
 			else
 			{
@@ -337,6 +512,7 @@ void cTraffic::MovePlayerRight(int lane)
 {
 	if(moveRight == true )
 	{
+		movePlayer = 0;
 		if(lane < 4)
 		{
 			float yToAchieve = Player.getyPosByLane(lane);
@@ -346,7 +522,6 @@ void cTraffic::MovePlayerRight(int lane)
 				Player.setyPosition ( yToAchieve );
 				Player.setLane(lane);
 				moveRight = false;
-				movePlayer = 0;
 			}
 			else
 			{

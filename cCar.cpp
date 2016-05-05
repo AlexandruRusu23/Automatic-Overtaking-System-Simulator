@@ -162,11 +162,14 @@ void cCar::draw()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glBegin(GL_QUADS);
-    	glTexCoord2f(0.0f, 1.0f); glVertex2f(xPosition,yPosition);
- 		glTexCoord2f(0.0f, 0.0f); glVertex2f(xPosition,yPosition-2);
-		glTexCoord2f(1.0f, 0.0f); glVertex2f(xPosition + 4,yPosition-2);
-		glTexCoord2f(1.0f, 1.0f); glVertex2f(xPosition + 4,yPosition);
+    	glTexCoord2f(1.0f, 1.0f); glVertex2f(xPosition    , yPosition     );
+ 		glTexCoord2f(0.0f, 1.0f); glVertex2f(xPosition - 4, yPosition     );
+		glTexCoord2f(0.0f, 0.0f); glVertex2f(xPosition - 4, yPosition - 2 );
+		glTexCoord2f(1.0f, 0.0f); glVertex2f(xPosition    , yPosition - 2 );
 	glEnd();
 
+	glBindTexture(GL_TEXTURE_2D,0);
+
 	glDisable(GL_BLEND);
+
 }

@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <vector>
 #include <cstdio>
+#include <string>
 #include "SOIL.h"
 using namespace std;
 

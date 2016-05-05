@@ -1,4 +1,5 @@
 #include "cTraffic.h"
+#include <string>
 
 class cWorld
 {
@@ -17,6 +18,9 @@ public:
 	void Reshape(int w,int h);
 	void Render();
 
+	void enclosetextarea();
+
 private:
 	cTraffic Traffic;
+	string *str;
 };

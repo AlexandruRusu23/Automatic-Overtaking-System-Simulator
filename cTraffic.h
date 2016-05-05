@@ -31,8 +31,12 @@ public:
 
 	void MovePlayerLeft(int lane);
 	void MovePlayerRight(int lane);
-	void BrakePlayer(int lane);
-	void AcceleratePlayer(int lane);
+	void SetTrafficSpeedPlayer();
+	void SetInitialSpeedPlayer();
+	void DecreaseSpeedPlayer();
+
+	void rendertext(string *message);
+	void DisplayPlayerState();
 
 private:
 	cRoad Road;
@@ -40,5 +44,6 @@ private:
 	cPlayer Player;
 	bool activatePlayer;
 	int movePlayer;
-	bool moveLeft, moveRight, Accelerate, Brake;
+	bool moveLeft, moveRight, setInitialSpeed, setTrafficSpeed;
+	bool leftAOS, rightAOS, bothAOS;
 };

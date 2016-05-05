@@ -52,6 +52,28 @@ void cWorld::Keyboard(unsigned char key, int x, int y)
 	}
 }
 
+void cWorld::enclosetextarea() {
+
+	
+	glColor3f(1.0,1.0,1.0);
+	glLineWidth(3.0);
+	glPolygonMode(GL_FRONT,GL_LINE);
+	glBegin(GL_POLYGON);
+
+		glVertex2f(-17.0,-4.5);
+		glVertex2f(-17.0,-8.4);			
+		glVertex2f(17.0,-8.4);
+		glVertex2f(17.0,-4.5);
+			
+	glEnd();
+
+	/*glRasterPos2f(-0.6,4.85);
+	for (int i=0;i<message->size();i++)
+		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12,(int)((*message)[i]));
+*/
+	glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
+}
+
 void cWorld::Reshape(int w, int h)
 {
     glViewport (0, 0, w, h);
@@ -63,6 +85,8 @@ void cWorld::Reshape(int w, int h)
 
 void cWorld::Render()
 {
+	str = new string("SAL");
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
@@ -70,9 +94,13 @@ void cWorld::Render()
 
 	Traffic.DrawRoad();
 
+	enclosetextarea();
+
 	Traffic.DrawCars();
 
 	Traffic.DrawPlayer();
+
+	Traffic.DisplayPlayerState();
 	
 	glutSwapBuffers();
 
