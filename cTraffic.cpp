@@ -37,7 +37,7 @@ bool cTraffic::VerifySpawn(cCar newCar)
 	{
 		if(newCar.getLane() == (*it).getLane() )
 		{
-			if(abs(newCar.getxPosition() - (*it).getxPosition() ) < 10)
+			if(abs(newCar.getxPosition() - (*it).getxPosition() ) < 12)
 			{
 				return false;
 			}
@@ -50,7 +50,7 @@ void cTraffic::InitCar(int type, int lane, float xPos)
 {
 	cCar newCar;
 	newCar.setType(type);
-	newCar.setLane(lane);
+	newCar.setByLane(lane);
 	newCar.setxPosition(xPos);
 	newCar.Init();
 
@@ -102,9 +102,9 @@ void cTraffic::VerifyLimit()
 				{	
 					if( (*it).getxPosition() * (*it).getOrientation() > (*jt).getxPosition() * (*jt).getOrientation() )
 					{
-						if( abs( (*it).getxPosition() - (*jt).getxPosition() ) < 11 )
+						if( abs( (*it).getxPosition() - (*jt).getxPosition() ) < 12 )
 						{
-							if( abs( (*it).getxPosition() - (*jt).getxPosition() ) < 7 )
+							if( abs( (*it).getxPosition() - (*jt).getxPosition() ) < 8 )
 							{
 								(*it).setxPosition( (*it).getxPosition()+0.02 * (*it).getOrientation() );	
 							}
@@ -167,85 +167,6 @@ void cTraffic::DrawCars()
 	MoveCars();
 }
 
-void cTraffic::rendertext(string *message) 
-{
-	for (int i=0;i<message->size();i++)
-		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18,(int)((*message)[i]));
-}
-
-void cTraffic::DisplayPlayerState() 
-{
-	glColor3f(0.0,0.5,1.0);
-	glRasterPos2f(-16.5,-5.5);
-	rendertext(new string("State: "));
-
-	if ( Player.getyPosition() > 0.5 ) 
-	{
-		glColor3f(1.0,0.0,0.0);
-		glRasterPos2f(-14.0,-5.5);
-		rendertext(new string("Overtaking"));
-	}
-	else
-	{
-		if( Player.getyPosition() > 0.5 )
-		{
-			glColor3f(1.0,0.0,0.0);
-			glRasterPos2f(-14.0,-5.5);
-			rendertext(new string("Overtaking"));
-		}
-		else {
-			if (Road.getSpeed() < 0.15) {
-				glColor3f(0.5,1.0,0.0);
-				glRasterPos2f(-14.0,-5.5);
-				rendertext(new string("Cruising"));
-			}
-			else {
-				glColor3f(1.0,1.0,0.0);
-				glRasterPos2f(-14.0,-5.5);
-				rendertext(new string("Speeding"));
-			}
-		}
-	}
-
-	if( leftAOS == true && rightAOS == true )
-		bothAOS = true;
-
-	glColor3f(0.0,0.5,1.0);
-	glRasterPos2f(-16.5,-6.5);
-	rendertext(new string("AOS Info: "));
-
-	if( bothAOS == true )
-	{
-		glColor3f(0.0,0.5,1.0);
-		glRasterPos2f(-12.5,-6.5);
-		rendertext(new string("BOTH lanes are free"));
-	}
-	else
-	{
-		if( leftAOS == true )
-		{
-			glColor3f(0.0,0.5,1.0);
-			glRasterPos2f(-12.5,-6.5);
-			rendertext(new string("Only LEFT lane is free"));
-		}
-		else
-		{
-			if( rightAOS == true )
-			{
-				glColor3f(0.0,0.5,1.0);
-				glRasterPos2f(-12.5,-6.5);
-				rendertext(new string("Only RIGHT lane is free"));
-			}
-			else
-			{
-				glColor3f(0.0,0.5,1.0);
-				glRasterPos2f(-12.5,-6.5);
-				rendertext(new string("Nothing to show"));
-			}
-		}
-	}
-}
-
 void cTraffic::AOS()
 {
  //depasire prin stanga, cu tot cu revenire pentru banda 2
@@ -279,7 +200,7 @@ void cTraffic::AOS()
 		{
 			if(Player.getLane() == (*it).getLane())
 			{
-				if(Player.getxPosition() < (*it).getxPosition() && abs( Player.getxPosition() - (*it).getxPosition()) <= 9)
+				if(Player.getxPosition() < (*it).getxPosition() && abs( Player.getxPosition() - (*it).getxPosition()) <= 10)
 				{
 					if(Road.getSpeed() > 0.199 )
 						movePlayer = 3;
@@ -489,12 +410,12 @@ void cTraffic::MovePlayerLeft(int lane)
 		movePlayer = 0;
 		if(lane > -1)
 		{
+			Player.setOnlyLane(lane);
 			float yToAchieve = Player.getyPosByLane(lane);
 
 			if(abs(yToAchieve - Player.getyPosition() ) <0.1 )
 			{
 				Player.setyPosition ( yToAchieve );
-				Player.setLane(lane);
 				moveLeft = false;
 			}
 			else
@@ -515,12 +436,12 @@ void cTraffic::MovePlayerRight(int lane)
 		movePlayer = 0;
 		if(lane < 4)
 		{
+			Player.setOnlyLane(lane);
 			float yToAchieve = Player.getyPosByLane(lane);
 
 			if(abs(yToAchieve - Player.getyPosition() ) < 0.1 )
 			{
 				Player.setyPosition ( yToAchieve );
-				Player.setLane(lane);
 				moveRight = false;
 			}
 			else

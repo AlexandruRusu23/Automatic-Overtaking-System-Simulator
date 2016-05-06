@@ -3,7 +3,7 @@
 cPlayer::cPlayer()
 {
 	xPosition = -2;
-	yPosition = 0.45;
+	yPosition = 2.4;
 	orientation = -1;
 	Lane = 2;
 	type = 0;

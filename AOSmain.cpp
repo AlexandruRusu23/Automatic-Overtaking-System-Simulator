@@ -2,11 +2,6 @@
 
 cWorld World;
 
-void AppReshape(int w, int h)
-{
-	World.Reshape(w,h);
-}
-
 void AppRender()
 {
 	World.Render();
@@ -37,13 +32,9 @@ int main(int argc, char** argv)
 	
 	//Get a full screen window
 	//glutFullScreen();
-	
-	//Cursor disappear
-	glutSetCursor(GLUT_CURSOR_NONE);
 
 	//Calling functions
-	glutDisplayFunc(AppRender);	
-	glutReshapeFunc(AppReshape);		
+	glutDisplayFunc(AppRender);			
 	glutKeyboardFunc(AppKeyboard);		
 
 	//Simulator initialization

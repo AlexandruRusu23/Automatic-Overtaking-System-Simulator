@@ -35,9 +35,6 @@ public:
 	void SetInitialSpeedPlayer();
 	void DecreaseSpeedPlayer();
 
-	void rendertext(string *message);
-	void DisplayPlayerState();
-
 private:
 	cRoad Road;
 	vector<cCar> Car;

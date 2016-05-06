@@ -15,10 +15,7 @@ public:
 	void Keyboard(unsigned char c, int x, int y);
 
 	//Showing functions
-	void Reshape(int w,int h);
 	void Render();
-
-	void enclosetextarea();
 
 private:
 	cTraffic Traffic;

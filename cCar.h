@@ -8,6 +8,7 @@ public:
 
 	//getters and setters
 	int getLane();
+	void setOnlyLane(int lane);
 	float getxPosition();
 	float getyPosition();
 	float getyPosByLane(int lane);
@@ -16,7 +17,7 @@ public:
 	float getSpeed();
 
 	void setType(int x);
-	void setLane(int lane);
+	void setByLane(int lane);
 	void setxPosition(float xPos);
 	void setyPosition(float yPos);
 	void setSpeed(float x);

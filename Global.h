@@ -11,6 +11,5 @@
 #include "SOIL.h"
 using namespace std;
 
-#define PERSPECTIVE_SIZE 120
-#define SCREEN_WIDTH	800
-#define SCREEN_HEIGHT	400
+#define SCREEN_WIDTH	600
+#define SCREEN_HEIGHT	300

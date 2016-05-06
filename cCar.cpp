@@ -8,6 +8,11 @@ int cCar::getLane()
 	return Lane;
 }
 
+void cCar::setOnlyLane(int lane)
+{
+	Lane = lane;
+}
+
 float cCar::getxPosition()
 {
 	return xPosition;
@@ -24,19 +29,19 @@ float cCar::getyPosByLane(int lane)
 	switch (lane)
 	{
 		case 0:
-			y=5.45;
+			y=8.4;
 			return y;
 		break;
 		case 1:
-			y=3.05;
+			y=5.5;
 			return y;
 		break;
 		case 2:
-			y=0.45;
+			y=2.4;
 			return y;
 		break;
 		case 3:
-			y=-1.85;
+			y=-0.3;
 			return y;
 		break;
 	}
@@ -57,28 +62,28 @@ float cCar::getSpeed()
 	return speed;
 }
 
-void cCar::setLane(int lane)
+void cCar::setByLane(int lane)
 {
 	Lane=lane;
 	switch (lane)
 	{
 		case 0:
-			yPosition=5.45;
+			yPosition=8.4;
 			orientation = 1;
 			speed = 0.3;
 		break;
 		case 1:
-			yPosition=3.05;
+			yPosition=5.5;
 			orientation = 1;
 			speed = 0.3;
 		break;
 		case 2:
-			yPosition=0.45;
+			yPosition=2.4;
 			orientation = -1;
 			speed = 0.1;
 		break;
 		case 3:
-			yPosition=-1.85;
+			yPosition=-0.3;
 			orientation = -1;
 			speed = 0.1;
 		break;
@@ -163,9 +168,9 @@ void cCar::draw()
 
 	glBegin(GL_QUADS);
     	glTexCoord2f(1.0f, 1.0f); glVertex2f(xPosition    , yPosition     );
- 		glTexCoord2f(0.0f, 1.0f); glVertex2f(xPosition - 4, yPosition     );
-		glTexCoord2f(0.0f, 0.0f); glVertex2f(xPosition - 4, yPosition - 2 );
-		glTexCoord2f(1.0f, 0.0f); glVertex2f(xPosition    , yPosition - 2 );
+ 		glTexCoord2f(0.0f, 1.0f); glVertex2f(xPosition - 5, yPosition     );
+		glTexCoord2f(0.0f, 0.0f); glVertex2f(xPosition - 5, yPosition - 2.5 );
+		glTexCoord2f(1.0f, 0.0f); glVertex2f(xPosition    , yPosition - 2.5 );
 	glEnd();
 
 	glBindTexture(GL_TEXTURE_2D,0);

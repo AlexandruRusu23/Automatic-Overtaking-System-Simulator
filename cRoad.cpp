@@ -7,7 +7,7 @@ cRoad::cRoad(void)
 	xRightFront=-margin;
 	xRightBack=-margin;
 	xRightBack=-3*margin;
-	y=5.8;
+	y=8.8;
 	speed = 0.2;
 }
 cRoad::~cRoad(void){}
@@ -97,13 +97,13 @@ void cRoad::draw()
  	
  		glTexCoord2f(0.0f, 0.0f); glVertex2f (xLeftFront,y); 
  		glTexCoord2f(1.0f, 0.0f); glVertex2f (xRightFront,y);
- 		glTexCoord2f(1.0f, 1.0f); glVertex2f (xRightFront,y-10); 
- 		glTexCoord2f(0.0f, 1.0f); glVertex2f (xLeftFront,y-10); 
+ 		glTexCoord2f(1.0f, 1.0f); glVertex2f (xRightFront,y-12); 
+ 		glTexCoord2f(0.0f, 1.0f); glVertex2f (xLeftFront,y-12); 
 
  		glTexCoord2f(0.0f, 0.0f); glVertex2f (xLeftBack,y); 
  		glTexCoord2f(1.0f, 0.0f); glVertex2f (xRightBack,y);
- 		glTexCoord2f(1.0f, 1.0f); glVertex2f (xRightBack,y-10); 
- 		glTexCoord2f(0.0f, 1.0f); glVertex2f (xLeftBack,y-10); 
+ 		glTexCoord2f(1.0f, 1.0f); glVertex2f (xRightBack,y-12); 
+ 		glTexCoord2f(0.0f, 1.0f); glVertex2f (xLeftBack,y-12); 
  
   	glEnd();
 
