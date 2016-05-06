@@ -67,4 +67,6 @@ void cWorld::Render()
 	Traffic.DrawPlayer();
 	
 	glutSwapBuffers();
+
+	usleep(10000);
 }
