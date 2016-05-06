@@ -27,7 +27,9 @@ public:
 
 	void VerifyLimit();
 
+	int LoadGLTextures();
 	void AOS();
+	void DisplayAOS();
 
 	void MovePlayerLeft(int lane);
 	void MovePlayerRight(int lane);
@@ -43,4 +45,5 @@ private:
 	int movePlayer;
 	bool moveLeft, moveRight, setInitialSpeed, setTrafficSpeed;
 	bool leftAOS, rightAOS, bothAOS;
+	int texture[30];
 };

@@ -1,0 +1,7 @@
+Tot run the simulator: 
+	-> enter in Terminal (CTRL+ALT+T)
+	-> change in simulator's directory
+	-> enter command "make"
+	-> enter command "./exe"
+
+Enjoy the simulator! :) 

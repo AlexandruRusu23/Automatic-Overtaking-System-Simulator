@@ -454,3 +454,49 @@ void cTraffic::MovePlayerRight(int lane)
 		}
 	}
 }
+
+int cTraffic::LoadGLTextures() // Load Bitmaps And Convert To Textures
+{
+	/* load an image file directly as a new OpenGL texture */
+	texture[0] = SOIL_load_OGL_texture("Texture/Alphabet/A.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
+	texture[1] = SOIL_load_OGL_texture("Texture/Alphabet/B.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
+	texture[2] = SOIL_load_OGL_texture("Texture/Alphabet/C.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
+	texture[3] = SOIL_load_OGL_texture("Texture/Alphabet/D.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
+
+	if(texture[0] == 0)
+		return false;
+
+	// Typical Texture Generation Using Data From The Bitmap
+	glBindTexture(GL_TEXTURE_2D, texture[0]);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+
+	return true;
+}
+
+void cTraffic::DisplayAOS()
+{
+	if (!LoadGLTextures())
+	{
+		printf("Nu a mers!\n");
+	}
+	glEnable(GL_TEXTURE_2D);
+	glColor4f(1.0,1.0,1.0,1.0);
+	glBindTexture(GL_TEXTURE_2D, texture[2]);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glBegin(GL_QUADS);
+ 	
+ 		glTexCoord2f(0.0f, 0.0f); glVertex2f (3,0); 
+ 		glTexCoord2f(1.0f, 0.0f); glVertex2f (1,0);
+ 		glTexCoord2f(1.0f, 1.0f); glVertex2f (1,-3); 
+ 		glTexCoord2f(0.0f, 1.0f); glVertex2f (3,-3); 
+ 
+  	glEnd();
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+  	glDisable(GL_BLEND);
+}

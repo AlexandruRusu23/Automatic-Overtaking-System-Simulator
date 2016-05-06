@@ -65,6 +65,8 @@ void cWorld::Render()
 	Traffic.DrawCars();
 
 	Traffic.DrawPlayer();
+
+	Traffic.DisplayAOS();
 	
 	glutSwapBuffers();
 
