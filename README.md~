@@ -12,8 +12,6 @@
       - 'A': move on the left lane
       - 'S': keep the speed of the car in front
       - 'D': move on the right lane
-  - System informations interface mapped with GLUT 2D texture:
-      - Messages about AOS system (which lanes are free, player's driving mode, etc). 
 
 ### How to run the game ###
 
