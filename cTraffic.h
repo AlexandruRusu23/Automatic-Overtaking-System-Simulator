@@ -7,6 +7,8 @@ public:
 	cTraffic();
 	~cTraffic();
 
+	void Init();
+
 	int getMovePlayer();
 	void setMovePlayer(int active);
 
@@ -29,6 +31,7 @@ public:
 
 	int LoadGLTextures();
 	void AOS();
+	void drawMessage(int i, float xLeft, float xRight, float yTop, float yBottom);
 	void DisplayAOS();
 
 	void MovePlayerLeft(int lane);

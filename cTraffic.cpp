@@ -11,6 +11,14 @@ cTraffic::cTraffic()
 }
 cTraffic::~cTraffic(){}
 
+void cTraffic::Init()
+{
+	if (!LoadGLTextures())
+	{
+		printf("Nu a mers!\n");
+	}
+}
+
 void cTraffic::LoadRoad()
 {
 	Road.Init();
@@ -169,7 +177,7 @@ void cTraffic::DrawCars()
 
 void cTraffic::AOS()
 {
- //depasire prin stanga, cu tot cu revenire pentru banda 2
+ //BETA FUNCTION - depasire prin stanga, cu tot cu revenire pentru banda 2
 /*	for(vector<cCar>::iterator it=Car.begin(); it!=Car.end(); it++)
 	{
 		if((*it).getType()!=0)
@@ -208,63 +216,52 @@ void cTraffic::AOS()
 			}
 		}
 	}
-
-	if(Road.getSpeed() < 0.15 )
-	{	
-		if( Player.getLane() < 1)
-		{
-			leftAOS = false;
-		}
-		else
-		{
-			leftAOS = true;
-		}
-		if( Player.getLane() > 2 )
-		{
-			rightAOS = false;
-		}
-		else
-		{
-			rightAOS = true;
-		}
-		
-		for(vector<cCar>::iterator it=Car.begin(); it!= Car.end(); it++ )
-		{
-			if( (*it).getType() != 0 )
-			{
-				if( Player.getLane() - 1 == (*it).getLane() )
-				{
-					if(Player.getxPosition() - 4 < (*it).getxPosition() && abs(Player.getxPosition() - (*it).getxPosition()) <=14 )
-					{	
-						leftAOS = false;
-					}
-				}
-				if( Player.getLane() + 1 == (*it).getLane() )
-				{
-					if(Player.getxPosition() -4 < (*it).getxPosition() && abs(Player.getxPosition() - (*it).getxPosition()) <=14 )
-					{
-						rightAOS = false;
-					}
-				}
-			}
-		}
-
-		if( leftAOS == true && rightAOS == true )
-		{
-			bothAOS = true;
-		}
-		else
-		{
-			bothAOS = false;
-		}
+	
+	if( Player.getLane() < 1)
+	{
+		leftAOS = false;
 	}
 	else
 	{
-		leftAOS = false;
+		leftAOS = true;
+	}
+	if( Player.getLane() > 2 )
+	{
 		rightAOS = false;
+	}
+	else
+	{
+		rightAOS = true;
+	}
+		
+	for(vector<cCar>::iterator it=Car.begin(); it!= Car.end(); it++ )
+	{
+		if( (*it).getType() != 0 )
+		{
+			if( Player.getLane() - 1 == (*it).getLane() )
+			{
+				if(Player.getxPosition() - 4 < (*it).getxPosition() && abs(Player.getxPosition() - (*it).getxPosition()) <=14 )
+				{	
+					leftAOS = false;
+				}
+			}
+			if( Player.getLane() + 1 == (*it).getLane() )
+			{
+				if(Player.getxPosition() -4 < (*it).getxPosition() && abs(Player.getxPosition() - (*it).getxPosition()) <=14 )
+				{
+					rightAOS = false;
+				}
+			}
+		}
+	}
+	if( leftAOS == true && rightAOS == true )
+	{
+		bothAOS = true;
+	}
+	else
+	{
 		bothAOS = false;
 	}
-
 	switch(movePlayer)
 	{
 		case 1:
@@ -455,18 +452,18 @@ void cTraffic::MovePlayerRight(int lane)
 	}
 }
 
-int cTraffic::LoadGLTextures() // Load Bitmaps And Convert To Textures
+int cTraffic::LoadGLTextures()
 {
-	/* load an image file directly as a new OpenGL texture */
-	texture[0] = SOIL_load_OGL_texture("Texture/Alphabet/A.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
-	texture[1] = SOIL_load_OGL_texture("Texture/Alphabet/B.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
-	texture[2] = SOIL_load_OGL_texture("Texture/Alphabet/C.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
-	texture[3] = SOIL_load_OGL_texture("Texture/Alphabet/D.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
+	texture[0] = SOIL_load_OGL_texture("Texture/Messages/state.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
+	texture[1] = SOIL_load_OGL_texture("Texture/Messages/aosinfo.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
+	texture[2] = SOIL_load_OGL_texture("Texture/Messages/speeding.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
+	texture[3] = SOIL_load_OGL_texture("Texture/Messages/cruising.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
+	texture[4] = SOIL_load_OGL_texture("Texture/Messages/overtaking.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
+	texture[5] = SOIL_load_OGL_texture("Texture/Messages/bothlanes.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
+	texture[6] = SOIL_load_OGL_texture("Texture/Messages/leftlane.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
+	texture[7] = SOIL_load_OGL_texture("Texture/Messages/rightlane.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
+	texture[8] = SOIL_load_OGL_texture("Texture/Messages/nothing.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
 
-	if(texture[0] == 0)
-		return false;
-
-	// Typical Texture Generation Using Data From The Bitmap
 	glBindTexture(GL_TEXTURE_2D, texture[0]);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
@@ -474,29 +471,73 @@ int cTraffic::LoadGLTextures() // Load Bitmaps And Convert To Textures
 	return true;
 }
 
-void cTraffic::DisplayAOS()
+void cTraffic::drawMessage(int i, float xLeft, float xRight, float yTop, float yBottom)
 {
-	if (!LoadGLTextures())
-	{
-		printf("Nu a mers!\n");
-	}
-	glEnable(GL_TEXTURE_2D);
-	glColor4f(1.0,1.0,1.0,1.0);
-	glBindTexture(GL_TEXTURE_2D, texture[2]);
+	glBindTexture(GL_TEXTURE_2D, texture[i]);
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    glBegin(GL_QUADS);
- 	
- 		glTexCoord2f(0.0f, 0.0f); glVertex2f (3,0); 
- 		glTexCoord2f(1.0f, 0.0f); glVertex2f (1,0);
- 		glTexCoord2f(1.0f, 1.0f); glVertex2f (1,-3); 
- 		glTexCoord2f(0.0f, 1.0f); glVertex2f (3,-3); 
- 
-  	glEnd();
+	glBegin(GL_QUADS);
+		
+		glTexCoord2f(1.0f, 1.0f); glVertex2f (xRight, yTop);
+		glTexCoord2f(0.0f, 1.0f); glVertex2f (xLeft, yTop);
+		glTexCoord2f(0.0f, 0.0f); glVertex2f (xLeft, yBottom);
+		glTexCoord2f(1.0f, 0.0f); glVertex2f (xRight, yBottom);		
+
+	glEnd();
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
   	glDisable(GL_BLEND);
+}
+
+void cTraffic::DisplayAOS()
+{
+	glEnable(GL_TEXTURE_2D);
+	glColor4f(1.0,1.0,1.0,1.0);
+
+	drawMessage(0, -19.5, -14.5, -3.5, -4.5);
+
+	drawMessage(1, -19.5, -14.5, -5.0, -6.0);
+
+	if(Player.getyPosition() > 3)
+	{
+		drawMessage(4, -14.5, -8.0, -3.5, -4.5);
+	}
+	else
+	{
+		if(Road.getSpeed() > 0.15)
+		{
+			drawMessage(2, -14.5, -9.0, -3.5, -4.5);
+			//drawMessage(8, -14.3, -4.7, -5.0, -6.0);
+		}
+		else
+		{
+			drawMessage(3, -14.5, -9.0, -3.5, -4.5);
+		}
+	}
+
+	if(bothAOS == true)
+	{
+		drawMessage(5, -14.3, -2.7, -5.0, -6.0);
+	}
+	else
+	{
+		if(leftAOS == true)
+		{
+			drawMessage(6, -14.3, -2.7, -5.0, -6.0);
+		}
+		else
+		{
+			if(rightAOS == true)
+			{
+				drawMessage(7, -14.3, -2.7, -5.0, -6.0);
+			}
+			else
+			{
+				drawMessage(8, -14.3, -4.7, -5.0, -6.0);
+			}
+		}
+	}
 }

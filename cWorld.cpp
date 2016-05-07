@@ -13,6 +13,7 @@ bool cWorld::Init()
 
 	glMatrixMode(GL_MODELVIEW);
 
+	Traffic.Init();
 	Traffic.LoadRoad();
 	Traffic.LoadPlayer();
 }

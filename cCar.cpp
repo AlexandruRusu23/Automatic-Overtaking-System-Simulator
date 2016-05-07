@@ -126,27 +126,27 @@ int cCar::LoadGLTextures()
 	{
 		case 0 :
 			if(orientation == 1)
-				texture[0] = SOIL_load_OGL_texture("Texture/revPorsche.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y );
+				texture[0] = SOIL_load_OGL_texture("Texture/Cars/revPorsche.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y );
 			else
-				texture[0] = SOIL_load_OGL_texture("Texture/Porsche.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y );
+				texture[0] = SOIL_load_OGL_texture("Texture/Cars/Porsche.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y );
 		break;
 		case 1 :
 			if(orientation == 1)
-				texture[0] = SOIL_load_OGL_texture("Texture/revRetroCar.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y );
+				texture[0] = SOIL_load_OGL_texture("Texture/Cars/revRetroCar.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y );
 			else
-				texture[0] = SOIL_load_OGL_texture("Texture/RetroCar.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y );
+				texture[0] = SOIL_load_OGL_texture("Texture/Cars/RetroCar.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y );
 		break;
 		case 2 :
 			if(orientation == 1)
-				texture[0] = SOIL_load_OGL_texture("Texture/revPoliceCar.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y );
+				texture[0] = SOIL_load_OGL_texture("Texture/Cars/revPoliceCar.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y );
 			else
-				texture[0] = SOIL_load_OGL_texture("Texture/PoliceCar.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y );
+				texture[0] = SOIL_load_OGL_texture("Texture/Cars/PoliceCar.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y );
 		break;
 		case 3:
 			if(orientation == 1)
-				texture[0] = SOIL_load_OGL_texture("Texture/revMercedes.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y );
+				texture[0] = SOIL_load_OGL_texture("Texture/Cars/revMercedes.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y );
 			else
-				texture[0] = SOIL_load_OGL_texture("Texture/Mercedes.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y );
+				texture[0] = SOIL_load_OGL_texture("Texture/Cars/Mercedes.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y );
 	}
 
 	if(texture[0] == 0)
