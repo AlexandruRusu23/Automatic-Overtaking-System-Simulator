@@ -36,6 +36,7 @@ public:
 
 	void MovePlayerLeft(int lane);
 	void MovePlayerRight(int lane);
+	void MoveBackPlayer();
 	void SetTrafficSpeedPlayer();
 	void SetInitialSpeedPlayer();
 	void DecreaseSpeedPlayer();
@@ -46,7 +47,7 @@ private:
 	cPlayer Player;
 	bool activatePlayer;
 	int movePlayer;
-	bool moveLeft, moveRight, setInitialSpeed, setTrafficSpeed;
+	bool moveLeft, moveRight, moveBack, setInitialSpeed, setTrafficSpeed;
 	bool leftAOS, rightAOS, bothAOS;
 	int texture[30];
 };

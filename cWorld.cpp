@@ -26,16 +26,16 @@ void cWorld::Keyboard(unsigned char key, int x, int y)
 			exit(0);
 		break;
 		case '1':
-			Traffic.CreateCar(0, rand()%3 + 1, 10); // lane , type, xPosition
+			Traffic.CreateCar(0, rand()%3 + 1, 20); // lane , type, xPosition
 		break;
 		case '2':
-			Traffic.CreateCar(1, rand()%3 + 1, 10);
+			Traffic.CreateCar(1, rand()%3 + 1, 20);
 		break;
 		case '3':
-			Traffic.CreateCar(2, rand()%3 + 1, 10);
+			Traffic.CreateCar(2, rand()%3 + 1, 20);
 		break;
 		case '4':
-			Traffic.CreateCar(3, rand()%3 + 1, 10);
+			Traffic.CreateCar(3, rand()%3 + 1, 20);
 		break;
 		case 'a':
 			Traffic.setMovePlayer(1);
@@ -47,11 +47,15 @@ void cWorld::Keyboard(unsigned char key, int x, int y)
 		break;
 		case 's':
 			Traffic.setMovePlayer(3);
-			//increase Player speed
+			//Player will get initial speed
 		break;
 		case 'w':
 			Traffic.setMovePlayer(4);
-			//decrease Player speed
+			//Player will get Traffic's speed
+		break;
+		case 'k':
+			Traffic.setMovePlayer(5);
+			//Player will go back ( not sure how much ) -- beta version
 		break;
 	}
 }

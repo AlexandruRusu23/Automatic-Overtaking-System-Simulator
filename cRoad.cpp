@@ -2,13 +2,13 @@
 
 cRoad::cRoad(void) 
 {
-	margin = -20;
+	margin = -24;
 	xLeftFront=margin;
 	xRightFront=-margin;
 	xRightBack=-margin;
 	xRightBack=-3*margin;
 	y=8.8;
-	speed = 0.2;
+	speed = 0.3;
 }
 cRoad::~cRoad(void){}
 

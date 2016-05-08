@@ -70,22 +70,22 @@ void cCar::setByLane(int lane)
 		case 0:
 			yPosition=8.4;
 			orientation = 1;
-			speed = 0.3;
+			speed = 0.4;
 		break;
 		case 1:
 			yPosition=5.5;
 			orientation = 1;
-			speed = 0.3;
+			speed = 0.4;
 		break;
 		case 2:
 			yPosition=2.4;
 			orientation = -1;
-			speed = 0.1;
+			speed = 0.2;
 		break;
 		case 3:
 			yPosition=-0.3;
 			orientation = -1;
-			speed = 0.1;
+			speed = 0.2;
 		break;
 	}
 }

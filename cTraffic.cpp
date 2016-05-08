@@ -8,6 +8,7 @@ cTraffic::cTraffic()
 	moveRight = false;
 	setTrafficSpeed = false;
 	setInitialSpeed = false;
+	moveBack = false;
 }
 cTraffic::~cTraffic(){}
 
@@ -64,14 +65,14 @@ void cTraffic::InitCar(int type, int lane, float xPos)
 
 	if(lane <2)
 	{
-		if(Road.getSpeed() <= 0.11 )
+		if(Road.getSpeed() <= 0.21 )
 		{
-			newCar.setSpeed(0.2);
+			newCar.setSpeed(0.3);
 		}
 	}
 	else
 	{
-		if(Road.getSpeed() <= 0.11 )
+		if(Road.getSpeed() <= 0.21 )
 		{
 			newCar.setSpeed(0);
 		}
@@ -80,7 +81,9 @@ void cTraffic::InitCar(int type, int lane, float xPos)
 	if(VerifySpawn(newCar) == true && setInitialSpeed == false && setTrafficSpeed == false )
 		Car.push_back(newCar);
 	else
-		printf("Can't load the car!\n");
+	{
+		printf("Can't load the car! %d %d\n",setInitialSpeed, setTrafficSpeed);
+	}
 }
 
 void cTraffic::CreateCar(int lane,int type, float xPos)
@@ -143,20 +146,20 @@ void cTraffic::MoveCars()
 				}
 				else
 				{
-					(*it).setxPosition(22);
+					(*it).setxPosition(24);
 				}
 			}
 			else // lanes 3 and 4
 			{
-				if((*it).getxPosition()<22 || (*it).getxPosition()>-22 )
+				if((*it).getxPosition()<24 || (*it).getxPosition()>-24 )
 				{
 					(*it).setxPosition((*it).getxPosition()-(*it).getSpeed() );
 				}
-				if((*it).getxPosition() < -22)
-					(*it).setxPosition(22);
+				if((*it).getxPosition() < -24)
+					(*it).setxPosition(24);
 				else
-					if((*it).getxPosition() > 22)
-						(*it).setxPosition(-22);
+					if((*it).getxPosition() > 24)
+						(*it).setxPosition(-24);
 			}
 		}
 	}
@@ -208,9 +211,9 @@ void cTraffic::AOS()
 		{
 			if(Player.getLane() == (*it).getLane())
 			{
-				if(Player.getxPosition() < (*it).getxPosition() && abs( Player.getxPosition() - (*it).getxPosition()) <= 10)
+				if(Player.getxPosition() < (*it).getxPosition() && abs( Player.getxPosition() - (*it).getxPosition()) <= 16)
 				{
-					if(Road.getSpeed() > 0.199 )
+					if(Road.getSpeed() > 0.299 )
 						movePlayer = 3;
 				}
 			}
@@ -276,11 +279,18 @@ void cTraffic::AOS()
 			//setTrafficSpeed
 			setTrafficSpeed = true;
 			setInitialSpeed = false;
+			moveBack = false;
 		break;
 		case 4:	
 			//setInitialSpeed
 			setInitialSpeed = true;
 			setTrafficSpeed = false;
+			moveBack = false;
+		break;
+		case 5:
+			setInitialSpeed = false;
+			setTrafficSpeed = false;
+			moveBack = true;
 		break;
 	}
 
@@ -317,6 +327,11 @@ void cTraffic::AOS()
 	{
 		SetInitialSpeedPlayer();
 	}
+
+	if(moveBack == true )
+	{
+		MoveBackPlayer();
+	}
 }
 
 void cTraffic::SetTrafficSpeedPlayer() // make player to move as fast as the traffic
@@ -330,28 +345,31 @@ void cTraffic::SetTrafficSpeedPlayer() // make player to move as fast as the tra
 			{
 				if((*it).getLane() >=2 )
 				{
-					if( (*it).getSpeed() >= 0 && (*it).getSpeed() < 0.005 )
+					if( (*it).getSpeed() > 0 && (*it).getSpeed() < 0.007 )
 						(*it).setSpeed(0);
-					if( (*it).getSpeed() >= 0.005 )
-						(*it).setSpeed( (*it).getSpeed() - 0.0015 );
+					if( (*it).getSpeed() >= 0.007 )
+						(*it).setSpeed( (*it).getSpeed() - 0.002 );
 				}
 				else
 				{
-					if( (*it).getSpeed() >= 0.2 && (*it).getSpeed() < 0.205 )
-						(*it).setSpeed(0.2);
-					if( (*it).getSpeed() >= 0.205 )
-						(*it).setSpeed( (*it).getSpeed() - 0.0015 );
+					if( (*it).getSpeed() > 0.3 && (*it).getSpeed() < 0.307 )
+						(*it).setSpeed(0.3);
+					if( (*it).getSpeed() >= 0.307 )
+						(*it).setSpeed( (*it).getSpeed() - 0.002 );
 				}
 			}
 		}
-		if(Road.getSpeed() >= 0.1 && Road.getSpeed()<0.105 )
+		if(Road.getSpeed() >= 0.2 && Road.getSpeed() <= 0.201)
 		{
 			setTrafficSpeed = false;
-			Road.setSpeed(0.1);
 		}
-		if(Road.getSpeed()>= 0.105 )
+		if(Road.getSpeed() > 0.201 && Road.getSpeed()<0.205 )
 		{
-			Road.setSpeed(Road.getSpeed() - 0.0015);
+			Road.setSpeed(0.2);
+		}
+		if(Road.getSpeed()>= 0.205 )
+		{
+			Road.setSpeed(Road.getSpeed() - 0.001);
 		}		
 	}
 }
@@ -367,30 +385,49 @@ void cTraffic::SetInitialSpeedPlayer()
 			{
 				if((*it).getLane() >=2 )
 				{
-					if( (*it).getSpeed() <= 0.1 && (*it).getSpeed() > 0.095 )
-						(*it).setSpeed(0.1);
-					if( (*it).getSpeed() <= 0.095 )
-						(*it).setSpeed( (*it).getSpeed() + 0.0015 );
+					if( (*it).getSpeed() < 0.2 && (*it).getSpeed() > 0.193 )
+						(*it).setSpeed(0.2);
+					if( (*it).getSpeed() <= 0.193 )
+						(*it).setSpeed( (*it).getSpeed() + 0.002 );
 				}
 				else
 				{
-					if( (*it).getSpeed() <= 0.3 && (*it).getSpeed() > 0.295 )
-						(*it).setSpeed(0.3);
-					if( (*it).getSpeed() <= 0.295 )
-						(*it).setSpeed( (*it).getSpeed() + 0.0015 );
+					if( (*it).getSpeed() < 0.4 && (*it).getSpeed() > 0.393 )
+						(*it).setSpeed(0.4);
+					if( (*it).getSpeed() <= 0.393 )
+						(*it).setSpeed( (*it).getSpeed() + 0.002 );
 				}
 			}
 		}
 
-		if(Road.getSpeed() <= 0.2 && Road.getSpeed() > 0.195 )
+		if(Road.getSpeed() >= 0.3)
 		{
 			setInitialSpeed = false;
-			Road.setSpeed(0.2);	
 		}
-		if(Road.getSpeed()<= 0.195 )
+		if(Road.getSpeed() < 0.3 && Road.getSpeed() > 0.295 )
 		{
-			Road.setSpeed(Road.getSpeed() + 0.0015);
+			Road.setSpeed(0.3);	
 		}
+		if(Road.getSpeed()<= 0.295 )
+		{
+			Road.setSpeed(Road.getSpeed() + 0.001);
+		}
+	}
+}
+// beta version of move back player
+void cTraffic::MoveBackPlayer()
+{
+	if(moveBack == true)
+	{
+		movePlayer= 0;
+		for(vector<cCar>::iterator it = Car.begin(); it!= Car.end(); it ++ )
+		{
+			if( (*it).getType()!=0)
+			{
+				(*it).setxPosition((*it).getxPosition() + 0.05);
+			}
+		}
+		moveBack = false;
 	}
 }
 
@@ -464,7 +501,6 @@ int cTraffic::LoadGLTextures()
 	texture[7] = SOIL_load_OGL_texture("Texture/Messages/rightlane.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
 	texture[8] = SOIL_load_OGL_texture("Texture/Messages/nothing.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
 
-	glBindTexture(GL_TEXTURE_2D, texture[0]);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 
@@ -507,7 +543,7 @@ void cTraffic::DisplayAOS()
 	}
 	else
 	{
-		if(Road.getSpeed() > 0.15)
+		if(Road.getSpeed() > 0.25)
 		{
 			drawMessage(2, -14.5, -9.0, -3.5, -4.5);
 			//drawMessage(8, -14.3, -4.7, -5.0, -6.0);
@@ -526,13 +562,13 @@ void cTraffic::DisplayAOS()
 	{
 		if(leftAOS == true)
 		{
-			drawMessage(6, -14.3, -2.7, -5.0, -6.0);
+			drawMessage(6, -14.3, -3.7, -5.0, -6.0);
 		}
 		else
 		{
 			if(rightAOS == true)
 			{
-				drawMessage(7, -14.3, -2.7, -5.0, -6.0);
+				drawMessage(7, -14.3, -3.7, -5.0, -6.0);
 			}
 			else
 			{
