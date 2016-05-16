@@ -1,2 +1,3 @@
 all:
-	g++ -o exe AOSmain.cpp cWorld.cpp cRoad.cpp cCar.cpp cTraffic.cpp cPlayer.cpp -lGL -lGLU -lglut -lSOIL
+	
+	g++ -o exe main.cpp eData.cpp eGame.cpp eRoad.cpp eTexture.cpp eCar.cpp eVehicle.cpp ePlayer.cpp -lGL -lGLU -lglut -lSOIL

@@ -13,3 +13,8 @@ using namespace std;
 
 #define SCREEN_WIDTH	600
 #define SCREEN_HEIGHT	300
+
+#define VISIBLE_X 20
+#define VISIBLE_Y 10
+
+#define epsilon 0.005

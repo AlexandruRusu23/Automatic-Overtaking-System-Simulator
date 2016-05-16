@@ -1,15 +1,15 @@
-#include "cWorld.h"
+#include "eGame.h"
 
-cWorld World;
+eGame Game;
 
 void AppRender()
 {
-	World.Render();
+	Game.Render();
 }
 
 void AppKeyboard(unsigned char key, int x, int y)
 {
-	World.Keyboard(key, x, y);
+	Game.Keyboard(key, x, y);
 }
 
 int main(int argc, char** argv)
@@ -30,15 +30,12 @@ int main(int argc, char** argv)
 	glutInitWindowSize(SCREEN_WIDTH,SCREEN_HEIGHT);
 	glutCreateWindow("AOS Simulator");
 	
-	//Get a full screen window
-	//glutFullScreen();
-
 	//Calling functions
 	glutDisplayFunc(AppRender);			
 	glutKeyboardFunc(AppKeyboard);		
 
 	//Simulator initialization
-	World.Init();
+	Game.Init();
 
 	glutIdleFunc(AppRender); 
 
