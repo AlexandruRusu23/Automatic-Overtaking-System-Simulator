@@ -73,10 +73,10 @@ void eGame::Keyboard(unsigned char key, int x, int y)
 			}		
 		break;
 		case 'a':
-			Player.setChangeLane(1);
+			Player.setChangeLane(GO_TO_LEFT);
 		break;
 		case 'd':
-			Player.setChangeLane(2);
+			Player.setChangeLane(GO_TO_RIGHT);
 		break;
 	}
 }

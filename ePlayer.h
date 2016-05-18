@@ -2,7 +2,10 @@
 
 #include "eCar.h"
 
-#define CHANGE_UNIT 0.025
+#define GO_TO_LEFT 1
+#define GO_TO_RIGHT 2
+#define RETURN_TO_LEFT 3
+#define RETURN_TO_RIGHT 4
 
 class ePlayer : public eCar
 {
@@ -24,10 +27,9 @@ private:
 
 	void Move();
 
-	//changing lane functions
-	void ChangeToLeftLane();
-	void ChangeToRightLane();
-
+	//lane changing
+	void MoveToLane(int lane);
+	
 	void SetLowSpeed();
 	void SetMediumSpeed();
 	void SetHighSpeed();

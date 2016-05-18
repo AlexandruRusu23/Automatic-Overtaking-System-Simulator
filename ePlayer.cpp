@@ -20,6 +20,17 @@ void ePlayer::Init(int id_texture)
 void ePlayer::setChangeLane(int val)
 {
 	changeLane = val;
+
+	if(changeLane == GO_TO_LEFT)
+	{
+		if(yValue < yValueByLane(Lane))
+			changeLane = RETURN_TO_LEFT;
+	}
+	if(changeLane == GO_TO_RIGHT)
+	{
+		if(yValue > yValueByLane(Lane))
+			changeLane = RETURN_TO_RIGHT;
+	}
 }
 
 float ePlayer::yValueByLane(int l)
@@ -69,53 +80,71 @@ void ePlayer::Move()
 {
 	switch(changeLane)
 	{
-		case 1:
-			ChangeToLeftLane();
+		case GO_TO_LEFT:
+			if(Lane > LANE_1)
+				MoveToLane(Lane - 1);
+			else
+				changeLane = 0;
 		break;
-		case 2:
-			ChangeToRightLane();
+		case GO_TO_RIGHT:
+			if(Lane < LANE_4)
+				MoveToLane(Lane + 1);
+			else
+				changeLane = 0;
+		break;
+		case RETURN_TO_LEFT:
+			if(Lane > LANE_1)
+				MoveToLane(Lane);
+			else
+			{
+				if(Lane == LANE_1)
+					MoveToLane(Lane);
+				else
+					changeLane = 0;
+			}
+		break;
+		case RETURN_TO_RIGHT:
+			if(Lane < LANE_4)
+				MoveToLane(Lane);
+			else
+			{
+				if(Lane == LANE_4)
+					MoveToLane(Lane);
+				else
+					changeLane = 0;
+			}
 		break;
 	}
 }
 
-void ePlayer::ChangeToLeftLane()
+void ePlayer::MoveToLane(int lane)
 {
-	if(changeLane == 1)
+	float yAux = yValueByLane(lane);
+
+	if(changeLane == GO_TO_LEFT || changeLane == RETURN_TO_LEFT)
 	{
-		float yAux = yValueByLane(Lane - 1);
-		if(yAux >= -20)
+		if(yValue < yAux)
 		{
-			if(yValue < yAux)
-			{
-				yValue += CHANGE_UNIT;
-			}
-			else
-			{
-				changeLane = 0;
-				yValue = yAux;
-				Lane = Lane - 1;
-			}
+			yValue += CHANGE_UNIT;
+		}
+		else
+		{
+			Lane = lane;
+			yValue = yAux;
+			changeLane = 0;
 		}
 	}
-}
-
-void ePlayer::ChangeToRightLane()
-{
-	if(changeLane == 2)
+	if(changeLane == GO_TO_RIGHT || changeLane == RETURN_TO_RIGHT)
 	{
-		float yAux = yValueByLane(Lane + 1);
-		if(yAux >= -20)
+		if(yValue > yAux)
 		{
-			if(yValue > yAux)
-			{
-				yValue -= CHANGE_UNIT;
-			}
-			else
-			{
-				changeLane = 0;
-				yValue = yAux;
-				Lane = Lane + 1;
-			}
+			yValue -= CHANGE_UNIT;
+		}
+		else
+		{
+			Lane = lane;
+			yValue = yAux;
+			changeLane = 0;
 		}
 	}
 }
