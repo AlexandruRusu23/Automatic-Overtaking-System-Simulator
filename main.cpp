@@ -12,6 +12,21 @@ void AppKeyboard(unsigned char key, int x, int y)
 	Game.Keyboard(key, x, y);
 }
 
+void AppMouse(int button,int state,int x,int y)
+{
+	Game.Mouse(button,state,x,y);
+}
+
+void AppReshape(int w,int h)
+{
+	Game.Reshape(w,h);
+}
+
+void AppMouseMotion(int x,int y)
+{
+	Game.MouseMotion(x,y);
+}
+
 int main(int argc, char** argv)
 {
 	int res_x,res_y,pos_x,pos_y;
@@ -32,7 +47,10 @@ int main(int argc, char** argv)
 	
 	//Calling functions
 	glutDisplayFunc(AppRender);			
-	glutKeyboardFunc(AppKeyboard);		
+	glutKeyboardFunc(AppKeyboard);
+	glutMouseFunc(AppMouse);
+	glutReshapeFunc(AppReshape);
+	glutPassiveMotionFunc(AppMouseMotion);	
 
 	//Simulator initialization
 	Game.Init();

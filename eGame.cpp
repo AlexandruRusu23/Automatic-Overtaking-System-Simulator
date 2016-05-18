@@ -18,6 +18,12 @@ void eGame::Init()
 	Player.Init(Data.GetID(IMG_PORSCHE));
 
 	state_vehicle_speed = LOW_SPEED;
+
+	AddCarState = 0;
+	AddButtonWidth = 2.5;
+	AddButtonHeight = 1.5;
+	CarTypeWidth = 2;
+	CarTypeHeight = 1;
 }
 
 void eGame::Keyboard(unsigned char key, int x, int y)
@@ -110,6 +116,88 @@ void eGame::Keyboard(unsigned char key, int x, int y)
 	}
 }
 
+void eGame::Mouse(int button,int state,int x,int y)
+{
+	if (state == 1) return;
+	y = windowHeight - y;
+	x = (int)(x / ((float)windowWidth/(VISIBLE_X * 2))) - 20;
+	y = (int)(y / ((float)windowHeight/(VISIBLE_Y * 2))) - 10;
+
+	if (x >= AddCarButtonX - AddButtonWidth && y >= AddCarButtonY - AddButtonHeight && x < AddCarButtonX + AddButtonWidth && y < AddCarButtonY + AddButtonHeight) //AddCar button pressed
+	{
+		AddCarState = 1;
+		return;
+	}
+
+	if (AddCarState == 1)
+	{
+		if (x >= CarType1X - CarTypeWidth && y >= CarType1Y - CarTypeHeight && x < CarType1X + CarTypeWidth && y < CarType1Y + CarTypeHeight)
+		{
+			carChoice = 1;
+			AddCarState = 2;
+			return;
+		}
+		if (x >= CarType2X - CarTypeWidth && y >= CarType2Y - CarTypeHeight && x < CarType2X + CarTypeWidth && y < CarType2Y + CarTypeHeight)
+		{
+			carChoice = 2;
+			AddCarState = 2;
+			return;
+		}
+		if (x >= CarType3X - CarTypeWidth && y >= CarType3Y - CarTypeHeight && x < CarType3X + CarTypeWidth && y < CarType3Y + CarTypeHeight)
+		{
+			carChoice = 3;
+			AddCarState = 2;
+			return;
+		}
+		AddCarState = 0;
+		return;
+	}
+	
+	if (AddCarState == 2)
+	{
+		carSpawnX = x;
+		carSpawnY = y;
+		AddCarState = 0;
+		return;
+	}
+}
+
+void eGame::MouseMotion(int x,int y)
+{
+	y = windowHeight - y;
+	x = (int)(x / ((float)windowWidth/(VISIBLE_X * 2))) - 20;
+	y = (int)(y / ((float)windowHeight/(VISIBLE_Y * 2))) - 10;
+
+	if (x >= AddCarButtonX - AddButtonWidth && y >= AddCarButtonY - AddButtonHeight && x < AddCarButtonX + AddButtonWidth && y < AddCarButtonY + AddButtonHeight) //AddCar button pressed
+	{
+		if (AddCarState == 0) 
+			AddCarState = 1;
+		return;
+	}
+
+	if (x < 4 || y > -2) {
+		if (AddCarState == 1)
+			AddCarState = 0;
+		return;
+	}
+}
+
+void eGame::drawUIButtons()
+{
+	//Render AddCar button
+	glColor3f(0.0,0.0,1.0);
+	glRectf(AddCarButtonX-AddButtonWidth,AddCarButtonY-AddButtonHeight,AddCarButtonX+AddButtonWidth,AddCarButtonY+AddButtonHeight);
+
+	//Show car type options
+	if (AddCarState == 1)
+	{
+		glColor3f(1.0,0.0,0.0);
+		glRectf(CarType1X - CarTypeWidth,CarType1Y - CarTypeHeight,CarType1X + CarTypeWidth,CarType1Y + CarTypeHeight);
+		glRectf(CarType2X - CarTypeWidth,CarType2Y - CarTypeHeight,CarType2X + CarTypeWidth,CarType2Y + CarTypeHeight);
+		glRectf(CarType3X - CarTypeWidth,CarType3Y - CarTypeHeight,CarType3X + CarTypeWidth,CarType3Y + CarTypeHeight);
+	}
+}
+
 void eGame::Render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -123,10 +211,19 @@ void eGame::Render()
 	{
 		(*it).Draw();
 	}
-
+	
+	drawUIButtons();
+	
 	glutSwapBuffers();
 
 	usleep(10000);
+}
+
+void eGame::Reshape(int w,int h)
+{
+	windowWidth = w;
+	windowHeight = h;
+	glViewport(0,0,w,h);
 }
 
 bool eGame::checkFreeSpace(int lane, float xPos)
