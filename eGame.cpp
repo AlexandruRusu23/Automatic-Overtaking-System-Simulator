@@ -16,6 +16,8 @@ void eGame::Init()
 	Data.Load();
 	Road.Load(Data.GetID(IMG_ROAD));
 	Player.Init(Data.GetID(IMG_PORSCHE));
+
+	state_vehicle_speed = LOW_SPEED;
 }
 
 void eGame::Keyboard(unsigned char key, int x, int y)
@@ -26,21 +28,45 @@ void eGame::Keyboard(unsigned char key, int x, int y)
 			exit(0);
 		break;
 		case '1':
+			if(state_vehicle_speed == HIGH_SPEED)
+				newVehicle.setChangeSpeed(HIGH_SPEED);
+			if(state_vehicle_speed == MEDIUM_SPEED)
+				newVehicle.setChangeSpeed(MEDIUM_SPEED);
+			if(state_vehicle_speed == LOW_SPEED)
+				newVehicle.setChangeSpeed(LOW_SPEED);
 			newVehicle.Init(LANE_1, VISIBLE_X, Data.GetID(IMG_MERCEDES));
 			if(checkFreeSpace(LANE_1, VISIBLE_X))
 				Vehicle.push_back(newVehicle);
 		break;
 		case '2':
+			if(state_vehicle_speed == HIGH_SPEED)
+				newVehicle.setChangeSpeed(HIGH_SPEED);
+			if(state_vehicle_speed == MEDIUM_SPEED)
+				newVehicle.setChangeSpeed(MEDIUM_SPEED);
+			if(state_vehicle_speed == LOW_SPEED)
+				newVehicle.setChangeSpeed(LOW_SPEED);
 			newVehicle.Init(LANE_2, VISIBLE_X, Data.GetID(IMG_RETRO));
 			if(checkFreeSpace(LANE_2, VISIBLE_X))
 				Vehicle.push_back(newVehicle);
 		break;
 		case '3':
+			if(state_vehicle_speed == HIGH_SPEED)
+				newVehicle.setChangeSpeed(HIGH_SPEED);
+			if(state_vehicle_speed == MEDIUM_SPEED)
+				newVehicle.setChangeSpeed(MEDIUM_SPEED);
+			if(state_vehicle_speed == LOW_SPEED)
+				newVehicle.setChangeSpeed(LOW_SPEED);
 			newVehicle.Init(LANE_3, -VISIBLE_X, Data.GetID(IMG_POLICE));
 			if(checkFreeSpace(LANE_3, -VISIBLE_X))
 				Vehicle.push_back(newVehicle);
 		break;
 		case '4':
+			if(state_vehicle_speed == HIGH_SPEED)
+				newVehicle.setChangeSpeed(HIGH_SPEED);
+			if(state_vehicle_speed == MEDIUM_SPEED)
+				newVehicle.setChangeSpeed(MEDIUM_SPEED);
+			if(state_vehicle_speed == LOW_SPEED)
+				newVehicle.setChangeSpeed(LOW_SPEED);
 			newVehicle.Init(LANE_4, -VISIBLE_X, Data.GetID(IMG_MERCEDES));
 			if(checkFreeSpace(LANE_4, -VISIBLE_X))
 				Vehicle.push_back(newVehicle);
@@ -57,20 +83,23 @@ void eGame::Keyboard(unsigned char key, int x, int y)
 		case 'w':
 			for(vector <eVehicle>::iterator it=Vehicle.begin(); it!= Vehicle.end(); it++)
 			{
-				(*it).setChangeSpeed(3);
+				(*it).setChangeSpeed(HIGH_SPEED);
 			}
+			state_vehicle_speed = HIGH_SPEED;
 		break;
 		case 's':
 			for(vector <eVehicle>::iterator it=Vehicle.begin(); it!= Vehicle.end(); it++)
 			{
-				(*it).setChangeSpeed(2);
+				(*it).setChangeSpeed(MEDIUM_SPEED);
 			}		
+			state_vehicle_speed = MEDIUM_SPEED;
 		break;
 		case 'x':
 			for(vector <eVehicle>::iterator it=Vehicle.begin(); it!= Vehicle.end(); it++)
 			{
-				(*it).setChangeSpeed(1);
+				(*it).setChangeSpeed(LOW_SPEED);
 			}		
+			state_vehicle_speed = LOW_SPEED;
 		break;
 		case 'a':
 			Player.setChangeLane(GO_TO_LEFT);

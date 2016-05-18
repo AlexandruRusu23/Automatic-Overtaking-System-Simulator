@@ -18,29 +18,74 @@ void eVehicle::Init(int lane,float xPos, int id_texture)
 	{
 		case LANE_1:
 			yValue = Y_L1;
-			Speed = 6*SPEED_SCALE;
+			switch (changeSpeed)
+			{
+				case HIGH_SPEED:
+					Speed = 4*SPEED_SCALE;
+				break;
+				case MEDIUM_SPEED:
+					Speed = 5*SPEED_SCALE;
+				break;
+				case LOW_SPEED:
+					Speed = 6*SPEED_SCALE;
+				break;
+			}
 			if(xPos < -50)
 				xValue = VISIBLE_X - epsilon;
 		break;
 		case LANE_2:
 			yValue = Y_L2;
-			Speed = 6*SPEED_SCALE;
+			switch (changeSpeed)
+			{
+				case HIGH_SPEED:
+					Speed = 4*SPEED_SCALE;
+				break;
+				case MEDIUM_SPEED:
+					Speed = 5*SPEED_SCALE;
+				break;
+				case LOW_SPEED:
+					Speed = 6*SPEED_SCALE;
+				break;
+			}
 			if(xPos < -50)
 				xValue = VISIBLE_X - epsilon;
 		break;
 		case LANE_3:
 			yValue = Y_L3;
-			Speed = -SPEED_SCALE;
+			switch (changeSpeed)
+			{
+				case HIGH_SPEED:
+					Speed = SPEED_SCALE;
+				break;
+				case MEDIUM_SPEED:
+					Speed = 0;
+				break;
+				case LOW_SPEED:
+					Speed = -SPEED_SCALE;
+				break;
+			}
 			if(xPos < -50)
 				xValue = -VISIBLE_X + epsilon;
 		break;
 		case LANE_4:
 			yValue = Y_L4;
-			Speed = -SPEED_SCALE;
+			switch (changeSpeed)
+			{
+				case HIGH_SPEED:
+					Speed = SPEED_SCALE;
+				break;
+				case MEDIUM_SPEED:
+					Speed = 0;
+				break;
+				case LOW_SPEED:
+					Speed = -SPEED_SCALE;
+				break;
+			}
 			if(xPos < -50)
 				xValue = -VISIBLE_X + epsilon;
 		break;
 	}
+	changeSpeed = 0;
 }
 
 void eVehicle::Draw()
@@ -102,13 +147,13 @@ void eVehicle::Move()
 
 	switch (changeSpeed)
 	{
-		case 1:
+		case LOW_SPEED:
 			SetLowSpeed();
 		break;
-		case 2:
+		case MEDIUM_SPEED:
 			SetMediumSpeed();
 		break;
-		case 3:
+		case HIGH_SPEED:
 			SetHighSpeed();
 		break;
 	}
@@ -116,7 +161,7 @@ void eVehicle::Move()
 
 void eVehicle::SetLowSpeed()
 {
-	if(changeSpeed == 1)
+	if(changeSpeed == LOW_SPEED)
 	{
 		if(Lane > LANE_2)
 		{
@@ -147,7 +192,7 @@ void eVehicle::SetLowSpeed()
 
 void eVehicle::SetMediumSpeed()
 {
-	if(changeSpeed == 2)
+	if(changeSpeed == MEDIUM_SPEED)
 	{
 		if(Lane > LANE_2)
 		{
@@ -192,7 +237,7 @@ void eVehicle::SetMediumSpeed()
 
 void eVehicle::SetHighSpeed()
 {
-	if(changeSpeed == 3)
+	if(changeSpeed == HIGH_SPEED)
 	{
 		if(Lane > LANE_2)
 		{
@@ -203,7 +248,7 @@ void eVehicle::SetHighSpeed()
 			else
 			{
 				Speed = SPEED_SCALE;
-				changeSpeed = 0;
+				changeSpeed = 0;			
 			}
 		}
 		else

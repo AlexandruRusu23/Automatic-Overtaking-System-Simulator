@@ -28,5 +28,7 @@ private:
 	eVehicle newVehicle;
 	ePlayer Player;
 
+	int state_vehicle_speed;
+
 	bool checkFreeSpace(int lane, float xPos);
 };

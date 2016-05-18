@@ -15,9 +15,18 @@
 #define Y_L3 3.65
 #define Y_L4 1.3
 
+#define LOW_SPEED 1
+#define MEDIUM_SPEED 2
+#define HIGH_SPEED 3
+
 #define SPEED_SCALE 0.05
 #define SPEED_UNIT 0.0005
 #define CHANGE_UNIT 0.025
+
+#define GO_TO_LEFT 1
+#define GO_TO_RIGHT 2
+#define RETURN_TO_LEFT 3
+#define RETURN_TO_RIGHT 4
 
 class eCar
 {

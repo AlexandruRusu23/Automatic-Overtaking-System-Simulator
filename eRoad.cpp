@@ -12,7 +12,7 @@ void eRoad::Load(int id_texture)
 {
 	this->id_texture = id_texture;
 	SetValue = 0;
-	speed = HIGH_SPEED; // high speed
+	speed = ROAD_HIGH_SPEED; // high speed
 	xLength = VISIBLE_X + VISIBLE_X * 0.1; // 20 units + 10% OF XLENGTH
 	yLength = VISIBLE_Y ; // 12 units
 	xValue[0] = -VISIBLE_X - VISIBLE_X * 0.05; // - ( 20 + 5% of VISIBLE_X )
@@ -100,13 +100,13 @@ void eRoad::SetSlowSpeed()
 {
 	if(SetValue == 1)
 	{
-		if(speed > SLOW_SPEED)
+		if(speed > ROAD_SLOW_SPEED)
 		{
 			speed -= UNIT;
 		}
 		else
 		{
-			speed = SLOW_SPEED;
+			speed = ROAD_SLOW_SPEED;
 			SetValue = 0;
 		}
 	}
@@ -116,20 +116,20 @@ void eRoad::SetMediumSpeed()
 {
 	if(SetValue == 2)
 	{
-		if(speed < MEDIUM_SPEED)
+		if(speed < ROAD_MEDIUM_SPEED)
 		{
 			speed += UNIT;
 		}
 		else
 		{
-			if(speed > MEDIUM_SPEED)
+			if(speed > ROAD_MEDIUM_SPEED)
 			{
 				speed -= UNIT;
 			}
 		}
-		if(speed > MEDIUM_SPEED - epsilon && speed < MEDIUM_SPEED + epsilon)
+		if(speed > ROAD_MEDIUM_SPEED - epsilon && speed < ROAD_MEDIUM_SPEED + epsilon)
 		{
-			speed == MEDIUM_SPEED;
+			speed == ROAD_MEDIUM_SPEED;
 			SetValue = 0;
 		}
 	}
@@ -139,13 +139,13 @@ void eRoad::SetHighSpeed()
 {
 	if(SetValue == 3)
 	{
-		if(speed < HIGH_SPEED)
+		if(speed < ROAD_HIGH_SPEED)
 		{
 			speed += UNIT;
 		}
 		else
 		{
-			speed = HIGH_SPEED;
+			speed = ROAD_HIGH_SPEED;
 			SetValue = 0;
 		}
 	}
