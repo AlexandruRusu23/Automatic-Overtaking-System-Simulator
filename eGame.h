@@ -27,7 +27,7 @@ public:
 	void Keyboard(unsigned char key, int x, int y);
 
 	//mouse input behavior
-	void Mouse(int button,int state,int x,int y);
+	void Mouse(int button,int state,float x,float y);
 	void MouseMotion(int x,int y);
 
 	//draw and move all objects
@@ -46,7 +46,7 @@ private:
 
 	int state_vehicle_speed;
 
-	int AddCarState,carSpawnX,carSpawnY,carChoice;
+	int AddCarState,carChoice;
 	float AddButtonWidth,AddButtonHeight,CarTypeWidth,CarTypeHeight;
 	int windowWidth,windowHeight;
 

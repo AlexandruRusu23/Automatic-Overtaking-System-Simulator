@@ -116,12 +116,12 @@ void eGame::Keyboard(unsigned char key, int x, int y)
 	}
 }
 
-void eGame::Mouse(int button,int state,int x,int y)
+void eGame::Mouse(int button,int state,float x,float y)
 {
 	if (state == 1) return;
 	y = windowHeight - y;
-	x = (int)(x / ((float)windowWidth/(VISIBLE_X * 2))) - 20;
-	y = (int)(y / ((float)windowHeight/(VISIBLE_Y * 2))) - 10;
+	x = (float)(x / ((float)windowWidth/(VISIBLE_X * 2))) - 20;
+	y = (float)(y / ((float)windowHeight/(VISIBLE_Y * 2))) - 10;
 
 	if (x >= AddCarButtonX - AddButtonWidth && y >= AddCarButtonY - AddButtonHeight && x < AddCarButtonX + AddButtonWidth && y < AddCarButtonY + AddButtonHeight) //AddCar button pressed
 	{
@@ -133,31 +133,60 @@ void eGame::Mouse(int button,int state,int x,int y)
 	{
 		if (x >= CarType1X - CarTypeWidth && y >= CarType1Y - CarTypeHeight && x < CarType1X + CarTypeWidth && y < CarType1Y + CarTypeHeight)
 		{
-			carChoice = 1;
+			carChoice = IMG_RETRO;
 			AddCarState = 2;
 			return;
 		}
 		if (x >= CarType2X - CarTypeWidth && y >= CarType2Y - CarTypeHeight && x < CarType2X + CarTypeWidth && y < CarType2Y + CarTypeHeight)
 		{
-			carChoice = 2;
+			carChoice = IMG_MERCEDES;
 			AddCarState = 2;
 			return;
 		}
 		if (x >= CarType3X - CarTypeWidth && y >= CarType3Y - CarTypeHeight && x < CarType3X + CarTypeWidth && y < CarType3Y + CarTypeHeight)
 		{
-			carChoice = 3;
+			carChoice = IMG_POLICE;
 			AddCarState = 2;
 			return;
 		}
 		AddCarState = 0;
 		return;
-	}
+	} 	
 	
 	if (AddCarState == 2)
 	{
-		carSpawnX = x;
-		carSpawnY = y;
 		AddCarState = 0;
+
+		if(state_vehicle_speed == HIGH_SPEED)
+			newVehicle.setChangeSpeed(HIGH_SPEED);
+		if(state_vehicle_speed == MEDIUM_SPEED)
+			newVehicle.setChangeSpeed(MEDIUM_SPEED);
+		if(state_vehicle_speed == LOW_SPEED)
+			newVehicle.setChangeSpeed(LOW_SPEED);
+		if(y <= (Y_L1 +0.8) && y >= (Y_L1 -0.8))
+		{	
+			newVehicle.Init(LANE_1, x , Data.GetID(carChoice));
+			if(checkFreeSpace(LANE_1, x ))
+				Vehicle.push_back(newVehicle);
+		}
+		if(y <= (Y_L2 +0.8) && y >= (Y_L2 -0.8))
+		{	
+			newVehicle.Init(LANE_2, x , Data.GetID(carChoice));
+			if(checkFreeSpace(LANE_2, x ))
+				Vehicle.push_back(newVehicle);
+		}
+		if(y <= (Y_L3 +0.8) && y >= (Y_L3 -0.8))
+		{	
+			newVehicle.Init(LANE_3, x , Data.GetID(carChoice));
+			if(checkFreeSpace(LANE_3, x ))
+				Vehicle.push_back(newVehicle);
+		}
+		if(y <= (Y_L4 +0.8) && y >= (Y_L4 -0.8))
+		{	
+			newVehicle.Init(LANE_4, x , Data.GetID(carChoice));
+			if(checkFreeSpace(LANE_4, x ))
+				Vehicle.push_back(newVehicle);
+		}
 		return;
 	}
 }
