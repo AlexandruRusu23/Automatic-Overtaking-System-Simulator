@@ -11,6 +11,7 @@
 #define IMG_POLICE 2
 #define IMG_MERCEDES 3
 #define IMG_ROAD 4
+#define IMG_NEW_BUTTON 5
 
 class eData
 {

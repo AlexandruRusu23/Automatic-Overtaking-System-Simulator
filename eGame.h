@@ -4,6 +4,7 @@
 #include "eRoad.h"
 #include "eVehicle.h"
 #include "ePlayer.h"
+#include "eMessage.h"
 
 #define AddCarButtonX 16.5
 #define AddCarButtonY -7.5
@@ -28,7 +29,7 @@ public:
 
 	//mouse input behavior
 	void Mouse(int button,int state,float x,float y);
-	void MouseMotion(int x,int y);
+	void MouseMotion(float x,float y);
 
 	//draw and move all objects
 	void Render();
@@ -43,12 +44,13 @@ private:
 	vector <eVehicle> Vehicle;
 	eVehicle newVehicle;
 	ePlayer Player;
+	eMessage newCarButton;
+	eMessage newMercedes, newRetro, newPolice;
 
 	int state_vehicle_speed;
 
 	int AddCarState,carChoice;
-	float AddButtonWidth,AddButtonHeight,CarTypeWidth,CarTypeHeight;
-	int windowWidth,windowHeight;
+	float windowWidth,windowHeight;
 
 	bool checkFreeSpace(int lane, float xPos);
 	void drawUIButtons();

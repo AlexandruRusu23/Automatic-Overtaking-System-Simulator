@@ -16,14 +16,14 @@ void eGame::Init()
 	Data.Load();
 	Road.Load(Data.GetID(IMG_ROAD));
 	Player.Init(Data.GetID(IMG_PORSCHE));
+	newCarButton.InitButton(15.5, -5.5, 4, 4, Data.GetID(IMG_NEW_BUTTON));
+	newMercedes.InitButton(7.2, -1.8, 4, 3, Data.GetID(IMG_MERCEDES));
+	newRetro.InitButton(11.4, -1.8, 4, 3, Data.GetID(IMG_RETRO));
+	newPolice.InitButton(15.8, -1.8, 4, 3, Data.GetID(IMG_POLICE));
 
 	state_vehicle_speed = LOW_SPEED;
 
 	AddCarState = 0;
-	AddButtonWidth = 2.5;
-	AddButtonHeight = 1.5;
-	CarTypeWidth = 2;
-	CarTypeHeight = 1;
 }
 
 void eGame::Keyboard(unsigned char key, int x, int y)
@@ -123,7 +123,7 @@ void eGame::Mouse(int button,int state,float x,float y)
 	x = (float)(x / ((float)windowWidth/(VISIBLE_X * 2))) - 20;
 	y = (float)(y / ((float)windowHeight/(VISIBLE_Y * 2))) - 10;
 
-	if (x >= AddCarButtonX - AddButtonWidth && y >= AddCarButtonY - AddButtonHeight && x < AddCarButtonX + AddButtonWidth && y < AddCarButtonY + AddButtonHeight) //AddCar button pressed
+	if (newCarButton.insideButton(x,y)) //AddCar button pressed
 	{
 		AddCarState = 1;
 		return;
@@ -131,25 +131,24 @@ void eGame::Mouse(int button,int state,float x,float y)
 
 	if (AddCarState == 1)
 	{
-		if (x >= CarType1X - CarTypeWidth && y >= CarType1Y - CarTypeHeight && x < CarType1X + CarTypeWidth && y < CarType1Y + CarTypeHeight)
+		if (newRetro.insideButton(x,y))
 		{
 			carChoice = IMG_RETRO;
 			AddCarState = 2;
 			return;
 		}
-		if (x >= CarType2X - CarTypeWidth && y >= CarType2Y - CarTypeHeight && x < CarType2X + CarTypeWidth && y < CarType2Y + CarTypeHeight)
-		{
-			carChoice = IMG_MERCEDES;
-			AddCarState = 2;
-			return;
-		}
-		if (x >= CarType3X - CarTypeWidth && y >= CarType3Y - CarTypeHeight && x < CarType3X + CarTypeWidth && y < CarType3Y + CarTypeHeight)
+		if (newPolice.insideButton(x,y))
 		{
 			carChoice = IMG_POLICE;
 			AddCarState = 2;
 			return;
 		}
-		AddCarState = 0;
+		if (newMercedes.insideButton(x,y))
+		{
+			carChoice = IMG_MERCEDES;
+			AddCarState = 2;
+			return;
+		}
 		return;
 	} 	
 	
@@ -169,19 +168,19 @@ void eGame::Mouse(int button,int state,float x,float y)
 			if(checkFreeSpace(LANE_1, x ))
 				Vehicle.push_back(newVehicle);
 		}
-		if(y <= (Y_L2 +0.8) && y >= (Y_L2 -0.8))
+		if(y <= (Y_L2 + 1) && y >= (Y_L2 - 1))
 		{	
 			newVehicle.Init(LANE_2, x , Data.GetID(carChoice));
 			if(checkFreeSpace(LANE_2, x ))
 				Vehicle.push_back(newVehicle);
 		}
-		if(y <= (Y_L3 +0.8) && y >= (Y_L3 -0.8))
+		if(y <= (Y_L3 + 1) && y >= (Y_L3 - 1))
 		{	
 			newVehicle.Init(LANE_3, x , Data.GetID(carChoice));
 			if(checkFreeSpace(LANE_3, x ))
 				Vehicle.push_back(newVehicle);
 		}
-		if(y <= (Y_L4 +0.8) && y >= (Y_L4 -0.8))
+		if(y <= (Y_L4 + 1) && y >= (Y_L4 - 1))
 		{	
 			newVehicle.Init(LANE_4, x , Data.GetID(carChoice));
 			if(checkFreeSpace(LANE_4, x ))
@@ -191,22 +190,16 @@ void eGame::Mouse(int button,int state,float x,float y)
 	}
 }
 
-void eGame::MouseMotion(int x,int y)
+void eGame::MouseMotion(float x,float y)
 {
 	y = windowHeight - y;
-	x = (int)(x / ((float)windowWidth/(VISIBLE_X * 2))) - 20;
-	y = (int)(y / ((float)windowHeight/(VISIBLE_Y * 2))) - 10;
+	x = (float)(x / ((float)windowWidth/(VISIBLE_X * 2))) - 20;
+	y = (float)(y / ((float)windowHeight/(VISIBLE_Y * 2))) - 10;
 
-	if (x >= AddCarButtonX - AddButtonWidth && y >= AddCarButtonY - AddButtonHeight && x < AddCarButtonX + AddButtonWidth && y < AddCarButtonY + AddButtonHeight) //AddCar button pressed
+	if (newCarButton.insideButton(x,y)) //AddCar button pressed
 	{
 		if (AddCarState == 0) 
 			AddCarState = 1;
-		return;
-	}
-
-	if (x < 4 || y > -2) {
-		if (AddCarState == 1)
-			AddCarState = 0;
 		return;
 	}
 }
@@ -214,16 +207,14 @@ void eGame::MouseMotion(int x,int y)
 void eGame::drawUIButtons()
 {
 	//Render AddCar button
-	glColor3f(0.0,0.0,1.0);
-	glRectf(AddCarButtonX-AddButtonWidth,AddCarButtonY-AddButtonHeight,AddCarButtonX+AddButtonWidth,AddCarButtonY+AddButtonHeight);
+	newCarButton.drawButton();
 
 	//Show car type options
 	if (AddCarState == 1)
 	{
-		glColor3f(1.0,0.0,0.0);
-		glRectf(CarType1X - CarTypeWidth,CarType1Y - CarTypeHeight,CarType1X + CarTypeWidth,CarType1Y + CarTypeHeight);
-		glRectf(CarType2X - CarTypeWidth,CarType2Y - CarTypeHeight,CarType2X + CarTypeWidth,CarType2Y + CarTypeHeight);
-		glRectf(CarType3X - CarTypeWidth,CarType3Y - CarTypeHeight,CarType3X + CarTypeWidth,CarType3Y + CarTypeHeight);
+		newMercedes.drawButton();
+		newPolice.drawButton();
+		newRetro.drawButton();
 	}
 }
 

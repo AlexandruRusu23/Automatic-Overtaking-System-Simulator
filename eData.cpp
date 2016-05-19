@@ -33,6 +33,8 @@ bool eData::Load()
 	if(!aux) return false;
 	aux = LoadImage(IMG_ROAD, new string("Texture/Road.png"));
 	if(!aux) return false;
+	aux = LoadImage(IMG_NEW_BUTTON, new string("Texture/Messages/new_button.png"));
+	if(!aux) return false;
 
 	return true;
 }
