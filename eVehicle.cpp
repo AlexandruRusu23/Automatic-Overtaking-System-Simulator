@@ -265,3 +265,8 @@ void eVehicle::SetHighSpeed()
 		}
 	}
 }
+
+bool eVehicle::compare(eVehicle ob)
+{
+	return (ob.xValue < xValue);
+}

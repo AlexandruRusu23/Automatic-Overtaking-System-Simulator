@@ -6,14 +6,13 @@
 #include "ePlayer.h"
 #include "eMessage.h"
 
-#define AddCarButtonX 16.5
-#define AddCarButtonY -7.5
-#define CarType1X 7
-#define CarType1Y -4
-#define CarType2X 12
-#define CarType2Y -4
-#define CarType3X 17
-#define CarType3Y -4
+#define LOOK_FRONT 1
+#define LOOK_BEHIND 2
+#define LOOK_MIDDLE 3
+
+#define FRONT_LIMIT 10
+#define BEHIND_LIMIT 14
+#define MIDDLE_LIMIT 5
 
 class eGame
 {
@@ -31,6 +30,11 @@ public:
 	void Mouse(int button,int state,float x,float y);
 	void MouseMotion(float x,float y);
 
+	bool checkPlayerCollision(int lane, int direction);
+	void vehicleScanner(int lane, int direction);
+
+	void AOS();
+
 	//draw and move all objects
 	void Render();
 
@@ -41,8 +45,10 @@ private:
 	// Game can see and control all other objects
 	eData Data;
 	eRoad Road;
+
 	vector <eVehicle> Vehicle;
 	eVehicle newVehicle;
+
 	ePlayer Player;
 	eMessage newCarButton;
 	eMessage newMercedes, newRetro, newPolice;

@@ -265,3 +265,55 @@ bool eGame::checkFreeSpace(int lane, float xPos)
 	}
 	return true;
 }
+
+bool eGame::checkPlayerCollision(int lane, int direction)
+{
+	for(vector<eVehicle>::iterator it=Vehicle.begin(); it!=Vehicle.end(); it++)
+	{
+		if((*it).getLane() == lane)
+		{
+			if(direction == LOOK_FRONT)
+			{
+				if(Player.getxValue() < (*it).getxValue())
+					if(abs(Player.getxValue() - (*it).getxValue()) < FRONT_LIMIT )
+						return false;
+			}
+			if(direction == LOOK_BEHIND)
+			{
+				if(Player.getxValue() > (*it).getxValue())
+					if(abs(Player.getxValue() - (*it).getxValue()) < BEHIND_LIMIT )
+						return false;	
+			}
+			if(direction == LOOK_MIDDLE)
+			{
+				if(Player.getxValue() + MIDDLE_LIMIT > (*it).getxValue())
+				{
+					if(Player.getxValue() - (MIDDLE_LIMIT + CAR_LENGTH) < (*it).getxValue())
+						return false;
+				}
+			}
+		}
+	}
+	return true;
+}
+
+/*
+--------------------------------------
+behind  |       middle       | front
+--------------------------------------
+  behind    | **PLAYER** |   front 
+-------------------------------------- 
+behind  |     middle         | front
+
+*/
+
+void eGame::vehicleScanner(int lane, int direction) //if there is a car inside the area mentioned return false
+{
+	
+}
+
+//AOS function (in Game because Player interacts will all objects)
+void eGame::AOS()
+{
+
+}

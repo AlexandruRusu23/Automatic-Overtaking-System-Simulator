@@ -6,6 +6,7 @@
 #include <cmath>
 #include <unistd.h>
 #include <vector>
+#include <algorithm>
 #include <cstdio>
 #include <string>
 #include "SOIL.h"
