@@ -18,7 +18,6 @@ public:
 	void Draw();
 
 	bool notInRange(int lane, float xPos);
-	bool compare(eVehicle ob);
 
 private:
 	int changeSpeed;

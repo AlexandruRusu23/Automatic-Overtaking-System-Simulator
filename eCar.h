@@ -20,7 +20,7 @@
 #define HIGH_SPEED 3
 
 #define SPEED_SCALE 0.05
-#define SPEED_UNIT 0.0005
+#define SPEED_UNIT 0.0012
 #define CHANGE_UNIT 0.025
 
 #define GO_TO_LEFT 1

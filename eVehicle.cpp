@@ -21,13 +21,13 @@ void eVehicle::Init(int lane,float xPos, int id_texture)
 			switch (changeSpeed)
 			{
 				case HIGH_SPEED:
-					Speed = 4*SPEED_SCALE;
+					Speed = 2*SPEED_SCALE;
 				break;
 				case MEDIUM_SPEED:
-					Speed = 5*SPEED_SCALE;
+					Speed = 3*SPEED_SCALE;
 				break;
 				case LOW_SPEED:
-					Speed = 6*SPEED_SCALE;
+					Speed = 4*SPEED_SCALE;
 				break;
 			}
 			if(xPos < -50)
@@ -38,13 +38,13 @@ void eVehicle::Init(int lane,float xPos, int id_texture)
 			switch (changeSpeed)
 			{
 				case HIGH_SPEED:
-					Speed = 4*SPEED_SCALE;
+					Speed = 2*SPEED_SCALE;
 				break;
 				case MEDIUM_SPEED:
-					Speed = 5*SPEED_SCALE;
+					Speed = 3*SPEED_SCALE;
 				break;
 				case LOW_SPEED:
-					Speed = 6*SPEED_SCALE;
+					Speed = 4*SPEED_SCALE;
 				break;
 			}
 			if(xPos < -50)
@@ -72,7 +72,7 @@ void eVehicle::Init(int lane,float xPos, int id_texture)
 			switch (changeSpeed)
 			{
 				case HIGH_SPEED:
-					Speed = SPEED_SCALE;
+					Speed = 2*SPEED_SCALE;
 				break;
 				case MEDIUM_SPEED:
 					Speed = 0;
@@ -177,13 +177,13 @@ void eVehicle::SetLowSpeed()
 		}
 		else
 		{
-			if(Speed < 6*SPEED_SCALE)
+			if(Speed < 4*SPEED_SCALE)
 			{
 				Speed += SPEED_UNIT;
 			}
 			else
 			{
-				Speed = 6*SPEED_SCALE;
+				Speed = 4*SPEED_SCALE;
 				changeSpeed = 0;
 			}
 		}
@@ -215,20 +215,20 @@ void eVehicle::SetMediumSpeed()
 		}
 		else
 		{
-			if(Speed > 5*SPEED_SCALE)
+			if(Speed > 3*SPEED_SCALE)
 			{
 				Speed -= SPEED_UNIT;
 			}
 			else
 			{
-				if(Speed < 5*SPEED_SCALE)
+				if(Speed < 3*SPEED_SCALE)
 				{
 					Speed += SPEED_UNIT;
 				}
 			}
-			if(Speed > 5*SPEED_SCALE - epsilon && Speed < 5*SPEED_SCALE + epsilon)
+			if(Speed > 3*SPEED_SCALE - epsilon && Speed < 3*SPEED_SCALE + epsilon)
 			{
-				Speed = 5*SPEED_SCALE;
+				Speed = 3*SPEED_SCALE;
 				changeSpeed = 0;
 			}
 		}
@@ -253,20 +253,15 @@ void eVehicle::SetHighSpeed()
 		}
 		else
 		{
-			if(Speed > 4*SPEED_SCALE)
+			if(Speed > 2*SPEED_SCALE)
 			{
 				Speed -= SPEED_UNIT;
 			}
 			else
 			{
-				Speed = 4*SPEED_SCALE;
+				Speed = 2*SPEED_SCALE;
 				changeSpeed = 0;
 			}
 		}
 	}
-}
-
-bool eVehicle::compare(eVehicle ob)
-{
-	return (ob.xValue < xValue);
 }

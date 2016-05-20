@@ -10,9 +10,9 @@
 #define LOOK_BEHIND 2
 #define LOOK_MIDDLE 3
 
-#define FRONT_LIMIT 10
-#define BEHIND_LIMIT 14
-#define MIDDLE_LIMIT 5
+#define FRONT_LIMIT 4
+#define BEHIND_LIMIT 4
+#define MIDDLE_LIMIT 0.5
 
 class eGame
 {
@@ -30,8 +30,7 @@ public:
 	void Mouse(int button,int state,float x,float y);
 	void MouseMotion(float x,float y);
 
-	bool checkPlayerCollision(int lane, int direction);
-	void vehicleScanner(int lane, int direction);
+	bool checkNotPlayerCollision(int lane, int direction, int limit);
 
 	void AOS();
 

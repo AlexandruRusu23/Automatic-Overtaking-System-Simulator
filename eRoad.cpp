@@ -3,15 +3,15 @@
 eRoad::eRoad() {}
 eRoad::~eRoad(){}
 
-void eRoad::setSetValue(int val)
+void eRoad::setChangeSpeed(int val)
 {
-	SetValue = val;
+	changeSpeed = val;
 }
 
 void eRoad::Load(int id_texture)
 {
 	this->id_texture = id_texture;
-	SetValue = 0;
+	changeSpeed = 0;
 	speed = ROAD_HIGH_SPEED; // high speed
 	xLength = VISIBLE_X + VISIBLE_X * 0.1; // 20 units + 10% OF XLENGTH
 	yLength = VISIBLE_Y ; // 12 units
@@ -57,7 +57,7 @@ void eRoad::Draw()
 
 void eRoad::Move()
 {
-	switch (SetValue)
+	switch (changeSpeed)
 	{
 		case 1:
 			SetSlowSpeed();
@@ -98,7 +98,7 @@ void eRoad::Move()
 
 void eRoad::SetSlowSpeed()
 {
-	if(SetValue == 1)
+	if(changeSpeed == 1)
 	{
 		if(speed > ROAD_SLOW_SPEED)
 		{
@@ -107,14 +107,14 @@ void eRoad::SetSlowSpeed()
 		else
 		{
 			speed = ROAD_SLOW_SPEED;
-			SetValue = 0;
+			changeSpeed = 0;
 		}
 	}
 }
 
 void eRoad::SetMediumSpeed()
 {
-	if(SetValue == 2)
+	if(changeSpeed == 2)
 	{
 		if(speed < ROAD_MEDIUM_SPEED)
 		{
@@ -130,14 +130,14 @@ void eRoad::SetMediumSpeed()
 		if(speed > ROAD_MEDIUM_SPEED - epsilon && speed < ROAD_MEDIUM_SPEED + epsilon)
 		{
 			speed == ROAD_MEDIUM_SPEED;
-			SetValue = 0;
+			changeSpeed = 0;
 		}
 	}
 }
 
 void eRoad::SetHighSpeed()
 {
-	if(SetValue == 3)
+	if(changeSpeed == 3)
 	{
 		if(speed < ROAD_HIGH_SPEED)
 		{
@@ -146,7 +146,7 @@ void eRoad::SetHighSpeed()
 		else
 		{
 			speed = ROAD_HIGH_SPEED;
-			SetValue = 0;
+			changeSpeed = 0;
 		}
 	}
 }

@@ -78,13 +78,13 @@ void eGame::Keyboard(unsigned char key, int x, int y)
 				Vehicle.push_back(newVehicle);
 		break;
 		case 'o':
-			Road.setSetValue(3);
+			Road.setChangeSpeed(HIGH_SPEED);
 		break;
 		case 'k':
-			Road.setSetValue(2);
+			Road.setChangeSpeed(MEDIUM_SPEED);
 		break;
 		case 'm':
-			Road.setSetValue(1);
+			Road.setChangeSpeed(LOW_SPEED);
 		break;
 		case 'w':
 			for(vector <eVehicle>::iterator it=Vehicle.begin(); it!= Vehicle.end(); it++)
@@ -233,6 +233,8 @@ void eGame::Render()
 	}
 	
 	drawUIButtons();
+
+	AOS();
 	
 	glutSwapBuffers();
 
@@ -266,7 +268,7 @@ bool eGame::checkFreeSpace(int lane, float xPos)
 	return true;
 }
 
-bool eGame::checkPlayerCollision(int lane, int direction)
+bool eGame::checkNotPlayerCollision(int lane, int direction, int limit)
 {
 	for(vector<eVehicle>::iterator it=Vehicle.begin(); it!=Vehicle.end(); it++)
 	{
@@ -275,20 +277,20 @@ bool eGame::checkPlayerCollision(int lane, int direction)
 			if(direction == LOOK_FRONT)
 			{
 				if(Player.getxValue() < (*it).getxValue())
-					if(abs(Player.getxValue() - (*it).getxValue()) < FRONT_LIMIT )
+					if(abs(Player.getxValue() - ((*it).getxValue() - CAR_LENGTH)) < limit )
 						return false;
 			}
 			if(direction == LOOK_BEHIND)
 			{
 				if(Player.getxValue() > (*it).getxValue())
-					if(abs(Player.getxValue() - (*it).getxValue()) < BEHIND_LIMIT )
+					if(abs((Player.getxValue() - CAR_LENGTH) - (*it).getxValue()) < limit )
 						return false;	
 			}
 			if(direction == LOOK_MIDDLE)
 			{
-				if(Player.getxValue() + MIDDLE_LIMIT > (*it).getxValue())
+				if( Player.getxValue() + limit > ((*it).getxValue() - CAR_LENGTH))
 				{
-					if(Player.getxValue() - (MIDDLE_LIMIT + CAR_LENGTH) < (*it).getxValue())
+					if((Player.getxValue() - CAR_LENGTH) - limit < (*it).getxValue())
 						return false;
 				}
 			}
@@ -307,13 +309,107 @@ behind  |     middle         | front
 
 */
 
-void eGame::vehicleScanner(int lane, int direction) //if there is a car inside the area mentioned return false
-{
-	
-}
-
 //AOS function (in Game because Player interacts will all objects)
 void eGame::AOS()
 {
+	if(Player.getLane() == LANE_4 && state_vehicle_speed != MEDIUM_SPEED)
+	{
+		if(!checkNotPlayerCollision(Player.getLane(), LOOK_FRONT, 2*FRONT_LIMIT)) // car in front of player
+		{
+			if(!checkNotPlayerCollision(Player.getLane(), LOOK_FRONT, FRONT_LIMIT)) // start point to overtake
+			{	
+				if(checkNotPlayerCollision(Player.getLane()-1,LOOK_MIDDLE, MIDDLE_LIMIT) && checkNotPlayerCollision(Player.getLane()-1, LOOK_FRONT, 2*FRONT_LIMIT)) // verify free space on left lane
+				{
+					Player.setChangeLane(GO_TO_LEFT);
+				}
+				else
+				{
+					Road.setChangeSpeed(MEDIUM_SPEED);
+					for(vector <eVehicle>::iterator it=Vehicle.begin(); it!= Vehicle.end(); it++)
+					{
+						(*it).setChangeSpeed(MEDIUM_SPEED);
+					}
+					state_vehicle_speed = MEDIUM_SPEED;
+				}
+			}
+		}
+	}
 
+	if(Player.getLane() == LANE_3 && state_vehicle_speed != MEDIUM_SPEED)
+	{
+		if(!checkNotPlayerCollision(Player.getLane(), LOOK_FRONT, 2*FRONT_LIMIT)) // car in front of player
+		{
+			if(!checkNotPlayerCollision(Player.getLane(), LOOK_FRONT, FRONT_LIMIT)) //start point to overtake
+			{
+				if(checkNotPlayerCollision(Player.getLane()+1,LOOK_MIDDLE, MIDDLE_LIMIT) && checkNotPlayerCollision(Player.getLane()+1, LOOK_FRONT, 2*FRONT_LIMIT))
+				{
+					Player.setChangeLane(GO_TO_RIGHT);
+				}
+				else
+				{
+					if(checkNotPlayerCollision(Player.getLane()-1,LOOK_MIDDLE, MIDDLE_LIMIT) && checkNotPlayerCollision(Player.getLane()-1, LOOK_FRONT, 7*FRONT_LIMIT))
+					{
+						Player.setChangeLane(GO_TO_LEFT);
+					}
+					else
+					{
+						Road.setChangeSpeed(MEDIUM_SPEED);
+						for(vector <eVehicle>::iterator it=Vehicle.begin(); it!= Vehicle.end(); it++)
+						{
+							(*it).setChangeSpeed(MEDIUM_SPEED);
+						}
+						state_vehicle_speed = MEDIUM_SPEED;
+					}
+				}
+			}
+		}
+	}
+	
+	if(state_vehicle_speed == MEDIUM_SPEED)
+	{
+
+	}
+
+	if(Player.getLane() < LANE_3)
+	{
+		if(checkNotPlayerCollision(Player.getLane(), LOOK_FRONT, 7*FRONT_LIMIT) && state_vehicle_speed == LOW_SPEED)
+		{
+			if(checkNotPlayerCollision(Player.getLane()+1, LOOK_MIDDLE, MIDDLE_LIMIT) && checkNotPlayerCollision(Player.getLane()+1, LOOK_FRONT, FRONT_LIMIT))
+			{
+				Player.setChangeLane(GO_TO_RIGHT);
+			}
+			else
+			{
+				if(checkNotPlayerCollision(Player.getLane()+1, LOOK_MIDDLE, MIDDLE_LIMIT))
+				{
+					Player.setChangeLane(GO_TO_RIGHT);
+					Road.setChangeSpeed(MEDIUM_SPEED);
+					for(vector <eVehicle>::iterator it=Vehicle.begin(); it!= Vehicle.end(); it++)
+					{
+						(*it).setChangeSpeed(MEDIUM_SPEED);
+					}
+					state_vehicle_speed = MEDIUM_SPEED;
+				}
+			}
+		}
+		else
+		{
+			Road.setChangeSpeed(LOW_SPEED);
+			for(vector <eVehicle>::iterator it=Vehicle.begin(); it!= Vehicle.end(); it++)
+			{
+				(*it).setChangeSpeed(HIGH_SPEED);
+			}		
+			state_vehicle_speed = HIGH_SPEED;
+			if(checkNotPlayerCollision(Player.getLane()+1, LOOK_MIDDLE, MIDDLE_LIMIT))
+			{
+				Player.setChangeLane(GO_TO_RIGHT);
+				Road.setChangeSpeed(MEDIUM_SPEED);
+				for(vector <eVehicle>::iterator it=Vehicle.begin(); it!= Vehicle.end(); it++)
+				{
+					(*it).setChangeSpeed(MEDIUM_SPEED);
+				}
+				state_vehicle_speed = MEDIUM_SPEED;
+			}
+		}
+	}
 }
