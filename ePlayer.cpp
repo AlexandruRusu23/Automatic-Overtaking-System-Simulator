@@ -15,6 +15,9 @@ void ePlayer::Init(int id_texture)
 	Lane = LANE_3;
 	xValue = -5;
 	yValue = yValueByLane(Lane);
+	maneuverAngle = 0.0;
+	leftManeuverStage = 0;
+	rightManeuverStage = 0;
 }
 
 void ePlayer::setChangeLane(int val)
@@ -62,12 +65,18 @@ void ePlayer::Draw()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	glPushMatrix();
+	glLoadIdentity();
+	glRotatef(maneuverAngle,0.0,0.0,1.0);
+
 	glBegin(GL_QUADS);
 		glTexCoord2f(1.0f, 1.0f); glVertex2f(xValue             , yValue             );
 		glTexCoord2f(0.0f, 1.0f); glVertex2f(xValue - CAR_LENGTH, yValue             );
 		glTexCoord2f(0.0f, 0.0f); glVertex2f(xValue - CAR_LENGTH, yValue - CAR_WIDTH );
 		glTexCoord2f(1.0f, 0.0f); glVertex2f(xValue             , yValue - CAR_WIDTH );
 	glEnd();
+
+	glPopMatrix();
 
 	glBindTexture(GL_TEXTURE_2D,0);
 
@@ -114,6 +123,43 @@ void ePlayer::Move()
 					changeLane = 0;
 			}
 		break;
+	}
+
+	if (changeLane == GO_TO_LEFT || changeLane == RETURN_TO_LEFT) 
+	{
+		if (leftManeuverStage == 0) 
+			leftManeuverStage = 1;
+		if (leftManeuverStage == 1) 
+		{
+			if (maneuverAngle < 4.0) maneuverAngle += 0.06;
+			if (maneuverAngle >= 4.0) leftManeuverStage = -1;
+		}
+		if (leftManeuverStage == -1) 
+		{
+			if (maneuverAngle > 0.0) maneuverAngle -= 0.09;
+			if (maneuverAngle <= 0.0) maneuverAngle = 0.0;
+		}
+	}
+	if (changeLane == GO_TO_RIGHT || changeLane == RETURN_TO_RIGHT) 
+	{
+		if (rightManeuverStage == 0)
+			rightManeuverStage = 1;
+		if (rightManeuverStage == 1) 
+		{
+			if (maneuverAngle > -4.0) maneuverAngle -= 0.06;
+			if (maneuverAngle <= -4.0) rightManeuverStage = -1;
+		}
+		if (rightManeuverStage == -1) 
+		{
+			if (maneuverAngle < 0.0) maneuverAngle += 0.09;
+			if (maneuverAngle >= 0.0) maneuverAngle = 0.0;
+		}
+	}
+	if (changeLane == 0) 
+	{
+		maneuverAngle = 0.0;
+		leftManeuverStage = 0;
+		rightManeuverStage = 0;
 	}
 }
 

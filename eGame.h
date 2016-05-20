@@ -12,7 +12,7 @@
 
 #define FRONT_LIMIT 4
 #define BEHIND_LIMIT 4
-#define MIDDLE_LIMIT 0.5
+#define MIDDLE_LIMIT 1
 
 class eGame
 {

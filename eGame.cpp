@@ -367,20 +367,20 @@ void eGame::AOS()
 	
 	if(state_vehicle_speed == MEDIUM_SPEED)
 	{
-
+		
 	}
 
 	if(Player.getLane() < LANE_3)
 	{
 		if(checkNotPlayerCollision(Player.getLane(), LOOK_FRONT, 7*FRONT_LIMIT) && state_vehicle_speed == LOW_SPEED)
 		{
-			if(checkNotPlayerCollision(Player.getLane()+1, LOOK_MIDDLE, MIDDLE_LIMIT) && checkNotPlayerCollision(Player.getLane()+1, LOOK_FRONT, FRONT_LIMIT))
+			if(checkNotPlayerCollision(Player.getLane()+1, LOOK_MIDDLE, -2) && checkNotPlayerCollision(Player.getLane()+1, LOOK_FRONT, FRONT_LIMIT))
 			{
 				Player.setChangeLane(GO_TO_RIGHT);
 			}
 			else
 			{
-				if(checkNotPlayerCollision(Player.getLane()+1, LOOK_MIDDLE, MIDDLE_LIMIT))
+				if(checkNotPlayerCollision(Player.getLane()+1, LOOK_MIDDLE, 0))
 				{
 					Player.setChangeLane(GO_TO_RIGHT);
 					Road.setChangeSpeed(MEDIUM_SPEED);
@@ -400,7 +400,7 @@ void eGame::AOS()
 				(*it).setChangeSpeed(HIGH_SPEED);
 			}		
 			state_vehicle_speed = HIGH_SPEED;
-			if(checkNotPlayerCollision(Player.getLane()+1, LOOK_MIDDLE, MIDDLE_LIMIT))
+			if(checkNotPlayerCollision(Player.getLane()+1, LOOK_MIDDLE, -1))
 			{
 				Player.setChangeLane(GO_TO_RIGHT);
 				Road.setChangeSpeed(MEDIUM_SPEED);

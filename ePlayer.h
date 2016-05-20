@@ -2,11 +2,6 @@
 
 #include "eCar.h"
 
-#define GO_TO_LEFT 1
-#define GO_TO_RIGHT 2
-#define RETURN_TO_LEFT 3
-#define RETURN_TO_RIGHT 4
-
 class ePlayer : public eCar
 {
 public:
@@ -22,6 +17,7 @@ public:
 
 private:
 	int changeLane;
+	float maneuverAngle,leftManeuverStage,rightManeuverStage;
 
 	float yValueByLane(int l);
 
