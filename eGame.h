@@ -51,6 +51,9 @@ private:
 	ePlayer Player;
 	eMessage newCarButton;
 	eMessage newMercedes, newRetro, newPolice;
+	eMessage aosInfo, playerState;
+	eMessage bothLanesShow, leftLaneShow, rightLaneShow, nothingShow;
+	eMessage speedingShow, cruisingShow, overtakingShow;
 
 	int state_vehicle_speed;
 

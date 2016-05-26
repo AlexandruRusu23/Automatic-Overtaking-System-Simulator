@@ -21,6 +21,18 @@ void eGame::Init()
 	newRetro.InitButton(11.4, -1.8, 4, 3, Data.GetID(IMG_RETRO));
 	newPolice.InitButton(15.8, -1.8, 4, 3, Data.GetID(IMG_POLICE));
 
+	aosInfo.InitButton(-19, -2, 8, 2, Data.GetID(IMG_AOS_INFO));
+	playerState.InitButton(-19, -4.5, 8, 2, Data.GetID(IMG_PLAYER_STATE));
+
+	bothLanesShow.InitButton(-11, -2, 11, 2, Data.GetID(IMG_BOTH_LANES_SHOW) );
+	leftLaneShow.InitButton(-11, -2, 11, 2, Data.GetID(IMG_LEFT_LANE_SHOW) );
+	rightLaneShow.InitButton(-11, -2, 11, 2, Data.GetID(IMG_RIGHT_LANE_SHOW) );
+	nothingShow.InitButton(-11, -2, 11, 2, Data.GetID(IMG_NOTHING_SHOW) );
+
+	speedingShow.InitButton(-11, -4.5, 11, 2, Data.GetID(IMG_SPEEDING_SHOW) );
+	cruisingShow.InitButton(-11, -4.5, 11, 2, Data.GetID(IMG_CRUISING_SHOW) );
+	overtakingShow.InitButton(-11, -4.5, 11, 2, Data.GetID(IMG_OVERTAKING_SHOW) );
+
 	state_vehicle_speed = LOW_SPEED;
 
 	AddCarState = 0;
@@ -208,7 +220,42 @@ void eGame::drawUIButtons()
 {
 	//Render AddCar button
 	newCarButton.drawButton();
+	aosInfo.drawButton();
+	playerState.drawButton();
 
+	if(Player.getLane()<LANE_3)
+		overtakingShow.drawButton();
+	else
+	{
+		if(state_vehicle_speed == LOW_SPEED)
+			speedingShow.drawButton();
+		else
+			cruisingShow.drawButton();
+	}
+
+	if(checkNotPlayerCollision(Player.getLane()-1, LOOK_FRONT, FRONT_LIMIT * 3) && checkNotPlayerCollision(Player.getLane()+1, LOOK_FRONT, FRONT_LIMIT * 3) )
+	{
+		if(Player.getLane() < LANE_4 && Player.getLane() > LANE_1)
+		{
+			bothLanesShow.drawButton();
+		}
+		else
+		{
+			if(checkNotPlayerCollision(Player.getLane()-1, LOOK_FRONT, FRONT_LIMIT * 3))
+			{
+				leftLaneShow.drawButton();
+			}
+			else
+			{
+				if(checkNotPlayerCollision(Player.getLane()+1, LOOK_FRONT, FRONT_LIMIT * 3))
+				{
+					rightLaneShow.drawButton();
+				}
+				else
+					nothingShow.drawButton();
+			}
+		}
+	}
 	//Show car type options
 	if (AddCarState == 1)
 	{
@@ -335,7 +382,7 @@ void eGame::AOS()
 		}
 	}
 
-	if(Player.getLane() == LANE_3 && state_vehicle_speed != MEDIUM_SPEED)
+	if(Player.getLane() == LANE_3)
 	{
 		if(!checkNotPlayerCollision(Player.getLane(), LOOK_FRONT, 2*FRONT_LIMIT)) // car in front of player
 		{
