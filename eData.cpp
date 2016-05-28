@@ -36,24 +36,5 @@ bool eData::Load()
 	aux = LoadImage(IMG_NEW_BUTTON, new string("Texture/Messages/new_button.png"));
 	if(!aux) return false;
 
-	aux = LoadImage(IMG_AOS_INFO, new string("Texture/Messages/aosinfo.png"));
-	if(!aux) return false;
-	aux = LoadImage(IMG_PLAYER_STATE, new string("Texture/Messages/state.png"));
-	if(!aux) return false;
-	aux = LoadImage(IMG_BOTH_LANES_SHOW, new string("Texture/Messages/bothlanes.png"));
-	if(!aux) return false;
-	aux = LoadImage(IMG_RIGHT_LANE_SHOW, new string("Texture/Messages/rightlane.png"));
-	if(!aux) return false;
-	aux = LoadImage(IMG_LEFT_LANE_SHOW, new string("Texture/Messages/leftlane.png"));
-	if(!aux) return false;
-	aux = LoadImage(IMG_CRUISING_SHOW, new string("Texture/Messages/cruising.png"));
-	if(!aux) return false;
-	aux = LoadImage(IMG_SPEEDING_SHOW, new string("Texture/Messages/speeding.png"));
-	if(!aux) return false;
-	aux = LoadImage(IMG_OVERTAKING_SHOW, new string("Texture/Messages/overtaking.png"));
-	if(!aux) return false;
-	aux = LoadImage(IMG_NOTHING_SHOW, new string("Texture/Messages/nothing.png"));
-	if(!aux) return false;
-
 	return true;
 }

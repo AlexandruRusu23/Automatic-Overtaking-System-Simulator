@@ -21,21 +21,10 @@ void eGame::Init()
 	newRetro.InitButton(11.4, -1.8, 4, 3, Data.GetID(IMG_RETRO));
 	newPolice.InitButton(15.8, -1.8, 4, 3, Data.GetID(IMG_POLICE));
 
-	aosInfo.InitButton(-19, -2, 8, 2, Data.GetID(IMG_AOS_INFO));
-	playerState.InitButton(-19, -4.5, 8, 2, Data.GetID(IMG_PLAYER_STATE));
-
-	bothLanesShow.InitButton(-11, -2, 11, 2, Data.GetID(IMG_BOTH_LANES_SHOW) );
-	leftLaneShow.InitButton(-11, -2, 11, 2, Data.GetID(IMG_LEFT_LANE_SHOW) );
-	rightLaneShow.InitButton(-11, -2, 11, 2, Data.GetID(IMG_RIGHT_LANE_SHOW) );
-	nothingShow.InitButton(-11, -2, 11, 2, Data.GetID(IMG_NOTHING_SHOW) );
-
-	speedingShow.InitButton(-11, -4.5, 11, 2, Data.GetID(IMG_SPEEDING_SHOW) );
-	cruisingShow.InitButton(-11, -4.5, 11, 2, Data.GetID(IMG_CRUISING_SHOW) );
-	overtakingShow.InitButton(-11, -4.5, 11, 2, Data.GetID(IMG_OVERTAKING_SHOW) );
-
-	state_vehicle_speed = LOW_SPEED;
-
 	AddCarState = 0;
+	laneToChange = -1;
+	PlayerOvertake = true;
+	PlayerCruising = false;
 }
 
 void eGame::Keyboard(unsigned char key, int x, int y)
@@ -46,84 +35,109 @@ void eGame::Keyboard(unsigned char key, int x, int y)
 			exit(0);
 		break;
 		case '1':
-			if(state_vehicle_speed == HIGH_SPEED)
-				newVehicle.setChangeSpeed(HIGH_SPEED);
-			if(state_vehicle_speed == MEDIUM_SPEED)
-				newVehicle.setChangeSpeed(MEDIUM_SPEED);
-			if(state_vehicle_speed == LOW_SPEED)
-				newVehicle.setChangeSpeed(LOW_SPEED);
-			newVehicle.Init(LANE_1, VISIBLE_X, Data.GetID(IMG_MERCEDES));
-			if(checkFreeSpace(LANE_1, VISIBLE_X))
+			newVehicle.Init(LANE_1, VISIBLE_X, 15, Data.GetID(IMG_MERCEDES));
+			if(checkFreeSpawnSpace(LANE_1, VISIBLE_X))
 				Vehicle.push_back(newVehicle);
 		break;
 		case '2':
-			if(state_vehicle_speed == HIGH_SPEED)
-				newVehicle.setChangeSpeed(HIGH_SPEED);
-			if(state_vehicle_speed == MEDIUM_SPEED)
-				newVehicle.setChangeSpeed(MEDIUM_SPEED);
-			if(state_vehicle_speed == LOW_SPEED)
-				newVehicle.setChangeSpeed(LOW_SPEED);
-			newVehicle.Init(LANE_2, VISIBLE_X, Data.GetID(IMG_RETRO));
-			if(checkFreeSpace(LANE_2, VISIBLE_X))
+			newVehicle.Init(LANE_2, VISIBLE_X, 15, Data.GetID(IMG_RETRO));
+			if(checkFreeSpawnSpace(LANE_2, VISIBLE_X))
 				Vehicle.push_back(newVehicle);
 		break;
 		case '3':
-			if(state_vehicle_speed == HIGH_SPEED)
-				newVehicle.setChangeSpeed(HIGH_SPEED);
-			if(state_vehicle_speed == MEDIUM_SPEED)
-				newVehicle.setChangeSpeed(MEDIUM_SPEED);
-			if(state_vehicle_speed == LOW_SPEED)
-				newVehicle.setChangeSpeed(LOW_SPEED);
-			newVehicle.Init(LANE_3, -VISIBLE_X, Data.GetID(IMG_POLICE));
-			if(checkFreeSpace(LANE_3, -VISIBLE_X))
+			newVehicle.Init(LANE_3, -VISIBLE_X, 5, Data.GetID(IMG_POLICE));
+			if(checkFreeSpawnSpace(LANE_3, -VISIBLE_X))
 				Vehicle.push_back(newVehicle);
 		break;
 		case '4':
-			if(state_vehicle_speed == HIGH_SPEED)
-				newVehicle.setChangeSpeed(HIGH_SPEED);
-			if(state_vehicle_speed == MEDIUM_SPEED)
-				newVehicle.setChangeSpeed(MEDIUM_SPEED);
-			if(state_vehicle_speed == LOW_SPEED)
-				newVehicle.setChangeSpeed(LOW_SPEED);
-			newVehicle.Init(LANE_4, -VISIBLE_X, Data.GetID(IMG_MERCEDES));
-			if(checkFreeSpace(LANE_4, -VISIBLE_X))
+			newVehicle.Init(LANE_4, -VISIBLE_X, 5, Data.GetID(IMG_MERCEDES));
+			if(checkFreeSpawnSpace(LANE_4, -VISIBLE_X))
 				Vehicle.push_back(newVehicle);
 		break;
+
 		case 'o':
-			Road.setChangeSpeed(HIGH_SPEED);
+			Road.increaseSpeed();
 		break;
 		case 'k':
-			Road.setChangeSpeed(MEDIUM_SPEED);
+			Road.decreaseSpeed();
 		break;
-		case 'm':
-			Road.setChangeSpeed(LOW_SPEED);
+
+		case '9':
+			if(PlayerOvertake == true)
+				PlayerOvertake = false;
+			else
+				PlayerOvertake = true;
 		break;
+
+		case 'q':
+			for(vector <eVehicle>::iterator it=Vehicle.begin(); it!= Vehicle.end(); it++)
+			{
+				if((*it).getLane() == LANE_1)
+					(*it).increaseSpeed( (*it).getLane() );
+			}
+		break;
+		case 'a':
+			for(vector <eVehicle>::iterator it=Vehicle.begin(); it!= Vehicle.end(); it++)
+			{
+				if((*it).getLane() == LANE_1)
+					(*it).decreaseSpeed( (*it).getLane() );
+			}		
+		break;
+		
 		case 'w':
 			for(vector <eVehicle>::iterator it=Vehicle.begin(); it!= Vehicle.end(); it++)
 			{
-				(*it).setChangeSpeed(HIGH_SPEED);
+				if((*it).getLane() == LANE_2)
+					(*it).increaseSpeed( (*it).getLane() );
 			}
-			state_vehicle_speed = HIGH_SPEED;
 		break;
 		case 's':
 			for(vector <eVehicle>::iterator it=Vehicle.begin(); it!= Vehicle.end(); it++)
 			{
-				(*it).setChangeSpeed(MEDIUM_SPEED);
+				if((*it).getLane() == LANE_2)
+					(*it).decreaseSpeed( (*it).getLane() );
 			}		
-			state_vehicle_speed = MEDIUM_SPEED;
 		break;
-		case 'x':
+		case 'e':
 			for(vector <eVehicle>::iterator it=Vehicle.begin(); it!= Vehicle.end(); it++)
 			{
-				(*it).setChangeSpeed(LOW_SPEED);
-			}		
-			state_vehicle_speed = LOW_SPEED;
-		break;
-		case 'a':
-			Player.setChangeLane(GO_TO_LEFT);
+				if((*it).getLane() == LANE_3)
+					(*it).increaseSpeed( (*it).getLane() );
+			}
 		break;
 		case 'd':
-			Player.setChangeLane(GO_TO_RIGHT);
+			for(vector <eVehicle>::iterator it=Vehicle.begin(); it!= Vehicle.end(); it++)
+			{
+				if((*it).getLane() == LANE_3)
+					(*it).decreaseSpeed( (*it).getLane() );
+			}		
+		break;
+		case 'r':
+			for(vector <eVehicle>::iterator it=Vehicle.begin(); it!= Vehicle.end(); it++)
+			{
+				if((*it).getLane() == LANE_4)
+					(*it).increaseSpeed( (*it).getLane() );
+			}
+		break;
+		case 'f':
+			for(vector <eVehicle>::iterator it=Vehicle.begin(); it!= Vehicle.end(); it++)
+			{
+				if((*it).getLane() == LANE_4)
+					(*it).decreaseSpeed( (*it).getLane() );
+			}		
+		break;
+
+		case 'z':
+			if(Player.getLane() == LANE_1)
+				Player.MoveToLane(Player.getLane(), GO_TO_LEFT);
+			else	
+				Player.MoveToLane(Player.getLane()-1, GO_TO_LEFT);
+		break;
+		case 'c':
+			if(Player.getLane() == LANE_4)
+				Player.MoveToLane(Player.getLane(), GO_TO_RIGHT);
+			else
+				Player.MoveToLane(Player.getLane()+1, GO_TO_RIGHT);
 		break;
 	}
 }
@@ -168,34 +182,28 @@ void eGame::Mouse(int button,int state,float x,float y)
 	{
 		AddCarState = 0;
 
-		if(state_vehicle_speed == HIGH_SPEED)
-			newVehicle.setChangeSpeed(HIGH_SPEED);
-		if(state_vehicle_speed == MEDIUM_SPEED)
-			newVehicle.setChangeSpeed(MEDIUM_SPEED);
-		if(state_vehicle_speed == LOW_SPEED)
-			newVehicle.setChangeSpeed(LOW_SPEED);
-		if(y <= (Y_L1 +0.8) && y >= (Y_L1 -0.8))
+		if(y <= (Y_L1 + 1) && y >= (Y_L1 - 1))
 		{	
-			newVehicle.Init(LANE_1, x , Data.GetID(carChoice));
-			if(checkFreeSpace(LANE_1, x ))
+			newVehicle.Init(LANE_1, x, 15, Data.GetID(carChoice));
+			if(checkFreeSpawnSpace(LANE_1, x ))
 				Vehicle.push_back(newVehicle);
 		}
 		if(y <= (Y_L2 + 1) && y >= (Y_L2 - 1))
 		{	
-			newVehicle.Init(LANE_2, x , Data.GetID(carChoice));
-			if(checkFreeSpace(LANE_2, x ))
+			newVehicle.Init(LANE_2, x, 15, Data.GetID(carChoice));
+			if(checkFreeSpawnSpace(LANE_2, x ))
 				Vehicle.push_back(newVehicle);
 		}
 		if(y <= (Y_L3 + 1) && y >= (Y_L3 - 1))
 		{	
-			newVehicle.Init(LANE_3, x , Data.GetID(carChoice));
-			if(checkFreeSpace(LANE_3, x ))
+			newVehicle.Init(LANE_3, x, 5, Data.GetID(carChoice));
+			if(checkFreeSpawnSpace(LANE_3, x ))
 				Vehicle.push_back(newVehicle);
 		}
 		if(y <= (Y_L4 + 1) && y >= (Y_L4 - 1))
 		{	
-			newVehicle.Init(LANE_4, x , Data.GetID(carChoice));
-			if(checkFreeSpace(LANE_4, x ))
+			newVehicle.Init(LANE_4, x, 5, Data.GetID(carChoice));
+			if(checkFreeSpawnSpace(LANE_4, x ))
 				Vehicle.push_back(newVehicle);
 		}
 		return;
@@ -214,48 +222,16 @@ void eGame::MouseMotion(float x,float y)
 			AddCarState = 1;
 		return;
 	}
+
+	if ( (x < 8 || y > -2) && AddCarState == 1)
+		AddCarState = 0;
 }
 
 void eGame::drawUIButtons()
 {
 	//Render AddCar button
 	newCarButton.drawButton();
-	aosInfo.drawButton();
-	playerState.drawButton();
 
-	if(Player.getLane()<LANE_3)
-		overtakingShow.drawButton();
-	else
-	{
-		if(state_vehicle_speed == LOW_SPEED)
-			speedingShow.drawButton();
-		else
-			cruisingShow.drawButton();
-	}
-
-	if(checkNotPlayerCollision(Player.getLane()-1, LOOK_FRONT, FRONT_LIMIT * 3) && checkNotPlayerCollision(Player.getLane()+1, LOOK_FRONT, FRONT_LIMIT * 3) )
-	{
-		if(Player.getLane() < LANE_4 && Player.getLane() > LANE_1)
-		{
-			bothLanesShow.drawButton();
-		}
-		else
-		{
-			if(checkNotPlayerCollision(Player.getLane()-1, LOOK_FRONT, FRONT_LIMIT * 3))
-			{
-				leftLaneShow.drawButton();
-			}
-			else
-			{
-				if(checkNotPlayerCollision(Player.getLane()+1, LOOK_FRONT, FRONT_LIMIT * 3))
-				{
-					rightLaneShow.drawButton();
-				}
-				else
-					nothingShow.drawButton();
-			}
-		}
-	}
 	//Show car type options
 	if (AddCarState == 1)
 	{
@@ -267,6 +243,12 @@ void eGame::drawUIButtons()
 
 void eGame::Render()
 {
+
+	if (clock() - fpsclock < 1000000 / FPS) { //60 fps
+		return;
+	}
+	fpsclock = clock();
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
@@ -281,11 +263,25 @@ void eGame::Render()
 	
 	drawUIButtons();
 
-	AOS();
+	Update();
 	
 	glutSwapBuffers();
+}
 
-	usleep(10000);
+void eGame::Update()
+{
+	Road.Move();
+
+	for(vector<eVehicle>::iterator it=Vehicle.begin(); it!=Vehicle.end(); it++)
+	{
+		(*it).Move();
+		(*it).CalcRealSpeed(Road.getSpeed());
+	}
+
+	if(PlayerOvertake == true)
+		AOS();
+	if(PlayerCruising == true)
+		CRUISE();
 }
 
 void eGame::Reshape(int w,int h)
@@ -295,7 +291,7 @@ void eGame::Reshape(int w,int h)
 	glViewport(0,0,w,h);
 }
 
-bool eGame::checkFreeSpace(int lane, float xPos)
+bool eGame::checkFreeSpawnSpace(int lane, float xPos)
 {
 	if(Player.getLane() == lane)
 	{
@@ -315,7 +311,7 @@ bool eGame::checkFreeSpace(int lane, float xPos)
 	return true;
 }
 
-bool eGame::checkNotPlayerCollision(int lane, int direction, int limit)
+bool eGame::checkFreeArea(int lane, int direction, int limit)
 {
 	for(vector<eVehicle>::iterator it=Vehicle.begin(); it!=Vehicle.end(); it++)
 	{
@@ -356,107 +352,152 @@ behind  |     middle         | front
 
 */
 
-//AOS function (in Game because Player interacts will all objects)
+//AOS AI 
 void eGame::AOS()
 {
-	if(Player.getLane() == LANE_4 && state_vehicle_speed != MEDIUM_SPEED)
+	if(!checkFreeArea(Player.getLane(), LOOK_FRONT, 6*FRONT_LIMIT)) // AOS detect a car in front of player
 	{
-		if(!checkNotPlayerCollision(Player.getLane(), LOOK_FRONT, 2*FRONT_LIMIT)) // car in front of player
+		if(!checkFreeArea(Player.getLane(), LOOK_FRONT, 5*FRONT_LIMIT)) // AOS start to verify free spaces for overtaking
 		{
-			if(!checkNotPlayerCollision(Player.getLane(), LOOK_FRONT, FRONT_LIMIT)) // start point to overtake
-			{	
-				if(checkNotPlayerCollision(Player.getLane()-1,LOOK_MIDDLE, MIDDLE_LIMIT) && checkNotPlayerCollision(Player.getLane()-1, LOOK_FRONT, 2*FRONT_LIMIT)) // verify free space on left lane
-				{
-					Player.setChangeLane(GO_TO_LEFT);
-				}
-				else
-				{
-					Road.setChangeSpeed(MEDIUM_SPEED);
-					for(vector <eVehicle>::iterator it=Vehicle.begin(); it!= Vehicle.end(); it++)
-					{
-						(*it).setChangeSpeed(MEDIUM_SPEED);
-					}
-					state_vehicle_speed = MEDIUM_SPEED;
-				}
-			}
-		}
-	}
-
-	if(Player.getLane() == LANE_3)
-	{
-		if(!checkNotPlayerCollision(Player.getLane(), LOOK_FRONT, 2*FRONT_LIMIT)) // car in front of player
-		{
-			if(!checkNotPlayerCollision(Player.getLane(), LOOK_FRONT, FRONT_LIMIT)) //start point to overtake
+			switch (Player.getLane())
 			{
-				if(checkNotPlayerCollision(Player.getLane()+1,LOOK_MIDDLE, MIDDLE_LIMIT) && checkNotPlayerCollision(Player.getLane()+1, LOOK_FRONT, 2*FRONT_LIMIT))
-				{
-					Player.setChangeLane(GO_TO_RIGHT);
-				}
-				else
-				{
-					if(checkNotPlayerCollision(Player.getLane()-1,LOOK_MIDDLE, MIDDLE_LIMIT) && checkNotPlayerCollision(Player.getLane()-1, LOOK_FRONT, 7*FRONT_LIMIT))
+				case LANE_4:
+
+					if(!checkFreeArea(Player.getLane(), LOOK_FRONT, 4*FRONT_LIMIT))
 					{
-						Player.setChangeLane(GO_TO_LEFT);
+						// start semnalizare
+						if (!checkFreeArea(Player.getLane(), LOOK_FRONT, 2*FRONT_LIMIT))
+						{
+							if(checkFreeArea(Player.getLane()-1, LOOK_FRONT, 2*FRONT_LIMIT) && checkFreeArea(Player.getLane()-1, LOOK_MIDDLE, MIDDLE_LIMIT))
+							{
+								if(laneToChange == -1)
+									laneToChange = Player.getLane()-1;
+								if(laneToChange != -1)
+								{
+									if(Player.getLane() > laneToChange)
+										Player.MoveToLane(laneToChange, GO_TO_LEFT);
+									else
+									{
+										laneToChange = -1;
+										// stop semnalizare
+									}
+								}
+							}
+							else
+							{
+								// stop semnalizare 
+								// nu pot depasi
+								PlayerOvertake = false;
+								PlayerCruising = true;
+							}
+						}
+					}
+
+				break;
+
+				case LANE_3:
+						
+						//start semnalizare dreapta
+						if(!checkFreeArea(Player.getLane(), LOOK_FRONT, 4*FRONT_LIMIT))
+						{
+							if (!checkFreeArea(Player.getLane(), LOOK_FRONT, 2*FRONT_LIMIT))
+							{
+								if(checkFreeArea(Player.getLane()+1, LOOK_FRONT, 2*FRONT_LIMIT) && checkFreeArea(Player.getLane()+1, LOOK_MIDDLE, MIDDLE_LIMIT))
+								{
+									if(laneToChange == -1)
+										laneToChange = Player.getLane() + 1;
+									if(laneToChange != -1)
+									{
+										if(Player.getLane() < laneToChange)
+											Player.MoveToLane(laneToChange, GO_TO_RIGHT);
+										else
+										{
+											laneToChange = -1;
+											// stop semnalizare
+										}
+									}
+								}
+								else
+								{
+									// start semnalizare stanga 
+									if(checkFreeArea(Player.getLane()-1, LOOK_FRONT, 2*FRONT_LIMIT) && checkFreeArea(Player.getLane()-1, LOOK_MIDDLE, MIDDLE_LIMIT))
+									{
+										if(laneToChange == -1)
+											laneToChange = Player.getLane()-1;
+										if(laneToChange != -1)
+										{
+											if(Player.getLane() > laneToChange)
+												Player.MoveToLane(laneToChange, GO_TO_LEFT);
+											else
+											{
+												laneToChange = -1;
+												// stop semnalizare
+											}
+										}
+									}
+									else
+									{
+										// stop semnalizare 
+										// nu pot depasi
+										PlayerOvertake = false;
+										PlayerCruising = true;
+									}
+								}
+							}
+						}
+
+				break;
+
+				case LANE_2:
+
+					if(checkFreeArea(Player.getLane() + 1, LOOK_FRONT, 2*FRONT_LIMIT) && checkFreeArea(Player.getLane() + 1, LOOK_MIDDLE, MIDDLE_LIMIT))
+					{
+						if(laneToChange == -1)
+							laneToChange = Player.getLane() + 1;
+						if(laneToChange != -1)
+						{
+							if(Player.getLane() < laneToChange)
+								Player.MoveToLane(laneToChange, GO_TO_RIGHT);
+							else
+								laneToChange = -1;
+						}
 					}
 					else
 					{
-						Road.setChangeSpeed(MEDIUM_SPEED);
-						for(vector <eVehicle>::iterator it=Vehicle.begin(); it!= Vehicle.end(); it++)
-						{
-							(*it).setChangeSpeed(MEDIUM_SPEED);
-						}
-						state_vehicle_speed = MEDIUM_SPEED;
+						PlayerOvertake = false;
+						PlayerCruising = true;
 					}
-				}
+
+				break;	
 			}
 		}
 	}
-	
-	if(state_vehicle_speed == MEDIUM_SPEED)
+	else
 	{
-		
-	}
-
-	if(Player.getLane() < LANE_3)
-	{
-		if(checkNotPlayerCollision(Player.getLane(), LOOK_FRONT, 7*FRONT_LIMIT) && state_vehicle_speed == LOW_SPEED)
+		if(Player.getLane() == LANE_2)
 		{
-			if(checkNotPlayerCollision(Player.getLane()+1, LOOK_MIDDLE, -2) && checkNotPlayerCollision(Player.getLane()+1, LOOK_FRONT, FRONT_LIMIT))
+			if(checkFreeArea(Player.getLane() + 1, LOOK_FRONT, FRONT_LIMIT) && checkFreeArea(Player.getLane() + 1, LOOK_MIDDLE, MIDDLE_LIMIT))
 			{
-				Player.setChangeLane(GO_TO_RIGHT);
+				if(laneToChange == -1)
+					laneToChange = Player.getLane() + 1;
+				if(laneToChange != -1)
+				{
+					if(Player.getLane() < laneToChange)
+						Player.MoveToLane(laneToChange, GO_TO_RIGHT);
+					else
+						laneToChange = -1;
+				}
 			}
 			else
 			{
-				if(checkNotPlayerCollision(Player.getLane()+1, LOOK_MIDDLE, 0))
-				{
-					Player.setChangeLane(GO_TO_RIGHT);
-					Road.setChangeSpeed(MEDIUM_SPEED);
-					for(vector <eVehicle>::iterator it=Vehicle.begin(); it!= Vehicle.end(); it++)
-					{
-						(*it).setChangeSpeed(MEDIUM_SPEED);
-					}
-					state_vehicle_speed = MEDIUM_SPEED;
-				}
-			}
-		}
-		else
-		{
-			Road.setChangeSpeed(LOW_SPEED);
-			for(vector <eVehicle>::iterator it=Vehicle.begin(); it!= Vehicle.end(); it++)
-			{
-				(*it).setChangeSpeed(HIGH_SPEED);
-			}		
-			state_vehicle_speed = HIGH_SPEED;
-			if(checkNotPlayerCollision(Player.getLane()+1, LOOK_MIDDLE, -1))
-			{
-				Player.setChangeLane(GO_TO_RIGHT);
-				Road.setChangeSpeed(MEDIUM_SPEED);
-				for(vector <eVehicle>::iterator it=Vehicle.begin(); it!= Vehicle.end(); it++)
-				{
-					(*it).setChangeSpeed(MEDIUM_SPEED);
-				}
-				state_vehicle_speed = MEDIUM_SPEED;
-			}
+				PlayerOvertake = false;
+				PlayerCruising = true;
+			}			
 		}
 	}
+}
+
+void eGame::CRUISE()
+{
+
 }

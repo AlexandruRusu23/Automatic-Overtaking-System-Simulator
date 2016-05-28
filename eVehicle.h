@@ -8,24 +8,28 @@ public:
 	eVehicle();
 	~eVehicle();
 
-	void setChangeSpeed(int val);
+	void setChangeSpeed(int type, int lane);
 	int getChangeSpeed();
 
 	//data initialization
-	void Init(int lane, float xPos, int id_texture);
+	void Init(int Lane, float xValue, int speed_units, int id_texture);
 
 	//draw and move function
 	void Draw();
 
 	bool notInRange(int lane, float xPos);
 
-private:
-	int changeSpeed;
-
 	void Move();
 
+	void increaseSpeed() {}
+	void decreaseSpeed() {} 
+
 	//Speed changing functions
-	void SetLowSpeed();
-	void SetMediumSpeed();
-	void SetHighSpeed();
+	void increaseSpeed(int Lane);
+	void decreaseSpeed(int Lane);
+
+	void CalcRealSpeed(float road_speed);
+
+private:
+	int realSpeed;
 };

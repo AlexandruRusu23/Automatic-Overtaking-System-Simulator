@@ -13,6 +13,7 @@
 #define FRONT_LIMIT 4
 #define BEHIND_LIMIT 4
 #define MIDDLE_LIMIT 1
+#define FPS 60
 
 class eGame
 {
@@ -30,12 +31,15 @@ public:
 	void Mouse(int button,int state,float x,float y);
 	void MouseMotion(float x,float y);
 
-	bool checkNotPlayerCollision(int lane, int direction, int limit);
+	bool checkFreeArea(int lane, int direction, int limit);
 
 	void AOS();
+	void CRUISE();
 
 	//draw and move all objects
 	void Render();
+
+	void Update();
 
 	//get window size
 	void Reshape(int w,int h);
@@ -51,15 +55,17 @@ private:
 	ePlayer Player;
 	eMessage newCarButton;
 	eMessage newMercedes, newRetro, newPolice;
-	eMessage aosInfo, playerState;
-	eMessage bothLanesShow, leftLaneShow, rightLaneShow, nothingShow;
-	eMessage speedingShow, cruisingShow, overtakingShow;
 
-	int state_vehicle_speed;
+	int state_Update;
 
 	int AddCarState,carChoice;
 	float windowWidth,windowHeight;
+	int fpsclock;
 
-	bool checkFreeSpace(int lane, float xPos);
+	int laneToChange;
+
+	bool PlayerOvertake, PlayerCruising;
+
+	bool checkFreeSpawnSpace(int lane, float xPos);
 	void drawUIButtons();
 };

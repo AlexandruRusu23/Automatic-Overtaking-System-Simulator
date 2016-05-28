@@ -2,11 +2,9 @@
 
 #include "Global.h"
 
-#define ROAD_SLOW_SPEED 0.05
-#define ROAD_MEDIUM_SPEED 0.1
-#define ROAD_HIGH_SPEED 0.15
+#define ROAD_SPEED 0.01
 
-#define UNIT 0.0005 //unit for add or reduce to change road speed
+#define DELAY_UNIT 0.5
 
 class eRoad
 {
@@ -14,7 +12,7 @@ public:
 	eRoad();
 	~eRoad();
 
-	void setChangeSpeed(int val);
+	float getSpeed();
 
 	//calculate road coords and dimension
 	void Load(int id_texture);
@@ -22,17 +20,15 @@ public:
 	//draw and move the road
 	void Draw();
 
-private:
-	float speed;
-	float xValue[4], yValue, xLength, yLength;
-
-	int id_texture;
-	int changeSpeed; 
-
 	void Move();
 
 	//speed changing functions
-	void SetSlowSpeed();
-	void SetMediumSpeed(); 
-	void SetHighSpeed(); 
+	void increaseSpeed();
+	void decreaseSpeed();  
+
+private:
+	float Speed;
+	float xValue[4], yValue, xLength, yLength;
+
+	int id_texture;
 };

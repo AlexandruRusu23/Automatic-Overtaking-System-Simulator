@@ -10,23 +10,17 @@ public:
 
 	void Init(int id_texture);
 
-	void setChangeLane(int val);
-
 	//draw and move functions
 	void Draw();
 
+	//lane changing
+	void MoveToLane(int Lane, int direction);
+	
 private:
-	int changeLane;
-	float maneuverAngle,leftManeuverStage,rightManeuverStage;
+	int moveTo;
 
 	float yValueByLane(int l);
 
-	void Move();
-
-	//lane changing
-	void MoveToLane(int lane);
-	
-	void SetLowSpeed();
-	void SetMediumSpeed();
-	void SetHighSpeed();
+	void increaseSpeed();
+	void decreaseSpeed();
 };

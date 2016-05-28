@@ -1,93 +1,34 @@
 #include "eVehicle.h"
 
-eVehicle::eVehicle() 
-{
-	changeSpeed = 0;
-}
+eVehicle::eVehicle() {}
 eVehicle::~eVehicle(){}
 
-void eVehicle::setChangeSpeed(int val) { changeSpeed = val; }
-int eVehicle::getChangeSpeed() { return changeSpeed; }
-
-void eVehicle::Init(int lane,float xPos, int id_texture)
+void eVehicle::Init(int Lane, float xValue, int speed_units, int id_texture)
 {
+	this->Lane = Lane;
+	this->xValue = xValue;
 	this->id_texture = id_texture;
-	Lane = lane;
-	xValue = xPos;
-	switch(Lane)
+
+	switch(this->Lane)
 	{
 		case LANE_1:
-			yValue = Y_L1;
-			switch (changeSpeed)
-			{
-				case HIGH_SPEED:
-					Speed = 2*SPEED_SCALE;
-				break;
-				case MEDIUM_SPEED:
-					Speed = 3*SPEED_SCALE;
-				break;
-				case LOW_SPEED:
-					Speed = 4*SPEED_SCALE;
-				break;
-			}
-			if(xPos < -50)
-				xValue = VISIBLE_X - epsilon;
+			this->Speed = SPEED_STEP * speed_units;
+			this->yValue = Y_L1;
 		break;
 		case LANE_2:
-			yValue = Y_L2;
-			switch (changeSpeed)
-			{
-				case HIGH_SPEED:
-					Speed = 2*SPEED_SCALE;
-				break;
-				case MEDIUM_SPEED:
-					Speed = 3*SPEED_SCALE;
-				break;
-				case LOW_SPEED:
-					Speed = 4*SPEED_SCALE;
-				break;
-			}
-			if(xPos < -50)
-				xValue = VISIBLE_X - epsilon;
+			this->Speed = SPEED_STEP * speed_units;
+			this->yValue = Y_L2;
 		break;
 		case LANE_3:
-			yValue = Y_L3;
-			switch (changeSpeed)
-			{
-				case HIGH_SPEED:
-					Speed = SPEED_SCALE;
-				break;
-				case MEDIUM_SPEED:
-					Speed = 0;
-				break;
-				case LOW_SPEED:
-					Speed = -SPEED_SCALE;
-				break;
-			}
-			if(xPos < -50)
-				xValue = -VISIBLE_X + epsilon;
+			this->Speed = SPEED_STEP * speed_units;
+			this->yValue = Y_L3;
 		break;
 		case LANE_4:
-			yValue = Y_L4;
-			switch (changeSpeed)
-			{
-				case HIGH_SPEED:
-					Speed = 2*SPEED_SCALE;
-				break;
-				case MEDIUM_SPEED:
-					Speed = 0;
-				break;
-				case LOW_SPEED:
-					Speed = -SPEED_SCALE;
-				break;
-			}
-			if(xPos < -50)
-				xValue = -VISIBLE_X + epsilon;
+			this->Speed = SPEED_STEP * speed_units;
+			this->yValue = Y_L4;
 		break;
 	}
-	changeSpeed = 0;
 }
-
 void eVehicle::Draw()
 {
 	glBindTexture(GL_TEXTURE_2D, id_texture);
@@ -116,8 +57,6 @@ void eVehicle::Draw()
 	glBindTexture(GL_TEXTURE_2D,0);
 
 	glDisable(GL_BLEND);
-
-	Move();
 }
 
 void eVehicle::Move()
@@ -144,124 +83,48 @@ void eVehicle::Move()
 			xValue = VISIBLE_X + 4*CAR_LENGTH;
 		}
 	}
-
-	switch (changeSpeed)
-	{
-		case LOW_SPEED:
-			SetLowSpeed();
-		break;
-		case MEDIUM_SPEED:
-			SetMediumSpeed();
-		break;
-		case HIGH_SPEED:
-			SetHighSpeed();
-		break;
-	}
 }
 
-void eVehicle::SetLowSpeed()
+void eVehicle::CalcRealSpeed(float road_speed)
 {
-	if(changeSpeed == LOW_SPEED)
+	int road_kmh = int(road_speed/SPEED_STEP * 3); // player_speed
+
+	int veh_kmh = int ( (road_speed - abs(Speed)) / SPEED_STEP * 3 );
+
+	veh_kmh = road_kmh - veh_kmh; // diferenta de viteza dintre player si masina
+
+	int result;
+
+	if(Speed == 0)
+		result = road_kmh;
+	else
 	{
-		if(Lane > LANE_2)
+		if(Speed > 0)
 		{
-			if(Speed > -SPEED_SCALE)
-			{
-				Speed -= SPEED_UNIT;
-			}
-			else
-			{
-				Speed = -SPEED_SCALE;
-				changeSpeed = 0;
-			}
+			result = road_kmh + veh_kmh;
 		}
 		else
 		{
-			if(Speed < 4*SPEED_SCALE)
-			{
-				Speed += SPEED_UNIT;
-			}
-			else
-			{
-				Speed = 4*SPEED_SCALE;
-				changeSpeed = 0;
-			}
+			result = road_kmh - veh_kmh;
 		}
+	}
+
+	printf("Player speed: %d Car Speed: %d\n", road_kmh, result ); 
+
+}
+
+void eVehicle::increaseSpeed(int Lane)
+{
+	if(this->Lane == Lane)
+	{
+		this->Speed += SPEED_STEP;
 	}
 }
 
-void eVehicle::SetMediumSpeed()
+void eVehicle::decreaseSpeed(int Lane)
 {
-	if(changeSpeed == MEDIUM_SPEED)
+	if(this->Lane == Lane)
 	{
-		if(Lane > LANE_2)
-		{
-			if(Speed > 0)
-			{
-				Speed -= SPEED_UNIT;
-			}
-			else
-			{
-				if(Speed < 0)
-				{
-					Speed += SPEED_UNIT;
-				}
-			}
-			if(Speed > -epsilon && Speed < epsilon)
-			{				
-				Speed = 0;
-				changeSpeed = 0;
-			}
-		}
-		else
-		{
-			if(Speed > 3*SPEED_SCALE)
-			{
-				Speed -= SPEED_UNIT;
-			}
-			else
-			{
-				if(Speed < 3*SPEED_SCALE)
-				{
-					Speed += SPEED_UNIT;
-				}
-			}
-			if(Speed > 3*SPEED_SCALE - epsilon && Speed < 3*SPEED_SCALE + epsilon)
-			{
-				Speed = 3*SPEED_SCALE;
-				changeSpeed = 0;
-			}
-		}
-	}
-}
-
-void eVehicle::SetHighSpeed()
-{
-	if(changeSpeed == HIGH_SPEED)
-	{
-		if(Lane > LANE_2)
-		{
-			if(Speed < SPEED_SCALE)
-			{
-				Speed += SPEED_UNIT;
-			}
-			else
-			{
-				Speed = SPEED_SCALE;
-				changeSpeed = 0;			
-			}
-		}
-		else
-		{
-			if(Speed > 2*SPEED_SCALE)
-			{
-				Speed -= SPEED_UNIT;
-			}
-			else
-			{
-				Speed = 2*SPEED_SCALE;
-				changeSpeed = 0;
-			}
-		}
+		this->Speed -= SPEED_STEP;
 	}
 }
