@@ -3,7 +3,7 @@
 eVehicle::eVehicle() {}
 eVehicle::~eVehicle(){}
 
-void eVehicle::Init(int Lane, float xValue, int speed_units, int id_texture)
+void eVehicle::Init(int Lane, float xValue,float speed_units, int id_texture)
 {
 	this->Lane = Lane;
 	this->xValue = xValue;
@@ -12,19 +12,19 @@ void eVehicle::Init(int Lane, float xValue, int speed_units, int id_texture)
 	switch(this->Lane)
 	{
 		case LANE_1:
-			this->Speed = SPEED_STEP * speed_units;
+			this->Speed = speed_units;
 			this->yValue = Y_L1;
 		break;
 		case LANE_2:
-			this->Speed = SPEED_STEP * speed_units;
+			this->Speed = speed_units;
 			this->yValue = Y_L2;
 		break;
 		case LANE_3:
-			this->Speed = SPEED_STEP * speed_units;
+			this->Speed = speed_units;
 			this->yValue = Y_L3;
 		break;
 		case LANE_4:
-			this->Speed = SPEED_STEP * speed_units;
+			this->Speed = speed_units;
 			this->yValue = Y_L4;
 		break;
 	}
@@ -83,34 +83,6 @@ void eVehicle::Move()
 			xValue = VISIBLE_X + 4*CAR_LENGTH;
 		}
 	}
-}
-
-void eVehicle::CalcRealSpeed(float road_speed)
-{
-	int road_kmh = int(road_speed/SPEED_STEP * 3); // player_speed
-
-	int veh_kmh = int ( (road_speed - abs(Speed)) / SPEED_STEP * 3 );
-
-	veh_kmh = road_kmh - veh_kmh; // diferenta de viteza dintre player si masina
-
-	int result;
-
-	if(Speed == 0)
-		result = road_kmh;
-	else
-	{
-		if(Speed > 0)
-		{
-			result = road_kmh + veh_kmh;
-		}
-		else
-		{
-			result = road_kmh - veh_kmh;
-		}
-	}
-
-	//printf("Player speed: %d Car Speed: %d\n", road_kmh, result ); 
-
 }
 
 void eVehicle::increaseSpeed()

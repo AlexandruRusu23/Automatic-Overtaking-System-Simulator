@@ -12,7 +12,7 @@ public:
 	int getChangeSpeed();
 
 	//data initialization
-	void Init(int Lane, float xValue, int speed_units, int id_texture);
+	void Init(int Lane, float xValue, float speed_units, int id_texture);
 
 	//draw and move function
 	void Draw();
@@ -24,9 +24,4 @@ public:
 	//Speed changing functions
 	void increaseSpeed();
 	void decreaseSpeed();
-
-	void CalcRealSpeed(float road_speed);
-
-private:
-	int realSpeed;
 };

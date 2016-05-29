@@ -6,8 +6,8 @@
 #include "ePlayer.h"
 #include "eMessage.h"
 
-#define KM_H_110 36
-#define KM_H_18 7
+#define KM_H_110 0.36
+#define KM_H_18 0.07
 
 #define LOOK_FRONT 1
 #define LOOK_BEHIND 2
