@@ -6,6 +6,9 @@
 #include "ePlayer.h"
 #include "eMessage.h"
 
+#define KM_H_110 36
+#define KM_H_18 7
+
 #define LOOK_FRONT 1
 #define LOOK_BEHIND 2
 #define LOOK_MIDDLE 3
@@ -54,13 +57,25 @@ private:
 
 	ePlayer Player;
 	eMessage newCarButton;
-	eMessage newMercedes, newRetro, newPolice;
+	eMessage newMercedes, newRetro, newPolice, newPorsche, newTir;
+	eMessage changePlayer, speedUpPlayer, speedDownPlayer;
+	eMessage cruiseButton, aosButton, panel;
+	eMessage aosInfo, stateInfo, aosInfoText, stateInfoText;
+	eMessage blinker;
 
-	int state_Update;
+	eMessage numar1,numar2,numar3;
+	eMessage kilometru;
+
+	eMessage playerInfo;
+	eMessage playButton;
+	bool gameRunning;
 
 	int AddCarState,carChoice;
+	int changePlayerSkin;
+	int showPlayerInfo;
 	float windowWidth,windowHeight;
 	int fpsclock;
+	int blinkRatio;
 
 	int laneToChange;
 

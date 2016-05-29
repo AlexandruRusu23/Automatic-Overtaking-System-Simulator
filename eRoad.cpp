@@ -11,7 +11,7 @@ float eRoad::getSpeed()
 void eRoad::Load(int id_texture)
 {
 	this->id_texture = id_texture;
-	this->Speed = 5*ROAD_SPEED;
+	this->Speed = 20*ROAD_SPEED;
 	this->xLength = VISIBLE_X + VISIBLE_X * 0.1; // 20 units + 10% OF XLENGTH
 	this->yLength = VISIBLE_Y ; // 12 units
 	this->xValue[0] = -VISIBLE_X - VISIBLE_X * 0.05; // - ( 20 + 5% of VISIBLE_X )

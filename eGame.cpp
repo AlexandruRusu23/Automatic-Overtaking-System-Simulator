@@ -16,15 +16,34 @@ void eGame::Init()
 	Data.Load();
 	Road.Load(Data.GetID(IMG_ROAD));
 	Player.Init(Data.GetID(IMG_PORSCHE));
-	newCarButton.InitButton(15.5, -5.5, 4, 4, Data.GetID(IMG_NEW_BUTTON));
-	newMercedes.InitButton(7.2, -1.8, 4, 3, Data.GetID(IMG_MERCEDES));
-	newRetro.InitButton(11.4, -1.8, 4, 3, Data.GetID(IMG_RETRO));
-	newPolice.InitButton(15.8, -1.8, 4, 3, Data.GetID(IMG_POLICE));
+
+	newCarButton.InitButton(16.5, -6.5, 3, 3, Data.GetID(IMG_NEW_BUTTON));
+	newMercedes.InitButton(16.5, -1.1, 3, 1.8, Data.GetID(IMG_MERCEDES));
+	newRetro.InitButton(16.5, -2.9, 3, 1.8, Data.GetID(IMG_RETRO));
+	newPolice.InitButton(16.5, -4.7, 3, 1.8, Data.GetID(IMG_POLICE));
+
+	changePlayer.InitButton(12, -6.5, 3, 3, Data.GetID(IMG_CHANGE_PLAYER_BUTTON));
+	newPorsche.InitButton(12, -2.9, 3, 1.8, Data.GetID(IMG_PORSCHE));
+	newTir.InitButton(11, -4.7, 5, 1.8, Data.GetID(IMG_TIR));
+
+	speedUpPlayer.InitButton(-19.8, -1.2, 3.5, 2, Data.GetID(IMG_PLUS_BUTTON));
+	speedDownPlayer.InitButton(-16.3, -1.2, 3.5, 2, Data.GetID(IMG_MINUS_BUTTON));
+	cruiseButton.InitButton(-19.6, -3.3, 6.7, 2, Data.GetID(IMG_CRUISE_BUTTON_OFF));
+	aosButton.InitButton(-19.6, -5.5, 6.7, 2, Data.GetID(IMG_AOS_ON));
+	
+	panel.InitButton(-11.3, -1.1, 22, 8.8, Data.GetID(IMG_PANEL));
+	aosInfo.InitButton(-8, -1.8, 4, 1, Data.GetID(IMG_AOS_INFO));
+	stateInfo.InitButton(-8, -2.8, 3, 1, Data.GetID(IMG_STATE_INFO));
+	aosInfoText.InitButton(-3.8, -1.8, 7, 1, Data.GetID(IMG_NOTHING_TEXT));
+	stateInfoText.InitButton(-3.8, -2.8, 4, 1, Data.GetID(IMG_SPEEDING_TEXT));
+
+	playButton.InitButton(-19.8, -7.8, 2, 2, Data.GetID(IMG_PLAY_BUTTON));
 
 	AddCarState = 0;
 	laneToChange = -1;
 	PlayerOvertake = true;
 	PlayerCruising = false;
+	gameRunning = true;
 }
 
 void eGame::Keyboard(unsigned char key, int x, int y)
@@ -64,23 +83,29 @@ void eGame::Keyboard(unsigned char key, int x, int y)
 
 		case '9':
 			if(PlayerOvertake == true)
+			{
 				PlayerOvertake = false;
+				PlayerCruising = true;
+			}
 			else
+			{
+				PlayerCruising = false;
 				PlayerOvertake = true;
+			}
 		break;
 
 		case 'q':
 			for(vector <eVehicle>::iterator it=Vehicle.begin(); it!= Vehicle.end(); it++)
 			{
 				if((*it).getLane() == LANE_1)
-					(*it).increaseSpeed( (*it).getLane() );
+					(*it).increaseSpeed();
 			}
 		break;
 		case 'a':
 			for(vector <eVehicle>::iterator it=Vehicle.begin(); it!= Vehicle.end(); it++)
 			{
 				if((*it).getLane() == LANE_1)
-					(*it).decreaseSpeed( (*it).getLane() );
+					(*it).decreaseSpeed();
 			}		
 		break;
 		
@@ -88,42 +113,42 @@ void eGame::Keyboard(unsigned char key, int x, int y)
 			for(vector <eVehicle>::iterator it=Vehicle.begin(); it!= Vehicle.end(); it++)
 			{
 				if((*it).getLane() == LANE_2)
-					(*it).increaseSpeed( (*it).getLane() );
+					(*it).increaseSpeed();
 			}
 		break;
 		case 's':
 			for(vector <eVehicle>::iterator it=Vehicle.begin(); it!= Vehicle.end(); it++)
 			{
 				if((*it).getLane() == LANE_2)
-					(*it).decreaseSpeed( (*it).getLane() );
+					(*it).decreaseSpeed();
 			}		
 		break;
 		case 'e':
 			for(vector <eVehicle>::iterator it=Vehicle.begin(); it!= Vehicle.end(); it++)
 			{
 				if((*it).getLane() == LANE_3)
-					(*it).increaseSpeed( (*it).getLane() );
+					(*it).increaseSpeed();
 			}
 		break;
 		case 'd':
 			for(vector <eVehicle>::iterator it=Vehicle.begin(); it!= Vehicle.end(); it++)
 			{
 				if((*it).getLane() == LANE_3)
-					(*it).decreaseSpeed( (*it).getLane() );
+					(*it).decreaseSpeed();
 			}		
 		break;
 		case 'r':
 			for(vector <eVehicle>::iterator it=Vehicle.begin(); it!= Vehicle.end(); it++)
 			{
 				if((*it).getLane() == LANE_4)
-					(*it).increaseSpeed( (*it).getLane() );
+					(*it).increaseSpeed();
 			}
 		break;
 		case 'f':
 			for(vector <eVehicle>::iterator it=Vehicle.begin(); it!= Vehicle.end(); it++)
 			{
 				if((*it).getLane() == LANE_4)
-					(*it).decreaseSpeed( (*it).getLane() );
+					(*it).decreaseSpeed();
 			}		
 		break;
 
@@ -153,6 +178,114 @@ void eGame::Mouse(int button,int state,float x,float y)
 	{
 		AddCarState = 1;
 		return;
+	}
+
+	if (playButton.insideButton(x, y))
+	{
+		if(gameRunning == true)
+		{
+			gameRunning = false;
+			playButton.InitButton(-19.8, -7.8, 2, 2, Data.GetID(IMG_PAUSE_BUTTON));
+		}
+		else
+		{
+			gameRunning = true;
+			playButton.InitButton(-19.8, -7.8, 2, 2, Data.GetID(IMG_PLAY_BUTTON));
+		}
+	}
+
+	int tir_restriction = 0;
+
+	if (Player.getLength() == TIR_LENGTH)
+		tir_restriction = 7;
+
+
+	if (speedUpPlayer.insideButton(x, y))
+	{
+		if(Road.getSpeed() / SPEED_STEP < KM_H_110 - tir_restriction)
+		{
+			Road.increaseSpeed();
+			for(vector<eVehicle>::iterator it= Vehicle.begin(); it!=Vehicle.end(); it++)
+			{
+				if((*it).getLane() > LANE_2)
+				{
+					(*it).decreaseSpeed();
+				}
+				else
+				{
+					if((*it).getSpeed() / SPEED_STEP < ( KM_H_110 - 2*KM_H_18 ) )
+						(*it).increaseSpeed();
+				}
+			}
+		}
+	}
+
+	if( Player.insideArea(x, y))
+	{
+		showPlayerInfo = 1; 
+	}
+
+	if( playerInfo.insideButton(x, y))
+	{
+		showPlayerInfo = 0;
+	}
+
+	if (speedDownPlayer.insideButton(x, y))
+	{
+		if(Road.getSpeed() / SPEED_STEP > KM_H_18)
+		{
+			Road.decreaseSpeed();
+			for(vector<eVehicle>::iterator it= Vehicle.begin(); it!=Vehicle.end(); it++)
+			{
+				if((*it).getLane() > LANE_2)
+				{
+					//if((*it).getSpeed() / SPEED_STEP < ( KM_H_110 - 2*KM_H_18 ) )
+						(*it).increaseSpeed();
+				}
+				else
+				{
+					if((*it).getSpeed() / SPEED_STEP > 2*KM_H_18 + 1 )
+						(*it).decreaseSpeed();
+				}
+			}
+		}
+	}
+
+	if(cruiseButton.insideButton(x,y))
+	{
+		if(PlayerCruising == true)
+		{
+			cruiseButton.InitButton(-19.6, -3.3, 6.7, 2, Data.GetID(IMG_CRUISE_BUTTON_OFF));
+			aosButton.InitButton(-19.6, -5.5, 6.7, 2, Data.GetID(IMG_AOS_ON));
+			PlayerCruising = false;
+			PlayerOvertake = true;
+		}
+		else
+		{
+			cruiseButton.InitButton(-19.6, -3.3, 6.7, 2, Data.GetID(IMG_CRUISE_BUTTON_ON));
+			aosButton.InitButton(-19.6, -5.5, 6.7, 2, Data.GetID(IMG_AOS_OFF));
+			PlayerCruising = true;
+			PlayerOvertake = false;
+		}
+
+	}
+
+	if (aosButton.insideButton(x,y))
+	{
+		if(PlayerOvertake == true)
+		{
+			aosButton.InitButton(-19.6, -5.5, 6.7, 2, Data.GetID(IMG_AOS_OFF));
+			cruiseButton.InitButton(-19.6, -3.3, 6.7, 2, Data.GetID(IMG_CRUISE_BUTTON_ON));
+			PlayerOvertake = false;
+			PlayerCruising = true;
+		}
+		else
+		{
+			aosButton.InitButton(-19.6, -5.5, 6.7, 2, Data.GetID(IMG_AOS_ON));
+			cruiseButton.InitButton(-19.6, -3.3, 6.7, 2, Data.GetID(IMG_CRUISE_BUTTON_OFF));
+			PlayerOvertake = true;
+			PlayerCruising = false;
+		}
 	}
 
 	if (AddCarState == 1)
@@ -208,6 +341,29 @@ void eGame::Mouse(int button,int state,float x,float y)
 		}
 		return;
 	}
+
+	if (changePlayer.insideButton(x,y))
+	{
+		changePlayerSkin = 1;
+	}
+
+	if (changePlayerSkin == 1)
+	{
+		if(newPorsche.insideButton(x,y))
+		{
+			Player.setID(Data.GetID(IMG_PORSCHE));
+			Player.setLength(CAR_LENGTH);
+		}
+		if(newTir.insideButton(x,y))
+		{
+			if(Road.getSpeed() / SPEED_STEP <= KM_H_110 - 7)
+			{
+				Player.setID(Data.GetID(IMG_TIR));
+				Player.setLength(TIR_LENGTH);
+			}
+		}
+	}
+
 }
 
 void eGame::MouseMotion(float x,float y)
@@ -223,14 +379,91 @@ void eGame::MouseMotion(float x,float y)
 		return;
 	}
 
-	if ( (x < 8 || y > -2) && AddCarState == 1)
+	if (changePlayer.insideButton(x,y))
+	{
+		if(changePlayerSkin == 0)
+			changePlayerSkin = 1;
+		return;
+	}
+
+	if ( (x < 16 || y > -1) && AddCarState == 1)
 		AddCarState = 0;
+
+	if( (x<11.5 || y > -1 || x > 16) && changePlayerSkin == 1)
+		changePlayerSkin = 0;
 }
 
 void eGame::drawUIButtons()
 {
+	playButton.drawButton();
 	//Render AddCar button
 	newCarButton.drawButton();
+
+	changePlayer.drawButton();
+
+	speedUpPlayer.drawButton();
+	speedDownPlayer.drawButton();
+	cruiseButton.drawButton();
+	aosButton.drawButton();
+
+	panel.drawButton();
+	aosInfo.drawButton();
+	stateInfo.drawButton();
+	aosInfoText.drawButton();
+	stateInfoText.drawButton();
+
+	if(blinkRatio < 50)
+	{
+		blinker.drawButton();
+		blinkRatio++;
+	}
+	else
+	{
+		if(blinkRatio < 100)
+			blinkRatio ++;
+		else
+			blinkRatio = 0;
+	}
+
+	if(laneToChange != -1)
+	{
+		stateInfoText.InitButton(-3.8, -2.8, 4, 1, Data.GetID(IMG_OVERTAKING_TEXT));
+	}
+	else
+	{
+		if(PlayerCruising == true)
+		{
+			stateInfoText.InitButton(-3.8, -2.8, 4, 1, Data.GetID(IMG_CRUISING_TEXT));
+		}
+		else
+		{
+			stateInfoText.InitButton(-3.8, -2.8, 4, 1, Data.GetID(IMG_SPEEDING_TEXT));
+		}
+	}
+
+	if(checkFreeArea(Player.getLane() - 1, LOOK_FRONT, 4*FRONT_LIMIT) && checkFreeArea(Player.getLane() + 1, LOOK_FRONT, 4*FRONT_LIMIT))
+	{
+		aosInfoText.InitButton(-3.8, -1.8, 10, 1, Data.GetID(IMG_BOTH_LANES_TEXT));
+	}
+	else
+	{
+		if(checkFreeArea(Player.getLane() - 1, LOOK_FRONT, 4*FRONT_LIMIT))
+			aosInfoText.InitButton(-3.8, -1.8, 10, 1, Data.GetID(IMG_LEFT_LANE_TEXT));
+		else
+			if(checkFreeArea(Player.getLane() + 1, LOOK_FRONT, 4*FRONT_LIMIT))
+				aosInfoText.InitButton(-3.8, -1.8, 10, 1, Data.GetID(IMG_RIGHT_LANE_TEXT));
+			else
+				aosInfoText.InitButton(-3.8, -1.8, 7, 1, Data.GetID(IMG_NOTHING_TEXT));
+	}
+
+	if(showPlayerInfo == 1)
+	{
+		playerInfo.drawButton();
+		numar1.drawButton();
+		numar2.drawButton();
+		numar3.drawButton();
+		kilometru.drawButton();
+	}
 
 	//Show car type options
 	if (AddCarState == 1)
@@ -238,6 +471,12 @@ void eGame::drawUIButtons()
 		newMercedes.drawButton();
 		newPolice.drawButton();
 		newRetro.drawButton();
+	}
+
+	if(changePlayerSkin == 1)
+	{
+		newPorsche.drawButton();
+		newTir.drawButton();
 	}
 }
 
@@ -263,7 +502,8 @@ void eGame::Render()
 	
 	drawUIButtons();
 
-	Update();
+	if(gameRunning == true)
+		Update();
 	
 	glutSwapBuffers();
 }
@@ -279,9 +519,24 @@ void eGame::Update()
 	}
 
 	if(PlayerOvertake == true)
+	{
+		cruiseButton.InitButton(-19.6, -3.3, 6.7, 2, Data.GetID(IMG_CRUISE_BUTTON_OFF));
 		AOS();
+	}
 	if(PlayerCruising == true)
+	{
+		cruiseButton.InitButton(-19.6, -3.3, 6.7, 2, Data.GetID(IMG_CRUISE_BUTTON_ON));
 		CRUISE();
+	}
+
+	int km = (int) (Road.getSpeed()/SPEED_STEP * 3);
+	int nr3 = km%10; km/=10; int nr2 = km%10; km/=10; int nr1 = km%10; km = 0;
+
+	playerInfo.InitButton(Player.getxValue(), Player.getyValue() + 3, 4, 4, Data.GetID(IMG_PLAYER_INFO));
+	numar1.InitButton(Player.getxValue() + 0.5, Player.getyValue() + 2.3, 1, 1, Data.GetID(nr1 + 30));
+	numar2.InitButton(Player.getxValue() + 1.5, Player.getyValue() + 2.3, 1, 1, Data.GetID(nr2 + 30));
+	numar3.InitButton(Player.getxValue() + 2.5, Player.getyValue() + 2.3, 1, 1, Data.GetID(nr3 + 30));
+	kilometru.InitButton(Player.getxValue() + 1, Player.getyValue() + 1.3, 2, 1, Data.GetID(IMG_KMH));
 }
 
 void eGame::Reshape(int w,int h)
@@ -326,14 +581,14 @@ bool eGame::checkFreeArea(int lane, int direction, int limit)
 			if(direction == LOOK_BEHIND)
 			{
 				if(Player.getxValue() > (*it).getxValue())
-					if(abs((Player.getxValue() - CAR_LENGTH) - (*it).getxValue()) < limit )
+					if(abs((Player.getxValue() - Player.getLength()) - (*it).getxValue()) < limit )
 						return false;	
 			}
 			if(direction == LOOK_MIDDLE)
 			{
 				if( Player.getxValue() + limit > ((*it).getxValue() - CAR_LENGTH))
 				{
-					if((Player.getxValue() - CAR_LENGTH) - limit < (*it).getxValue())
+					if((Player.getxValue() - Player.getLength()) - limit < (*it).getxValue())
 						return false;
 				}
 			}
@@ -365,7 +620,8 @@ void eGame::AOS()
 
 					if(!checkFreeArea(Player.getLane(), LOOK_FRONT, 4*FRONT_LIMIT))
 					{
-						// start semnalizare
+						Player.setBlinker(-1);
+						blinker.InitButton(-10.5, -4.5, 2, 2, Data.GetID(IMG_ARROW_LEFT));
 						if (!checkFreeArea(Player.getLane(), LOOK_FRONT, 2*FRONT_LIMIT))
 						{
 							if(checkFreeArea(Player.getLane()-1, LOOK_FRONT, 2*FRONT_LIMIT) && checkFreeArea(Player.getLane()-1, LOOK_MIDDLE, MIDDLE_LIMIT))
@@ -376,19 +632,7 @@ void eGame::AOS()
 								{
 									if(Player.getLane() > laneToChange)
 										Player.MoveToLane(laneToChange, GO_TO_LEFT);
-									else
-									{
-										laneToChange = -1;
-										// stop semnalizare
-									}
 								}
-							}
-							else
-							{
-								// stop semnalizare 
-								// nu pot depasi
-								PlayerOvertake = false;
-								PlayerCruising = true;
 							}
 						}
 					}
@@ -397,7 +641,8 @@ void eGame::AOS()
 
 				case LANE_3:
 						
-						//start semnalizare dreapta
+						Player.setBlinker(1);
+						blinker.InitButton(8, -4.5, 2, 2, Data.GetID(IMG_ARROW_RIGHT));
 						if(!checkFreeArea(Player.getLane(), LOOK_FRONT, 4*FRONT_LIMIT))
 						{
 							if (!checkFreeArea(Player.getLane(), LOOK_FRONT, 2*FRONT_LIMIT))
@@ -410,35 +655,27 @@ void eGame::AOS()
 									{
 										if(Player.getLane() < laneToChange)
 											Player.MoveToLane(laneToChange, GO_TO_RIGHT);
-										else
-										{
-											laneToChange = -1;
-											// stop semnalizare
-										}
 									}
 								}
 								else
 								{
-									// start semnalizare stanga 
-									if(checkFreeArea(Player.getLane()-1, LOOK_FRONT, 2*FRONT_LIMIT) && checkFreeArea(Player.getLane()-1, LOOK_MIDDLE, MIDDLE_LIMIT))
+									if(Player.getLength() != TIR_LENGTH)
 									{
-										if(laneToChange == -1)
-											laneToChange = Player.getLane()-1;
-										if(laneToChange != -1)
+										Player.setBlinker(-1);
+										blinker.InitButton(-10.5, -4.5, 2, 2, Data.GetID(IMG_ARROW_LEFT));
+										if(checkFreeArea(Player.getLane()-1, LOOK_FRONT, 2*FRONT_LIMIT) && checkFreeArea(Player.getLane()-1, LOOK_MIDDLE, MIDDLE_LIMIT))
 										{
-											if(Player.getLane() > laneToChange)
-												Player.MoveToLane(laneToChange, GO_TO_LEFT);
-											else
+											if(laneToChange == -1)
+												laneToChange = Player.getLane()-1;
+											if(laneToChange != -1)
 											{
-												laneToChange = -1;
-												// stop semnalizare
+												if(Player.getLane() > laneToChange)
+													Player.MoveToLane(laneToChange, GO_TO_LEFT);
 											}
 										}
 									}
 									else
 									{
-										// stop semnalizare 
-										// nu pot depasi
 										PlayerOvertake = false;
 										PlayerCruising = true;
 									}
@@ -449,7 +686,8 @@ void eGame::AOS()
 				break;
 
 				case LANE_2:
-
+					Player.setBlinker(1);
+					blinker.InitButton(8, -4.5, 2, 2, Data.GetID(IMG_ARROW_RIGHT));
 					if(checkFreeArea(Player.getLane() + 1, LOOK_FRONT, 2*FRONT_LIMIT) && checkFreeArea(Player.getLane() + 1, LOOK_MIDDLE, MIDDLE_LIMIT))
 					{
 						if(laneToChange == -1)
@@ -458,14 +696,7 @@ void eGame::AOS()
 						{
 							if(Player.getLane() < laneToChange)
 								Player.MoveToLane(laneToChange, GO_TO_RIGHT);
-							else
-								laneToChange = -1;
 						}
-					}
-					else
-					{
-						PlayerOvertake = false;
-						PlayerCruising = true;
 					}
 
 				break;	
@@ -476,6 +707,8 @@ void eGame::AOS()
 	{
 		if(Player.getLane() == LANE_2)
 		{
+			Player.setBlinker(1);
+			blinker.InitButton(8, -4.5, 2, 2, Data.GetID(IMG_ARROW_RIGHT));
 			if(checkFreeArea(Player.getLane() + 1, LOOK_FRONT, FRONT_LIMIT) && checkFreeArea(Player.getLane() + 1, LOOK_MIDDLE, MIDDLE_LIMIT))
 			{
 				if(laneToChange == -1)
@@ -484,17 +717,18 @@ void eGame::AOS()
 				{
 					if(Player.getLane() < laneToChange)
 						Player.MoveToLane(laneToChange, GO_TO_RIGHT);
-					else
-						laneToChange = -1;
 				}
 			}
-			else
-			{
-				PlayerOvertake = false;
-				PlayerCruising = true;
-			}			
 		}
 	}
+
+	if(Player.getLane() == laneToChange)
+	{
+		laneToChange = -1;
+		Player.setBlinker(0);
+		blinker.InitButton(30, 30, 2, 2, Data.GetID(IMG_ARROW_RIGHT));
+	}
+
 }
 
 void eGame::CRUISE()

@@ -3,6 +3,7 @@
 #include "Global.h"
 
 #define CAR_LENGTH 4
+#define TIR_LENGTH 7
 #define CAR_WIDTH 2
 
 #define LANE_1 0
@@ -45,5 +46,6 @@ protected:
 	int Lane;
 	float xValue, yValue;
 	float Speed;
+	int Length;
 	GLuint id_texture;
 };

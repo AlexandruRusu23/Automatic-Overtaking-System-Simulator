@@ -21,12 +21,9 @@ public:
 
 	void Move();
 
-	void increaseSpeed() {}
-	void decreaseSpeed() {} 
-
 	//Speed changing functions
-	void increaseSpeed(int Lane);
-	void decreaseSpeed(int Lane);
+	void increaseSpeed();
+	void decreaseSpeed();
 
 	void CalcRealSpeed(float road_speed);
 

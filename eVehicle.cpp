@@ -109,22 +109,16 @@ void eVehicle::CalcRealSpeed(float road_speed)
 		}
 	}
 
-	printf("Player speed: %d Car Speed: %d\n", road_kmh, result ); 
+	//printf("Player speed: %d Car Speed: %d\n", road_kmh, result ); 
 
 }
 
-void eVehicle::increaseSpeed(int Lane)
+void eVehicle::increaseSpeed()
 {
-	if(this->Lane == Lane)
-	{
-		this->Speed += SPEED_STEP;
-	}
+	this->Speed += SPEED_STEP;
 }
 
-void eVehicle::decreaseSpeed(int Lane)
+void eVehicle::decreaseSpeed()
 {
-	if(this->Lane == Lane)
-	{
-		this->Speed -= SPEED_STEP;
-	}
+	this->Speed -= SPEED_STEP;
 }
