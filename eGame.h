@@ -68,6 +68,11 @@ private:
 
 	eMessage playerInfo;
 	eMessage playButton;
+
+	eMessage plusButton, minusButton;
+	eMessage cifra1, cifra2;
+	eMessage meters;
+
 	bool gameRunning;
 
 	int AddCarState,carChoice;
@@ -78,6 +83,7 @@ private:
 	int blinkRatio;
 
 	int laneToChange;
+	int cruiseDistance;
 
 	bool PlayerOvertake, PlayerCruising;
 

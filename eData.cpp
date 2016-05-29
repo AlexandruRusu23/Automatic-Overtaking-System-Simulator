@@ -109,5 +109,8 @@ bool eData::Load()
 	aux = LoadImage(IMG_9, new string("Texture/Alphabet/9.png"));
 	if(!aux) return false;
 
+	aux = LoadImage(IMG_METERS, new string("Texture/Messages/meters.png"));
+	if(!aux) return false;
+
 	return true;
 }

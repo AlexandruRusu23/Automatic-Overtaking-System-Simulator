@@ -48,6 +48,8 @@
 #define IMG_8 38
 #define IMG_9 39 
 
+#define IMG_METERS 40
+
 class eData
 {
 public:

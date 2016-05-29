@@ -36,6 +36,10 @@ void eGame::Init()
 	stateInfo.InitButton(-8, -2.8, 3, 1, Data.GetID(IMG_STATE_INFO));
 	aosInfoText.InitButton(-3.8, -1.8, 7, 1, Data.GetID(IMG_NOTHING_TEXT));
 	stateInfoText.InitButton(-3.8, -2.8, 4, 1, Data.GetID(IMG_SPEEDING_TEXT));
+	
+	meters.InitButton(-1.5, -7, 5.8, 1, Data.GetID(IMG_METERS));
+	plusButton.InitButton(-8, -7, 2, 2, Data.GetID(IMG_PLUS_BUTTON));
+	minusButton.InitButton(5.4, -7, 2, 2, Data.GetID(IMG_MINUS_BUTTON));
 
 	playButton.InitButton(-19.8, -7.8, 2, 2, Data.GetID(IMG_PLAY_BUTTON));
 
@@ -44,6 +48,7 @@ void eGame::Init()
 	PlayerOvertake = true;
 	PlayerCruising = false;
 	gameRunning = true;
+	cruiseDistance = 10;
 }
 
 void eGame::Keyboard(unsigned char key, int x, int y)
@@ -288,6 +293,22 @@ void eGame::Mouse(int button,int state,float x,float y)
 		}
 	}
 
+	if (plusButton.insideButton(x, y))
+	{
+		if(cruiseDistance < 30)
+		{
+			cruiseDistance ++;
+		}
+	}
+
+	if (minusButton.insideButton(x, y))
+	{
+		if(cruiseDistance > 10)
+		{
+			cruiseDistance --;
+		}
+	}
+
 	if (AddCarState == 1)
 	{
 		if (newRetro.insideButton(x,y))
@@ -411,6 +432,11 @@ void eGame::drawUIButtons()
 	stateInfo.drawButton();
 	aosInfoText.drawButton();
 	stateInfoText.drawButton();
+	meters.drawButton();
+	plusButton.drawButton();
+	minusButton.drawButton();
+	cifra1.drawButton();
+	cifra2.drawButton();
 
 	if(blinkRatio < 50)
 	{
@@ -537,6 +563,12 @@ void eGame::Update()
 	numar2.InitButton(Player.getxValue() + 1.5, Player.getyValue() + 2.3, 1, 1, Data.GetID(nr2 + 30));
 	numar3.InitButton(Player.getxValue() + 2.5, Player.getyValue() + 2.3, 1, 1, Data.GetID(nr3 + 30));
 	kilometru.InitButton(Player.getxValue() + 1, Player.getyValue() + 1.3, 2, 1, Data.GetID(IMG_KMH));
+
+	int crs = cruiseDistance;
+	int n2 = crs%10; crs/=10; int n1 = crs%10; 
+
+	cifra1.InitButton(-5, -7, 1.6, 2, Data.GetID(n1 + 30));
+	cifra2.InitButton(-3.4, -7, 1.6, 2, Data.GetID(n2 + 30));
 }
 
 void eGame::Reshape(int w,int h)
