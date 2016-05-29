@@ -213,27 +213,30 @@ void eGame::Mouse(int button,int state,float x,float y)
 
 	if (speedUpPlayer.insideButton(x, y))
 	{
-		if(Road.getSpeed() / SPEED_STEP < KM_H_110 - tir_restriction)
-		{
-			Road.increaseSpeed();
-			for(vector<eVehicle>::iterator it= Vehicle.begin(); it!=Vehicle.end(); it++)
-			{
-				if((*it).getLane() > LANE_2)
-				{
-					(*it).decreaseSpeed();
-				}
-				else
-				{
-					if((*it).getSpeed() / SPEED_STEP < ( KM_H_110 - 2*KM_H_18 ) )
-						(*it).increaseSpeed();
-				}
-			}
-		}
 		if(PlayerCruising == true)
 		{
-			if(cruiseSpeed < 110)
+			if(cruiseSpeed < 107)
 			{
 				cruiseSpeed += 3;
+			}
+		}
+		else
+		{
+			if(Road.getSpeed() / SPEED_STEP < KM_H_110 - tir_restriction)
+			{
+				Road.increaseSpeed();
+				for(vector<eVehicle>::iterator it= Vehicle.begin(); it!=Vehicle.end(); it++)
+				{
+					if((*it).getLane() > LANE_2)
+					{
+						(*it).decreaseSpeed();
+					}
+					else
+					{
+						if((*it).getSpeed() / SPEED_STEP < ( KM_H_110 - 2*KM_H_18 ) )
+							(*it).increaseSpeed();
+					}
+				}
 			}
 		}
 	}
@@ -250,28 +253,31 @@ void eGame::Mouse(int button,int state,float x,float y)
 
 	if (speedDownPlayer.insideButton(x, y))
 	{
-		if(Road.getSpeed() / SPEED_STEP > KM_H_18)
-		{
-			Road.decreaseSpeed();
-			for(vector<eVehicle>::iterator it= Vehicle.begin(); it!=Vehicle.end(); it++)
-			{
-				if((*it).getLane() > LANE_2)
-				{
-					//if((*it).getSpeed() / SPEED_STEP < ( KM_H_110 - 2*KM_H_18 ) )
-						(*it).increaseSpeed();
-				}
-				else
-				{
-					if((*it).getSpeed() / SPEED_STEP > 2*KM_H_18 + 1 )
-						(*it).decreaseSpeed();
-				}
-			}
-		}
 		if(PlayerCruising == true)
 		{
 			if(cruiseSpeed >21)
 			{
 				cruiseSpeed -= 3;
+			}
+		}
+		else
+		{
+			if(Road.getSpeed() / SPEED_STEP > KM_H_18)
+			{
+				Road.decreaseSpeed();
+				for(vector<eVehicle>::iterator it= Vehicle.begin(); it!=Vehicle.end(); it++)
+				{
+					if((*it).getLane() > LANE_2)
+					{
+						//if((*it).getSpeed() / SPEED_STEP < ( KM_H_110 - 2*KM_H_18 ) )
+							(*it).increaseSpeed();
+					}
+					else
+					{
+						if((*it).getSpeed() / SPEED_STEP > 2*KM_H_18 + 1 )
+							(*it).decreaseSpeed();
+					}
+				}
 			}
 		}
 	}
@@ -606,14 +612,14 @@ bool eGame::checkFreeSpawnSpace(int lane, float xPos)
 {
 	if(Player.getLane() == lane)
 	{
-		if(abs (Player.getxValue() - xPos) < 11 )
+		if(abs (Player.getxValue() - xPos) < cruiseDistance + 6 )
 			return false;
 	}
 	for(vector<eVehicle>::iterator it=Vehicle.begin(); it!=Vehicle.end(); it++)
 	{
 		if((*it).getLane() == lane)
 		{
-			if(abs( (*it).getxValue() - xPos) < 11 )
+			if(abs( (*it).getxValue() - xPos) < cruiseDistance + 6 )
 			{
 				return false;
 			}
@@ -819,7 +825,57 @@ void eGame::CRUISE()
 		}	
 	}
 	
-	if(checkFreeArea(Player.getLane(), LOOK_FRONT, cruiseDistance))
+	if(!checkFreeArea(Player.getLane(), LOOK_FRONT, cruiseDistance))
+	{
+		if(Road.getSpeed() / SPEED_STEP * 3 > laneSpeed[Player.getLane()] - 6)
+		{
+			if(decreaseSpeedRatio == 10)
+			{
+				Road.decreaseSpeed();
+				for(vector<eVehicle>::iterator it= Vehicle.begin(); it!=Vehicle.end(); it++)
+				{
+					if((*it).getLane() > LANE_2)
+					{		
+						(*it).increaseSpeed();
+					}
+					else
+					{
+						if((*it).getSpeed() / SPEED_STEP > 2*KM_H_18 + 1 )
+							(*it).decreaseSpeed();
+					}
+				}
+			}
+			decreaseSpeedRatio ++;
+			if(decreaseSpeedRatio > 10) decreaseSpeedRatio = 0;
+		}
+	}
+
+	if (checkFreeArea(Player.getLane(), LOOK_FRONT, cruiseDistance + 1))
+	{
+		if(Road.getSpeed() / SPEED_STEP * 3 < laneSpeed[Player.getLane()] )
+		{
+			if(increaseSpeedRatio == 10)
+			{
+				Road.increaseSpeed();
+				for(vector<eVehicle>::iterator it= Vehicle.begin(); it!=Vehicle.end(); it++)
+				{
+					if((*it).getLane() > LANE_2)
+					{		
+						(*it).decreaseSpeed();
+					}
+					else
+					{
+						if((*it).getSpeed() / SPEED_STEP < 2*KM_H_110 + 1 )
+							(*it).increaseSpeed();
+					}
+				}
+			}
+			increaseSpeedRatio ++;
+			if(increaseSpeedRatio > 10) increaseSpeedRatio = 0;
+		}	
+	}
+
+	if(checkFreeArea(Player.getLane(), LOOK_FRONT, cruiseDistance + cruiseDistance/5))
 	{
 		if(Road.getSpeed() / SPEED_STEP * 3 < cruiseSpeed)
 		{
