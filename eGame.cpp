@@ -49,6 +49,12 @@ void eGame::Init()
 	PlayerCruising = false;
 	gameRunning = true;
 	cruiseDistance = 10;
+	cruiseSpeed = 81;
+
+	for(int i = LANE_1; i<= LANE_4; i++)
+	{
+		laneSpeed[i] = 60; // km/h
+	}
 }
 
 void eGame::Keyboard(unsigned char key, int x, int y)
@@ -69,12 +75,12 @@ void eGame::Keyboard(unsigned char key, int x, int y)
 				Vehicle.push_back(newVehicle);
 		break;
 		case '3':
-			newVehicle.Init(LANE_3, -VISIBLE_X, 5, Data.GetID(IMG_POLICE));
+			newVehicle.Init(LANE_3, -VISIBLE_X, -7, Data.GetID(IMG_POLICE));
 			if(checkFreeSpawnSpace(LANE_3, -VISIBLE_X))
 				Vehicle.push_back(newVehicle);
 		break;
 		case '4':
-			newVehicle.Init(LANE_4, -VISIBLE_X, 5, Data.GetID(IMG_MERCEDES));
+			newVehicle.Init(LANE_4, -VISIBLE_X, -7, Data.GetID(IMG_MERCEDES));
 			if(checkFreeSpawnSpace(LANE_4, -VISIBLE_X))
 				Vehicle.push_back(newVehicle);
 		break;
@@ -223,6 +229,13 @@ void eGame::Mouse(int button,int state,float x,float y)
 				}
 			}
 		}
+		if(PlayerCruising == true)
+		{
+			if(cruiseSpeed < 110)
+			{
+				cruiseSpeed += 3;
+			}
+		}
 	}
 
 	if( Player.insideArea(x, y))
@@ -254,6 +267,13 @@ void eGame::Mouse(int button,int state,float x,float y)
 				}
 			}
 		}
+		if(PlayerCruising == true)
+		{
+			if(cruiseSpeed >21)
+			{
+				cruiseSpeed -= 3;
+			}
+		}
 	}
 
 	if(cruiseButton.insideButton(x,y))
@@ -267,10 +287,13 @@ void eGame::Mouse(int button,int state,float x,float y)
 		}
 		else
 		{
-			cruiseButton.InitButton(-19.6, -3.3, 6.7, 2, Data.GetID(IMG_CRUISE_BUTTON_ON));
-			aosButton.InitButton(-19.6, -5.5, 6.7, 2, Data.GetID(IMG_AOS_OFF));
-			PlayerCruising = true;
-			PlayerOvertake = false;
+			if(laneToChange == -1)
+			{	
+				cruiseButton.InitButton(-19.6, -3.3, 6.7, 2, Data.GetID(IMG_CRUISE_BUTTON_ON));
+				aosButton.InitButton(-19.6, -5.5, 6.7, 2, Data.GetID(IMG_AOS_OFF));
+				PlayerCruising = true;
+				PlayerOvertake = false;
+			}
 		}
 
 	}
@@ -295,7 +318,7 @@ void eGame::Mouse(int button,int state,float x,float y)
 
 	if (plusButton.insideButton(x, y))
 	{
-		if(cruiseDistance < 30)
+		if(cruiseDistance < 20)
 		{
 			cruiseDistance ++;
 		}
@@ -350,13 +373,13 @@ void eGame::Mouse(int button,int state,float x,float y)
 		}
 		if(y <= (Y_L3 + 1) && y >= (Y_L3 - 1))
 		{	
-			newVehicle.Init(LANE_3, x, 5, Data.GetID(carChoice));
+			newVehicle.Init(LANE_3, x, -7, Data.GetID(carChoice));
 			if(checkFreeSpawnSpace(LANE_3, x ))
 				Vehicle.push_back(newVehicle);
 		}
 		if(y <= (Y_L4 + 1) && y >= (Y_L4 - 1))
 		{	
-			newVehicle.Init(LANE_4, x, 5, Data.GetID(carChoice));
+			newVehicle.Init(LANE_4, x, -7, Data.GetID(carChoice));
 			if(checkFreeSpawnSpace(LANE_4, x ))
 				Vehicle.push_back(newVehicle);
 		}
@@ -467,7 +490,8 @@ void eGame::drawUIButtons()
 		}
 	}
 
-	if(checkFreeArea(Player.getLane() - 1, LOOK_FRONT, 4*FRONT_LIMIT) && checkFreeArea(Player.getLane() + 1, LOOK_FRONT, 4*FRONT_LIMIT))
+	if(checkFreeArea(Player.getLane() - 1, LOOK_FRONT, 4*FRONT_LIMIT) && checkFreeArea(Player.getLane() + 1, LOOK_FRONT, 4*FRONT_LIMIT)
+			&& Player.getLane() < LANE_4)
 	{
 		aosInfoText.InitButton(-3.8, -1.8, 10, 1, Data.GetID(IMG_BOTH_LANES_TEXT));
 	}
@@ -476,7 +500,7 @@ void eGame::drawUIButtons()
 		if(checkFreeArea(Player.getLane() - 1, LOOK_FRONT, 4*FRONT_LIMIT))
 			aosInfoText.InitButton(-3.8, -1.8, 10, 1, Data.GetID(IMG_LEFT_LANE_TEXT));
 		else
-			if(checkFreeArea(Player.getLane() + 1, LOOK_FRONT, 4*FRONT_LIMIT))
+			if(checkFreeArea(Player.getLane() + 1, LOOK_FRONT, 4*FRONT_LIMIT) && Player.getLane() < LANE_4)
 				aosInfoText.InitButton(-3.8, -1.8, 10, 1, Data.GetID(IMG_RIGHT_LANE_TEXT));
 			else
 				aosInfoText.InitButton(-3.8, -1.8, 7, 1, Data.GetID(IMG_NOTHING_TEXT));
@@ -766,4 +790,57 @@ void eGame::AOS()
 void eGame::CRUISE()
 {
 
+	Player.setBlinker(0);
+	blinker.InitButton(30, 30, 2, 2, Data.GetID(IMG_ARROW_RIGHT));
+
+
+	if(!checkFreeArea(Player.getLane(), LOOK_FRONT, cruiseDistance - 1))
+	{
+		if(Road.getSpeed() / SPEED_STEP * 3 > laneSpeed[Player.getLane()] + 3)
+		{
+			if(decreaseSpeedRatio == 10)
+			{
+				Road.decreaseSpeed();
+				for(vector<eVehicle>::iterator it= Vehicle.begin(); it!=Vehicle.end(); it++)
+				{
+					if((*it).getLane() > LANE_2)
+					{		
+						(*it).increaseSpeed();
+					}
+					else
+					{
+						if((*it).getSpeed() / SPEED_STEP > 2*KM_H_18 + 1 )
+							(*it).decreaseSpeed();
+					}
+				}
+			}
+			decreaseSpeedRatio ++;
+			if(decreaseSpeedRatio > 10) decreaseSpeedRatio = 0;
+		}	
+	}
+	
+	if(checkFreeArea(Player.getLane(), LOOK_FRONT, cruiseDistance))
+	{
+		if(Road.getSpeed() / SPEED_STEP * 3 < cruiseSpeed)
+		{
+			if(increaseSpeedRatio == 10)
+			{
+				Road.increaseSpeed();
+				for(vector<eVehicle>::iterator it= Vehicle.begin(); it!=Vehicle.end(); it++)
+				{
+					if((*it).getLane() > LANE_2)
+					{
+						(*it).decreaseSpeed();
+					}
+					else
+					{
+						if((*it).getSpeed() / SPEED_STEP < 2* KM_H_110 + 1 )
+							(*it).increaseSpeed();
+					}
+				}
+			}
+			increaseSpeedRatio ++;
+			if(increaseSpeedRatio > 10) increaseSpeedRatio =0;
+		}
+	}
 }

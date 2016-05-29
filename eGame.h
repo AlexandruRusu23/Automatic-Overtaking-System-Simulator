@@ -81,9 +81,12 @@ private:
 	float windowWidth,windowHeight;
 	int fpsclock;
 	int blinkRatio;
+	int increaseSpeedRatio, decreaseSpeedRatio;
+
+	float laneSpeed[4];
 
 	int laneToChange;
-	int cruiseDistance;
+	int cruiseDistance, cruiseSpeed;
 
 	bool PlayerOvertake, PlayerCruising;
 

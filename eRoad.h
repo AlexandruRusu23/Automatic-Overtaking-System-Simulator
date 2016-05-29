@@ -12,6 +12,7 @@ public:
 	eRoad();
 	~eRoad();
 
+	void setSpeed(float Speed);
 	float getSpeed();
 
 	//calculate road coords and dimension
