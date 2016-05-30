@@ -14,7 +14,7 @@
 #define LOOK_MIDDLE 3
 
 #define FRONT_LIMIT 4
-#define BEHIND_LIMIT 4
+#define BEHIND_LIMIT 3
 #define MIDDLE_LIMIT 1
 #define FPS 60
 
