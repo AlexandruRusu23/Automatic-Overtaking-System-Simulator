@@ -964,11 +964,13 @@ void eGame::CRUISE()
 							if((*it).getLane() > LANE_2)
 							{		
 								(*it).increaseSpeed();
+								(*it).setxValue((*it).getxValue() + 0.05);
 							}
 							else
 							{
 								if(abs(Road.getSpeed() - (*it).getSpeed()) > 0.04)
 									(*it).decreaseSpeed();
+								(*it).setxValue((*it).getxValue() - 0.05);
 							}
 						}
 					}

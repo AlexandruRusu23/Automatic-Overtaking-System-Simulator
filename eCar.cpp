@@ -8,6 +8,11 @@ int eCar::getLane()
 	return Lane;
 }
 
+void eCar::setxValue(float xValue)
+{
+	this->xValue = xValue;
+}
+
 float eCar::getxValue()
 {
 	return xValue;

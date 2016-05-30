@@ -34,6 +34,7 @@ public:
 
 	int getLane();
 	float getxValue();
+	void setxValue(float xValue);
 	float getSpeed();
 
 	void Init();
