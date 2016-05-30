@@ -55,10 +55,10 @@ void eGame::Init()
 	cruiseModeAdapt = false;
 	cruiseModeReturn = true;
 
-	for(int i = LANE_1; i<= LANE_4; i++)
-	{
-		laneSpeed[i] = 0.20; // speed units
-	}
+	laneSpeed[LANE_1] = 0.32;
+	laneSpeed[LANE_1] = 0.32;
+	laneSpeed[LANE_3] = 0.20;
+	laneSpeed[LANE_4] = 0.20;
 }
 
 void eGame::Keyboard(unsigned char key, int x, int y)
@@ -69,12 +69,12 @@ void eGame::Keyboard(unsigned char key, int x, int y)
 			exit(0);
 		break;
 		case '1':
-			newVehicle.Init(LANE_1, VISIBLE_X, 15, Data.GetID(IMG_MERCEDES));
+			newVehicle.Init(LANE_1, VISIBLE_X, 0.3, Data.GetID(IMG_MERCEDES));
 			if(checkFreeSpawnSpace(LANE_1, VISIBLE_X))
 				Vehicle.push_back(newVehicle);
 		break;
 		case '2':
-			newVehicle.Init(LANE_2, VISIBLE_X, 15, Data.GetID(IMG_RETRO));
+			newVehicle.Init(LANE_2, VISIBLE_X, 0.3, Data.GetID(IMG_RETRO));
 			if(checkFreeSpawnSpace(LANE_2, VISIBLE_X))
 				Vehicle.push_back(newVehicle);
 		break;
@@ -249,8 +249,7 @@ void eGame::Mouse(int button,int state,float x,float y)
 					}
 					else
 					{
-						if((*it).getSpeed() < ( KM_H_110 - 2*KM_H_18 ) )
-							(*it).increaseSpeed();
+						(*it).increaseSpeed();
 					}
 				}
 			}
@@ -289,8 +288,7 @@ void eGame::Mouse(int button,int state,float x,float y)
 					}
 					else
 					{
-						if((*it).getSpeed() > 2*KM_H_18 + 0.01 )
-							(*it).decreaseSpeed();
+						(*it).decreaseSpeed();
 					}
 				}
 			}
@@ -383,27 +381,15 @@ void eGame::Mouse(int button,int state,float x,float y)
 
 		if(y <= (Y_L1 + 1) && y >= (Y_L1 - 1))
 		{	
-			spd = Road.getSpeed() + laneSpeed[LANE_1];
-			if(Road.getSpeed() > laneSpeed[LANE_1])
-			{
-				spd = spd + Road.getSpeed() - laneSpeed[LANE_1];
-			}
-			else
-				spd = spd - Road.getSpeed() - laneSpeed[LANE_1];
-			newVehicle.Init(LANE_1, x, 0.4, Data.GetID(carChoice));
+			spd = Road.getSpeed() + 0.05;
+			newVehicle.Init(LANE_1, x, spd, Data.GetID(carChoice));
 			if(checkFreeSpawnSpace(LANE_1, x ))
 				Vehicle.push_back(newVehicle);
 		}
 		if(y <= (Y_L2 + 1) && y >= (Y_L2 - 1))
 		{	
-			spd = Road.getSpeed() + laneSpeed[LANE_2];
-			if(Road.getSpeed() > laneSpeed[LANE_2])
-			{
-				spd = spd + Road.getSpeed() - laneSpeed[LANE_2];
-			}
-			else
-				spd = spd - Road.getSpeed() - laneSpeed[LANE_2];
-			newVehicle.Init(LANE_2, x, 0.4, Data.GetID(carChoice));
+			spd = Road.getSpeed() + 0.05;
+			newVehicle.Init(LANE_2, x, spd, Data.GetID(carChoice));
 			if(checkFreeSpawnSpace(LANE_2, x ))
 				Vehicle.push_back(newVehicle);
 		}
