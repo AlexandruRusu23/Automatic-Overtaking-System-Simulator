@@ -47,7 +47,7 @@ int main(int argc, char** argv)
 	
 	//Calling functions
 	glutDisplayFunc(AppRender);			
-	glutKeyboardFunc(AppKeyboard);
+	//glutKeyboardFunc(AppKeyboard);
 	glutMouseFunc(AppMouse);
 	glutReshapeFunc(AppReshape);
 	glutPassiveMotionFunc(AppMouseMotion);	
