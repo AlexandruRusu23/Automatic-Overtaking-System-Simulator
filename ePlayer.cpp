@@ -27,7 +27,7 @@ float ePlayer::getyValue()
 
 void ePlayer::setBlinker(int value)
 {
-	blinkerSwitch = value;
+	this->blinkerSwitch = value;
 }
 
 void ePlayer::Init(int id_texture)

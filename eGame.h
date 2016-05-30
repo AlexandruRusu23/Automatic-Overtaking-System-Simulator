@@ -86,7 +86,10 @@ private:
 	float laneSpeed[4];
 
 	int laneToChange;
-	int cruiseDistance, cruiseSpeed;
+	float cruiseDistance;
+	float cruiseSpeed;
+
+	bool cruiseModeReduce, cruiseModeAdapt, cruiseModeReturn;
 
 	bool PlayerOvertake, PlayerCruising;
 

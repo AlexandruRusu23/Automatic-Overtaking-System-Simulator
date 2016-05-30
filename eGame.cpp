@@ -48,8 +48,12 @@ void eGame::Init()
 	PlayerOvertake = true;
 	PlayerCruising = false;
 	gameRunning = true;
-	cruiseDistance = 10;
+	cruiseDistance = 5;
 	cruiseSpeed = 0.27;
+
+	cruiseModeReduce = false;
+	cruiseModeAdapt = false;
+	cruiseModeReturn = true;
 
 	for(int i = LANE_1; i<= LANE_4; i++)
 	{
@@ -80,7 +84,7 @@ void eGame::Keyboard(unsigned char key, int x, int y)
 				Vehicle.push_back(newVehicle);
 		break;
 		case '4':
-			newVehicle.Init(LANE_4, -VISIBLE_X, -0.07, Data.GetID(IMG_MERCEDES));
+			newVehicle.Init(LANE_4, 15, -0.07, Data.GetID(IMG_MERCEDES));
 			if(checkFreeSpawnSpace(LANE_4, VISIBLE_X))
 				Vehicle.push_back(newVehicle);
 		break;
@@ -265,7 +269,6 @@ void eGame::Mouse(int button,int state,float x,float y)
 
 	if (speedDownPlayer.insideButton(x, y))
 	{
-		printf("%f    ", Road.getSpeed() );
 		if(PlayerCruising == true)
 		{
 			if(cruiseSpeed > 0.07)
@@ -292,7 +295,6 @@ void eGame::Mouse(int button,int state,float x,float y)
 				}
 			}
 		}
-		printf("%f\n", Road.getSpeed());
 	}
 
 	if(cruiseButton.insideButton(x,y))
@@ -314,7 +316,6 @@ void eGame::Mouse(int button,int state,float x,float y)
 				PlayerOvertake = false;
 			}
 		}
-
 	}
 
 	if (aosButton.insideButton(x,y))
@@ -345,7 +346,7 @@ void eGame::Mouse(int button,int state,float x,float y)
 
 	if (minusButton.insideButton(x, y))
 	{
-		if(cruiseDistance > 10)
+		if(cruiseDistance > 5)
 		{
 			cruiseDistance --;
 		}
@@ -410,7 +411,6 @@ void eGame::Mouse(int button,int state,float x,float y)
 		{
 			spd = Road.getSpeed() - laneSpeed[LANE_3];
 			spd = -spd;
-			printf("road: %f   lane3:   %f\n",Road.getSpeed(), laneSpeed[LANE_3]);
 			newVehicle.Init(LANE_3, x, spd, Data.GetID(carChoice));
 			if(checkFreeSpawnSpace(LANE_3, x ))
 				Vehicle.push_back(newVehicle);
@@ -419,7 +419,6 @@ void eGame::Mouse(int button,int state,float x,float y)
 		{	
 			spd = Road.getSpeed() - laneSpeed[LANE_4];
 			spd = -spd;
-			printf("road: %f   lane4:   %f\n",Road.getSpeed(), laneSpeed[LANE_4]);
 			newVehicle.Init(LANE_4, x, spd, Data.GetID(carChoice));
 			if(checkFreeSpawnSpace(LANE_4, x ))
 				Vehicle.push_back(newVehicle);
@@ -730,6 +729,11 @@ void eGame::AOS()
 										Player.MoveToLane(laneToChange, GO_TO_LEFT);
 								}
 							}
+							else
+							{
+								PlayerCruising = true;
+								PlayerOvertake = false;
+							}
 						}
 					}
 
@@ -770,6 +774,11 @@ void eGame::AOS()
 											}
 										}
 									}
+									else
+									{
+										PlayerOvertake = false;
+										PlayerCruising = true;
+									}
 								}
 							}
 						}
@@ -787,6 +796,11 @@ void eGame::AOS()
 							if(Player.getLane() < laneToChange)
 								Player.MoveToLane(laneToChange, GO_TO_RIGHT);
 						}
+					}
+					else
+					{
+						PlayerCruising = true;
+						PlayerOvertake = false;
 					}
 
 				break;	
@@ -809,6 +823,11 @@ void eGame::AOS()
 						Player.MoveToLane(laneToChange, GO_TO_RIGHT);
 				}
 			}
+			else
+			{
+				PlayerCruising = true;
+				PlayerOvertake = false;
+			}
 		}
 	}
 
@@ -823,107 +842,212 @@ void eGame::AOS()
 
 void eGame::CRUISE()
 {
-
-	Player.setBlinker(0);
-	blinker.InitButton(30, 30, 2, 2, Data.GetID(IMG_ARROW_RIGHT));
-
-	if(!checkFreeArea(Player.getLane(), LOOK_FRONT, cruiseDistance - 1))
+	// if AOS didn't complete a maneuvre
+	int drct = -1;
+	if(laneToChange != -1)
 	{
-		if(Road.getSpeed() > laneSpeed[Player.getLane()] + 0.01)
-		{
-			if(decreaseSpeedRatio == 10)
-			{
-				Road.decreaseSpeed();
-				for(vector<eVehicle>::iterator it= Vehicle.begin(); it!=Vehicle.end(); it++)
-				{
-					if((*it).getLane() > LANE_2)
-					{		
-						(*it).increaseSpeed();
-					}
-					else
-					{
-						if((*it).getSpeed() > 2*KM_H_18 + 0.01 )
-							(*it).decreaseSpeed();
-					}
-				}
-			}
-			decreaseSpeedRatio ++;
-			if(decreaseSpeedRatio > 10) decreaseSpeedRatio = 0;
-		}	
+		if(Player.getLane() < laneToChange)
+			drct = GO_TO_RIGHT;
+		else
+			drct = GO_TO_LEFT;
 	}
-	
-	if(!checkFreeArea(Player.getLane(), LOOK_FRONT, cruiseDistance))
+	if(drct != -1)
+		Player.MoveToLane(laneToChange, drct);
+
+	if(Player.getLane() == LANE_2)
 	{
-		if(Road.getSpeed() > laneSpeed[Player.getLane()] - 0.03)
+		if(checkFreeArea(Player.getLane() + 1, LOOK_MIDDLE, MIDDLE_LIMIT) && checkFreeArea(Player.getLane() + 1, LOOK_FRONT, 2*FRONT_LIMIT))
 		{
-			if(decreaseSpeedRatio == 10)
+			laneToChange = LANE_3;
+		}
+		else
+		{
+			if(!checkFreeArea(Player.getLane(), LOOK_FRONT, 4*FRONT_LIMIT))
 			{
-				Road.decreaseSpeed();
-				for(vector<eVehicle>::iterator it= Vehicle.begin(); it!=Vehicle.end(); it++)
+				cruiseSpeed = 0.1; // 30 km/h
+				if(checkFreeArea(Player.getLane() + 1, LOOK_MIDDLE, MIDDLE_LIMIT))
 				{
-					if((*it).getLane() > LANE_2)
-					{		
-						(*it).increaseSpeed();
-					}
-					else
-					{
-						if((*it).getSpeed() > 2*KM_H_18 + 0.01 )
-							(*it).decreaseSpeed();
-					}
+					laneToChange = LANE_3;
 				}
 			}
-			decreaseSpeedRatio ++;
-			if(decreaseSpeedRatio > 10) decreaseSpeedRatio = 0;
 		}
 	}
 
-	if (checkFreeArea(Player.getLane(), LOOK_FRONT, cruiseDistance + 1))
+	//blinker settings
+	if(Player.getLane() == LANE_2)
 	{
-		if(Road.getSpeed() < laneSpeed[Player.getLane()] )
-		{
-			if(increaseSpeedRatio == 10)
-			{
-				Road.increaseSpeed();
-				for(vector<eVehicle>::iterator it= Vehicle.begin(); it!=Vehicle.end(); it++)
-				{
-					if((*it).getLane() > LANE_2)
-					{		
-						(*it).decreaseSpeed();
-					}
-					else
-					{
-						if((*it).getSpeed() < 2*KM_H_110 + 0.01 )
-							(*it).increaseSpeed();
-					}
-				}
-			}
-			increaseSpeedRatio ++;
-			if(increaseSpeedRatio > 10) increaseSpeedRatio = 0;
-		}	
+		Player.setBlinker(1);
+		blinker.InitButton(8, -4.5, 2, 2, Data.GetID(IMG_ARROW_RIGHT));
+	}
+	else
+	{
+		Player.setBlinker(0);
+		blinker.InitButton(30, 30, 2, 2, Data.GetID(IMG_ARROW_RIGHT));
 	}
 
-	if(checkFreeArea(Player.getLane(), LOOK_FRONT, cruiseDistance + cruiseDistance/5))
+	cruiseModeReturn = false;
+	cruiseModeReduce = false;
+	cruiseModeAdapt = false;
+
+	if(!checkFreeArea(Player.getLane(), LOOK_FRONT, cruiseDistance))
 	{
-		if(Road.getSpeed() / SPEED_STEP < cruiseSpeed)
+		if(Road.getSpeed() <= laneSpeed[Player.getLane()] && Road.getSpeed() > laneSpeed[Player.getLane()] - 0.03)
 		{
-			if(increaseSpeedRatio == 10)
+			cruiseModeReduce = false;
+			cruiseModeAdapt = true;
+		}
+		else
+		{
+			cruiseModeReduce = true;
+		}
+	}
+	else
+	{
+		if(checkFreeArea(Player.getLane(), LOOK_FRONT, cruiseDistance) && Road.getSpeed() < laneSpeed[Player.getLane()])
+		{
+			cruiseModeReturn = true;
+		}
+		else
+		{
+			if(checkFreeArea(Player.getLane(), LOOK_FRONT, cruiseDistance + cruiseDistance/5))
 			{
-				Road.increaseSpeed();
-				for(vector<eVehicle>::iterator it= Vehicle.begin(); it!=Vehicle.end(); it++)
+				cruiseModeReturn = true;
+			}
+		}
+	}
+
+	if(Road.getSpeed() == laneSpeed[Player.getLane()] - 0.03)
+		cruiseModeAdapt = false;
+
+	if(cruiseModeReduce == true)
+	{
+		if(!checkFreeArea(Player.getLane(), LOOK_FRONT, cruiseDistance))
+		{
+			if(Road.getSpeed() > laneSpeed[Player.getLane()] + 0.01)
+			{
+				if(decreaseSpeedRatio == 5)
 				{
-					if((*it).getLane() > LANE_2)
+					Road.decreaseSpeed();
+					for(vector<eVehicle>::iterator it= Vehicle.begin(); it!=Vehicle.end(); it++)
 					{
-						(*it).decreaseSpeed();
-					}
-					else
-					{
-						if((*it).getSpeed() < 2* KM_H_110 + 0.01 )
+						if((*it).getLane() > LANE_2)
+						{		
 							(*it).increaseSpeed();
+						}
+						else
+						{
+							if((*it).getSpeed() > 2*KM_H_18 + 0.01 )
+								(*it).decreaseSpeed();
+						}
 					}
 				}
+				decreaseSpeedRatio ++;
+				if(decreaseSpeedRatio > 5) decreaseSpeedRatio = 0;
 			}
-			increaseSpeedRatio ++;
-			if(increaseSpeedRatio > 10) increaseSpeedRatio =0;
+		}
+	}
+	
+	if(cruiseModeAdapt == true)
+	{
+		if(!checkFreeArea(Player.getLane(), LOOK_FRONT, cruiseDistance))
+		{
+			if(Road.getSpeed() > laneSpeed[Player.getLane()] - 0.03)
+			{
+				if(decreaseSpeedRatio == 10)
+				{
+					Road.decreaseSpeed();
+					for(vector<eVehicle>::iterator it= Vehicle.begin(); it!=Vehicle.end(); it++)
+					{
+						if((*it).getLane() > LANE_2)
+						{		
+							(*it).increaseSpeed();
+						}
+						else
+						{
+							if((*it).getSpeed() > 2*KM_H_18 + 0.01 )
+								(*it).decreaseSpeed();
+						}
+					}
+				}
+				decreaseSpeedRatio ++;
+				if(decreaseSpeedRatio > 10) decreaseSpeedRatio = 0;
+			}
+		}
+	}
+
+	if(cruiseModeReturn == true)
+	{
+		if(checkFreeArea(Player.getLane(), LOOK_FRONT, cruiseDistance + cruiseDistance/5))
+		{
+			if(Road.getSpeed() < cruiseSpeed)
+			{
+				if(increaseSpeedRatio == 10)
+				{
+					Road.increaseSpeed();
+					for(vector<eVehicle>::iterator it= Vehicle.begin(); it!=Vehicle.end(); it++)
+					{
+						if((*it).getLane() > LANE_2)
+						{
+							(*it).decreaseSpeed();
+						}
+						else
+						{
+							if((*it).getSpeed() < 2* KM_H_110 + 0.01 )
+								(*it).increaseSpeed();
+						}
+					}
+				}
+				increaseSpeedRatio ++;
+				if(increaseSpeedRatio > 10) increaseSpeedRatio =0;
+			}
+			if(Road.getSpeed() > cruiseSpeed)
+			{
+				if(decreaseSpeedRatio == 10)
+				{
+					Road.decreaseSpeed();
+					for(vector<eVehicle>::iterator it= Vehicle.begin(); it!=Vehicle.end(); it++)
+					{
+						if((*it).getLane() > LANE_2)
+						{
+							(*it).increaseSpeed();
+						}
+						else
+						{
+							if((*it).getSpeed() < 2* KM_H_110 + 0.01 )
+								(*it).decreaseSpeed();
+						}
+					}
+				}
+				decreaseSpeedRatio ++;
+				if(decreaseSpeedRatio > 10) decreaseSpeedRatio =0;
+			}
+		}
+		else
+		{
+			if(checkFreeArea(Player.getLane(), LOOK_FRONT, cruiseDistance))
+			{
+				if(Road.getSpeed() < laneSpeed[Player.getLane()])
+				{
+					if(increaseSpeedRatio == 10)
+					{
+						Road.increaseSpeed();
+						for(vector<eVehicle>::iterator it= Vehicle.begin(); it!=Vehicle.end(); it++)
+						{
+							if((*it).getLane() > LANE_2)
+							{
+								(*it).decreaseSpeed();
+							}
+							else
+							{
+								if((*it).getSpeed() < 2* KM_H_110 + 0.01 )
+									(*it).increaseSpeed();
+							}
+						}
+					}
+					increaseSpeedRatio ++;
+					if(increaseSpeedRatio > 10) increaseSpeedRatio =0;
+				}
+			}
 		}
 	}
 }
