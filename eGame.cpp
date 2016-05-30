@@ -69,23 +69,23 @@ void eGame::Keyboard(unsigned char key, int x, int y)
 			exit(0);
 		break;
 		case '1':
-			newVehicle.Init(LANE_1, VISIBLE_X, 0.3, Data.GetID(IMG_MERCEDES));
-			if(checkFreeSpawnSpace(LANE_1, VISIBLE_X))
+			newVehicle.Init(LANE_1, VISIBLE_X + 4, 0.32, Data.GetID(IMG_MERCEDES));
+			if(checkFreeSpawnSpace(LANE_1, VISIBLE_X + 4))
 				Vehicle.push_back(newVehicle);
 		break;
 		case '2':
-			newVehicle.Init(LANE_2, VISIBLE_X, 0.3, Data.GetID(IMG_RETRO));
-			if(checkFreeSpawnSpace(LANE_2, VISIBLE_X))
+			newVehicle.Init(LANE_2, VISIBLE_X + 4, 0.32, Data.GetID(IMG_RETRO));
+			if(checkFreeSpawnSpace(LANE_2, VISIBLE_X + 4))
 				Vehicle.push_back(newVehicle);
 		break;
 		case '3':
 			newVehicle.Init(LANE_3, 15, -0.07, Data.GetID(IMG_POLICE));
-			if(checkFreeSpawnSpace(LANE_3, VISIBLE_X))
+			if(checkFreeSpawnSpace(LANE_3, 15))
 				Vehicle.push_back(newVehicle);
 		break;
 		case '4':
 			newVehicle.Init(LANE_4, 15, -0.07, Data.GetID(IMG_MERCEDES));
-			if(checkFreeSpawnSpace(LANE_4, VISIBLE_X))
+			if(checkFreeSpawnSpace(LANE_4, 15))
 				Vehicle.push_back(newVehicle);
 		break;
 
@@ -229,15 +229,9 @@ void eGame::Mouse(int button,int state,float x,float y)
 
 	if (speedUpPlayer.insideButton(x, y))
 	{
-		if(PlayerCruising == true)
+		if(cruiseSpeed < 0.29)
 		{
-			if(cruiseSpeed < 0.36)
-			{
-				cruiseSpeed += 0.01;
-			}
-		}
-		else
-		{
+			cruiseSpeed += 0.01;
 			if(Road.getSpeed() < KM_H_110 - tir_restriction)
 			{
 				Road.increaseSpeed();
@@ -268,15 +262,9 @@ void eGame::Mouse(int button,int state,float x,float y)
 
 	if (speedDownPlayer.insideButton(x, y))
 	{
-		if(PlayerCruising == true)
+		if(cruiseSpeed > 0.07)
 		{
-			if(cruiseSpeed > 0.07)
-			{
-				cruiseSpeed -= 0.01;
-			}
-		}
-		else
-		{
+			cruiseSpeed -= 0.01;
 			if(Road.getSpeed() > KM_H_18)
 			{
 				Road.decreaseSpeed();
@@ -288,7 +276,8 @@ void eGame::Mouse(int button,int state,float x,float y)
 					}
 					else
 					{
-						(*it).decreaseSpeed();
+						if(abs(Road.getSpeed() - (*it).getSpeed()) > 0.04)
+							(*it).decreaseSpeed();
 					}
 				}
 			}
@@ -633,14 +622,14 @@ bool eGame::checkFreeSpawnSpace(int lane, float xPos)
 {
 	if(Player.getLane() == lane)
 	{
-		if(abs (Player.getxValue() - xPos) < cruiseDistance + 6 )
+		if(abs (Player.getxValue() - xPos) < cruiseDistance + 12 )
 			return false;
 	}
 	for(vector<eVehicle>::iterator it=Vehicle.begin(); it!=Vehicle.end(); it++)
 	{
 		if((*it).getLane() == lane)
 		{
-			if(abs( (*it).getxValue() - xPos) < cruiseDistance + 6 )
+			if(abs( (*it).getxValue() - xPos) < cruiseDistance + 12 )
 			{
 				return false;
 			}
@@ -714,10 +703,8 @@ void eGame::AOS()
 		if(decreaseSpeedRatio > 5) decreaseSpeedRatio = 0;
 	}
 
-	if(!checkFreeArea(Player.getLane(), LOOK_FRONT, 6*FRONT_LIMIT)) // AOS detect a car in front of player
+	if(!checkFreeArea(Player.getLane(), LOOK_FRONT, 8*FRONT_LIMIT)) // AOS detect a car in front of player
 	{
-		if(!checkFreeArea(Player.getLane(), LOOK_FRONT, 5*FRONT_LIMIT)) // AOS start to verify free spaces for overtaking
-		{
 			switch (Player.getLane())
 			{
 				case LANE_4:
@@ -771,17 +758,20 @@ void eGame::AOS()
 
 				case LANE_3:
 						
-						if(checkFreeArea(Player.getLane() + 1, LOOK_FRONT, 4*FRONT_LIMIT))
+						if(checkFreeArea(Player.getLane() + 1, LOOK_FRONT, 7*FRONT_LIMIT))
 						{
 							Player.setBlinker(1);
 							blinker.InitButton(8, -4.5, 2, 2, Data.GetID(IMG_ARROW_RIGHT));
 						}
 						else
 						{
-							if(checkFreeArea(Player.getLane() - 1, LOOK_FRONT, 4*FRONT_LIMIT))
+							if(checkFreeArea(Player.getLane() - 1, LOOK_FRONT, 7*FRONT_LIMIT))
 							{
-								Player.setBlinker(-1);	
-								blinker.InitButton(-10.5, -4.5, 2, 2, Data.GetID(IMG_ARROW_LEFT));	
+								if(Player.getLength() != TIR_LENGTH)
+								{
+									Player.setBlinker(-1);	
+									blinker.InitButton(-10.5, -4.5, 2, 2, Data.GetID(IMG_ARROW_LEFT));
+								}	
 							}
 						}
 
@@ -809,7 +799,7 @@ void eGame::AOS()
 										{
 											if(Road.getSpeed() < KM_H_110)
 											{
-												if(increaseSpeedRatio == 5)
+												if(increaseSpeedRatio == 3)
 												{
 													Road.increaseSpeed();
 													for(vector<eVehicle>::iterator it= Vehicle.begin(); it!=Vehicle.end(); it++)
@@ -825,7 +815,7 @@ void eGame::AOS()
 													}
 												}
 												increaseSpeedRatio ++;
-												if(increaseSpeedRatio > 5) increaseSpeedRatio =0;
+												if(increaseSpeedRatio > 3) increaseSpeedRatio =0;
 											}
 
 											Player.setBlinker(-1);
@@ -837,6 +827,11 @@ void eGame::AOS()
 												if(Player.getLane() > laneToChange)
 													Player.MoveToLane(laneToChange, GO_TO_LEFT);
 											}
+										}
+										else
+										{
+											PlayerOvertake = false;
+											PlayerCruising = true;
 										}
 									}
 									else
@@ -870,7 +865,6 @@ void eGame::AOS()
 
 				break;	
 			}
-		}
 	}
 	else
 	{
@@ -888,11 +882,31 @@ void eGame::AOS()
 						Player.MoveToLane(laneToChange, GO_TO_RIGHT);
 				}
 			}
-			else
+		}
+	}
+
+	if(Player.getLane() == LANE_3 && laneToChange == -1)
+	{
+		if(Road.getSpeed() > cruiseSpeed)
+		{
+			if(decreaseSpeedRatio == 5)
 			{
-				PlayerCruising = true;
-				PlayerOvertake = false;
+				Road.decreaseSpeed();
+				for(vector<eVehicle>::iterator it= Vehicle.begin(); it!=Vehicle.end(); it++)
+				{
+					if((*it).getLane() > LANE_2)
+					{		
+						(*it).increaseSpeed();
+					}
+					else
+					{
+						if(abs(Road.getSpeed() - (*it).getSpeed()) > 0.04)
+							(*it).decreaseSpeed();
+					}
+				}
 			}
+			decreaseSpeedRatio ++;
+			if(decreaseSpeedRatio > 5) decreaseSpeedRatio = 0;
 		}
 	}
 
@@ -905,6 +919,11 @@ void eGame::AOS()
 	if(cruiseSpeed == 0.1 && Player.getLane() != LANE_2)
 	{
 		cruiseSpeed = 0.27;
+	}
+	if(Road.getSpeed() < laneSpeed[Player.getLane()])
+	{
+		PlayerCruising = true;
+		PlayerOvertake = false;
 	}
 }
 
@@ -927,17 +946,17 @@ void eGame::CRUISE()
 
 	if(Player.getLane() == LANE_2)
 	{
-		if(!checkFreeArea(Player.getLane(), LOOK_FRONT, 6*FRONT_LIMIT))
+		if(!checkFreeArea(Player.getLane(), LOOK_FRONT, 8*FRONT_LIMIT))
 		{
-			if(checkFreeArea(Player.getLane() + 1, LOOK_MIDDLE, MIDDLE_LIMIT))
+			if(checkFreeArea(Player.getLane() + 1, LOOK_MIDDLE, MIDDLE_LIMIT + 1))
 			{
 				laneToChange = LANE_3;
 			}
 			else
 			{
-				if(Road.getSpeed() > 0.1)
+				if(Road.getSpeed() > 0.07)
 				{
-					if(decreaseSpeedRatio == 5)
+					if(decreaseSpeedRatio == 3)
 					{
 						Road.decreaseSpeed();
 						for(vector<eVehicle>::iterator it= Vehicle.begin(); it!=Vehicle.end(); it++)
@@ -948,12 +967,13 @@ void eGame::CRUISE()
 							}
 							else
 							{
-								(*it).decreaseSpeed();
+								if(abs(Road.getSpeed() - (*it).getSpeed()) > 0.04)
+									(*it).decreaseSpeed();
 							}
 						}
 					}
 					decreaseSpeedRatio ++;
-					if(decreaseSpeedRatio > 5) decreaseSpeedRatio = 0;
+					if(decreaseSpeedRatio > 3) decreaseSpeedRatio = 0;
 				}
 			}
 		}
@@ -980,35 +1000,18 @@ void eGame::CRUISE()
 
 	if (checkFreeArea(Player.getLane(), LOOK_FRONT, cruiseDistance) && Road.getSpeed() == laneSpeed[Player.getLane()])
 	{
-		PlayerCruising = false;
-		PlayerOvertake = true;
-	}
-
-/*
-	if (!checkFreeArea(Player.getLane(), LOOK_BEHIND, BEHIND_LIMIT) && Road.getSpeed() < laneSpeed[Player.getLane()])
-	{
-		if(Road.getSpeed() < laneSpeed[Player.getLane()])
-		{
-			if(increaseSpeedRatio == 7)
-			{
-				Road.increaseSpeed();
-				for(vector<eVehicle>::iterator it= Vehicle.begin(); it!=Vehicle.end(); it++)
-				{
-					if((*it).getLane() > LANE_2)
-					{
-						(*it).decreaseSpeed();
-					}
-					else
-					{
-						(*it).increaseSpeed();
-					}
-				}
-			}
-			increaseSpeedRatio ++;
-			if(increaseSpeedRatio > 7) increaseSpeedRatio =0;	
+		if(Player.getLength() != TIR_LENGTH)
+		{	
+			PlayerCruising = false;
+			PlayerOvertake = true;
 		}
 	}
-*/
+
+	if (!checkFreeArea(Player.getLane(), LOOK_BEHIND, 2*BEHIND_LIMIT) && Road.getSpeed() < laneSpeed[Player.getLane()])
+	{
+		cruiseSpeed = 0.27;
+	}
+
 	cruiseModeReturn = false;
 	cruiseModeReduce = false;
 	cruiseModeAdapt = false;
@@ -1060,7 +1063,8 @@ void eGame::CRUISE()
 						}
 						else
 						{
-							(*it).decreaseSpeed();
+							if(abs(Road.getSpeed() - (*it).getSpeed()) > 0.04)
+								(*it).decreaseSpeed();
 						}
 					}
 				}
@@ -1087,7 +1091,8 @@ void eGame::CRUISE()
 						}
 						else
 						{
-							(*it).decreaseSpeed();
+							if(abs(Road.getSpeed() - (*it).getSpeed()) > 0.04)
+								(*it).decreaseSpeed();
 						}
 					}
 				}
@@ -1134,7 +1139,8 @@ void eGame::CRUISE()
 						}
 						else
 						{
-							(*it).decreaseSpeed();
+							if(abs(Road.getSpeed() - (*it).getSpeed()) > 0.04)
+								(*it).decreaseSpeed();
 						}
 					}
 				}

@@ -63,24 +63,24 @@ void eVehicle::Move()
 {
 	if(Lane > LANE_2)
 	{
-		if(xValue > -(VISIBLE_X + 4*CAR_LENGTH) || xValue - CAR_LENGTH < VISIBLE_X + 4*CAR_LENGTH )
+		if(xValue >= -3*VISIBLE_X || xValue - CAR_LENGTH <= 3*VISIBLE_X)
 		{
 			xValue += Speed;
 		}
-		if(xValue < -(VISIBLE_X + 4*CAR_LENGTH))
-			xValue = (VISIBLE_X + CAR_LENGTH) + 4*CAR_LENGTH;
-		if(xValue - CAR_LENGTH > VISIBLE_X + 4*CAR_LENGTH)
-			xValue = -(VISIBLE_X + 4*CAR_LENGTH);
+		if(xValue < -3*VISIBLE_X)
+			xValue = 3*VISIBLE_X;
+		if(xValue - CAR_LENGTH > 3*VISIBLE_X)
+			xValue = -3*VISIBLE_X;
 	}
 	else
 	{
-		if(xValue > -(VISIBLE_X + 4*CAR_LENGTH) )
+		if(xValue > -4*VISIBLE_X)
 		{
 			xValue -= Speed;
 		}
 		else
 		{
-			xValue = VISIBLE_X + 4*CAR_LENGTH;
+			xValue = 4*VISIBLE_X;
 		}
 	}
 }
