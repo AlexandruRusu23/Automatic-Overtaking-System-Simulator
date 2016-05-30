@@ -956,7 +956,7 @@ void eGame::CRUISE()
 			{
 				if(Road.getSpeed() > 0.07)
 				{
-					if(decreaseSpeedRatio == 3)
+					if(decreaseSpeedRatio == 1)
 					{
 						Road.decreaseSpeed();
 						for(vector<eVehicle>::iterator it= Vehicle.begin(); it!=Vehicle.end(); it++)
@@ -968,14 +968,14 @@ void eGame::CRUISE()
 							}
 							else
 							{
-								if(abs(Road.getSpeed() - (*it).getSpeed()) > 0.04)
+								if(abs(Road.getSpeed() - (*it).getSpeed()) > 0.05)
 									(*it).decreaseSpeed();
-								(*it).setxValue((*it).getxValue() - 0.05);
+								(*it).setxValue((*it).getxValue() - 0.1);
 							}
 						}
 					}
 					decreaseSpeedRatio ++;
-					if(decreaseSpeedRatio > 3) decreaseSpeedRatio = 0;
+					if(decreaseSpeedRatio > 1) decreaseSpeedRatio = 0;
 				}
 			}
 		}
@@ -1110,7 +1110,7 @@ void eGame::CRUISE()
 		{
 			if(Road.getSpeed() < cruiseSpeed)
 			{
-				if(increaseSpeedRatio == 10)
+				if(increaseSpeedRatio == 1)
 				{
 					Road.increaseSpeed();
 					for(vector<eVehicle>::iterator it= Vehicle.begin(); it!=Vehicle.end(); it++)
@@ -1126,11 +1126,11 @@ void eGame::CRUISE()
 					}
 				}
 				increaseSpeedRatio ++;
-				if(increaseSpeedRatio > 10) increaseSpeedRatio =0;
+				if(increaseSpeedRatio > 1) increaseSpeedRatio =0;
 			}
 			if(Road.getSpeed() > cruiseSpeed)
 			{
-				if(decreaseSpeedRatio == 10)
+				if(decreaseSpeedRatio == 1)
 				{
 					Road.decreaseSpeed();
 					for(vector<eVehicle>::iterator it= Vehicle.begin(); it!=Vehicle.end(); it++)
@@ -1147,7 +1147,7 @@ void eGame::CRUISE()
 					}
 				}
 				decreaseSpeedRatio ++;
-				if(decreaseSpeedRatio > 10) decreaseSpeedRatio =0;
+				if(decreaseSpeedRatio > 1) decreaseSpeedRatio =0;
 			}
 		}
 		else
@@ -1156,7 +1156,7 @@ void eGame::CRUISE()
 			{
 				if(Road.getSpeed() < laneSpeed[Player.getLane()])
 				{
-					if(increaseSpeedRatio == 10)
+					if(increaseSpeedRatio == 2)
 					{
 						Road.increaseSpeed();
 						for(vector<eVehicle>::iterator it= Vehicle.begin(); it!=Vehicle.end(); it++)
@@ -1172,7 +1172,7 @@ void eGame::CRUISE()
 						}
 					}
 					increaseSpeedRatio ++;
-					if(increaseSpeedRatio > 10) increaseSpeedRatio =0;
+					if(increaseSpeedRatio > 2) increaseSpeedRatio =0;
 				}
 			}
 		}
