@@ -14,12 +14,13 @@
 ```
 sudo apt-get install freeglut3 freeglut3-dev
 sudo apt-get install libsoil-dev
+sudo apt-get install libglew-dev
 ```
 
 ### Usage ###
 
 ```
 make
-./exe
+./Traffic_Simulator.out
 ```
 ### Have fun! ###
