@@ -9,7 +9,7 @@
   - Set manually the speed of the player (if it has to change your input after because a collision will conflict the player, it will do)
   - Informations about current player's decision, data scanned by sensors and other parameters for user interests will also be displayed
 
-### Requirments ###
+### Requirements ###
 
 ```
 sudo apt-get install freeglut3 freeglut3-dev
